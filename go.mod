@@ -1,0 +1,39 @@
+module git.xswitch.cn/xswitch/xctrl
+
+go 1.16
+
+require (
+	github.com/casbin/casbin/v2 v2.17.0
+	github.com/davecgh/go-spew v1.1.1
+	github.com/evanphx/json-patch/v5 v5.6.0
+	github.com/go-acme/lego/v3 v3.9.0
+	github.com/go-log/log v0.2.0
+	github.com/go-redis/redis/v7 v7.4.1
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/gobwas/httphead v0.1.0
+	github.com/gobwas/ws v1.1.0
+	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.1.2
+	github.com/gorilla/handlers v1.5.1
+	github.com/kr/pretty v0.1.0
+	github.com/miekg/dns v1.1.27
+	github.com/mitchellh/hashstructure v1.1.0
+	github.com/nats-io/nats.go v1.10.0
+	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
+	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/pkg/errors v0.9.1
+	github.com/prometheus/common v0.15.0 // indirect
+	github.com/sirupsen/logrus v1.7.0
+	github.com/stretchr/testify v1.7.0
+	go.etcd.io/bbolt v1.3.3
+	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
+	go.uber.org/zap v1.13.0
+	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
+	golang.org/x/net v0.0.0-20220127074510-2fabfed7e28f
+	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
+	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
+	google.golang.org/grpc v1.27.1
+	google.golang.org/protobuf v1.26.0
+)
+
+replace google.golang.org/grpc => google.golang.org/grpc v1.26.0

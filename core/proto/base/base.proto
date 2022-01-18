@@ -1,0 +1,76 @@
+syntax = "proto3";
+option go_package = "git.xswitch.cn/xswitch/xctrl/core/proto/base";
+
+package base;
+
+// 查询条件
+message Filter {
+  enum Cond {
+    None = 0;
+    // a = ?
+    Eq = 1;
+    // a <> ?
+    Neq = 2;
+    // a > ?
+    Gt = 3;
+    // a >= ?
+    Gte = 4;
+    // a < ?
+    Lt = 5;
+    // a <= ?
+    Lte = 6;
+    // a Like ?
+    Like = 7;
+    // a IN (?,?,?)
+    In = 8;
+    // a NOT IN (?, ?, ?)
+    NotIn = 9;
+    // a IS NULL []
+    IsNull = 10;
+    // a IS NOT NULL []
+    NotNull = 11;
+    // a BETWEEN 1 AND 2
+    Between = 12;
+  }
+  // and 条件
+  message And {
+    // 条件 enum Cond
+    string cond = 1;
+    // 字段
+    string column = 2;
+    // 判断参数
+    repeated string args = 3;
+  }
+  // or 条件
+  message Or {
+    // 条件
+    string cond = 1;
+    // 字段
+    string column = 2;
+    // 参数
+    repeated string args = 3;
+  }
+
+  // order by
+  message OrderBy{
+    // 条件
+    OrderByDerection order_by_direction = 1;
+    //字段
+    string column = 2;
+  }
+
+  oneof filter {
+    And and = 1;
+    Or or = 2;
+    OrderBy order_by = 3;
+  }
+  enum OrderByDerection {
+    Asc = 0;
+    Desc = 1;
+  }
+}
+
+message Debug {
+  string log_level = 1;
+  bool show_sql = 2;
+}

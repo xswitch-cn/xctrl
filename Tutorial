@@ -1,0 +1,58 @@
+# xctrl开放接口使用说明书
+
+## 1、项目中下载使用xctrl库
+
+```
+go get git.xswitch.cn/xswitch/xctrl
+```
+
+### 使用方法
+
+#### 1、订阅Nats消息并获取nats消息解析
+
+1) 、初始化控制中心,并实现Handler接口
+
+```
+  ctrl.Init(&Handler{})
+  ctrl.EnableEvent("topic-test")
+
+  type Handler struct {}
+
+  // ctx , topic, reply,Params
+  func	Request(ctx context.Context, topic string, reply string, reqest *Request){}
+	// ctx , topic ,reply  Params
+  func	App(ctx context.Context, topic string, reply string, message *Message){}
+	// ctx , topic , Params
+  func	Event(ctx context.Context, topic  string, request *Request){}
+	// ctx , topic , Params
+  func	Result(ctx context.Context,topic string, result *Result){}
+
+```
+
+2) *message.Params是订阅nats主题接收到的消息，通过Unmarshal（Go语言，其他语言自行处理）获取结构体数据
+
+```
+channel := new(ctrl.Channel)
+json.Unmarshal(*message.Params, channel)
+```
+
+#### 2、调用rpc方法
+
+```
+
+import "git.xswitch.cn/xswitch/xctrl/core/ctrl"
+
+response, err := ctrl.Service().Play(
+		ctx,
+		&xctrl.PlayRequest{
+			Uuid: uuid,
+			Media: &xctrl.Media{
+				Type: xctrl.MediaType_FILE.String(),
+				Data: file,
+			},
+		},
+		ctrl.WithAddress(channel.GetNodeUuid()))
+```
+
+
+
