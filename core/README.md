@@ -314,9 +314,9 @@ digraph G {
 	CALLING -> RING -> ANSWER -> DESTROY[color=green]
 	CALLING -> ANSWER -> DESTROY[style=dashed color=grey]
 	CALLING -> RING -> MEDIA -> READY -> ANSWER -> DESTROY[color=blue label="M"]
-	CALLING -> RING -> ANSWER -> MEDIA -> READY-> DESTROY[color=red label="N"]
+	CALLING -> RING -> MEDIA -> ANSWER -> READY-> DESTROY[color=red label="N"]
 	CALLING -> RING -> MEDIA -> BRIDGE -> ANSWER -> UNBRIDGE -> DESTROY[color=purple label="M"]
-	CALLING -> RING -> ANSWER -> MEDIA -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
+	CALLING -> RING -> MEDIA -> ANSWER -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
 }
 ```
 
