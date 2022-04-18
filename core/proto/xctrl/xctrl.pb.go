@@ -11,6 +11,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	"encoding/json"
 )
 
 const (
@@ -454,7 +455,7 @@ type NativeJSResponse struct {
 	// optional
 	Seq string `protobuf:"bytes,4,opt,name=seq,proto3" json:"seq,omitempty"`
 	// a string or a native JSON struct to google.protobuf.Any or .Struct
-	Data string `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
+	Data json.RawMessage `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (x *NativeJSResponse) Reset() {
@@ -517,11 +518,11 @@ func (x *NativeJSResponse) GetSeq() string {
 	return ""
 }
 
-func (x *NativeJSResponse) GetData() string {
+func (x *NativeJSResponse) GetData() json.RawMessage {
 	if x != nil {
 		return x.Data
 	}
-	return ""
+	return json.RawMessage{}
 }
 
 type Request struct {
