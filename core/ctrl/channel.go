@@ -79,7 +79,26 @@ func (channel *Channel) NodeAddress() client.CallOption {
 // Answer 应答
 func (channel *Channel) Answer() *xctrl.Response {
 	response, err := Service().Answer(context.TODO(), &xctrl.Request{
-		Uuid: channel.GetUuid(),
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+	}, channel.NodeAddress())
+
+	if err != nil {
+		response = new(xctrl.Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) Accept(takeover bool) *xctrl.Response {
+	response, err := Service().Accept(context.TODO(), &xctrl.AcceptRequest{
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+		Takeover: takeover,
 	}, channel.NodeAddress())
 
 	if err != nil {
