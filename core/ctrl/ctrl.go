@@ -119,8 +119,23 @@ func Transfer(ctrlID string, channel *xctrl.ChannelEvent) error {
 
 // Call 发起 request 请求
 func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, error) {
-	fmt.Println("topic: ", topic)
 	req.Version = "2.0"
+	body, err := json.Marshal(req)
+	if err != nil {
+		fmt.Errorf("execute native api error: %v", err)
+		return nil, err
+	}
+	return globalCtrl.conn.Request(topic, body, timeout)
+}
+
+// Call 发起 request 请求
+func XCall(topic string, method string, params interface{}, timeout time.Duration) (*nats.Message, error) {
+	req := XRequest{
+		Version: "2.0",
+		Method:  method,
+		ID:      "0",
+		Params:  params,
+	}
 	body, err := json.Marshal(req)
 	if err != nil {
 		fmt.Errorf("execute native api error: %v", err)

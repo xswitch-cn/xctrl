@@ -16,6 +16,14 @@ type Request struct {
 	ID      *json.RawMessage `json:"id"`
 }
 
+// Request RPC 请求对象
+type XRequest struct {
+	Version string      `json:"jsonrpc"`
+	Method  string      `json:"method"`
+	Params  interface{} `json:"params"`
+	ID      interface{} `json:"id"`
+}
+
 // Response RPC 返回对象
 type Response struct {
 	Version string           `json:"jsonrpc"`
