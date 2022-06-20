@@ -130,6 +130,10 @@ func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, err
 
 // Call 发起 request 请求
 func XCall(topic string, method string, params interface{}, timeout time.Duration) (*nats.Message, error) {
+	//XNode.JStatus->XNode.NativeJSAPI
+	if method=="XNode.JStatus"{
+		method="XNode.NativeJSAPI"
+	}
 	req := XRequest{
 		Version: "2.0",
 		Method:  method,

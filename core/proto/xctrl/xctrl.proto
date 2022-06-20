@@ -82,6 +82,10 @@ service XNode {
   rpc NativeAPI(NativeRequest) returns (NativeResponse) {}
   // 执行原生JSAPI
   rpc NativeJSAPI(NativeJSRequest) returns (NativeJSResponse) {}
+  // 状态
+  rpc JStatus(JStatusRequest) returns (JStatusResponse) {}
+  // 获取会议信息
+//  rpc ConferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
 }
 
 message AcceptRequest {
@@ -668,7 +672,6 @@ message Header {
   string status_text = 6;
 }
 
-
 message Payload  {
   double index = 1;
   double time = 2;
@@ -683,7 +686,6 @@ message Payload  {
   string sentence_id = 11;
   double gender_score = 12;
 }
-
 
 message StashResult {
   double sentenceId = 1;
@@ -782,4 +784,63 @@ message VideoResizeEvent {
   uint32 old_height = 4;
   uint32 new_width = 5;
   uint32 new_height = 6;
+}
+
+message JStatusRequest {
+  string ctrl_uuid = 1;
+  message JStatusData {
+    string command = 1;
+    string data = 2;
+  }
+  JStatusData data = 2;
+}
+
+message JStatusUptime {
+  int32 years = 1;
+  int32 days = 2;
+  int32 hours = 3;
+  int32 minutes = 4;
+  int32 seconds = 5;
+  int32 milliseconds = 6;
+  int32 microseconds = 7;
+}
+
+message JStatusSessionsCount {
+  int32 total = 1;
+  int32 active = 2;
+  int32 peak = 3;
+  int32 peak5Min = 4;
+  int32 limit = 5;
+}
+
+message JStatusSessionsRate {
+  int32 current = 1;
+  int32 max = 2;
+  int32 peak = 3;
+  int32 peak5Min = 4;
+}
+
+message JStatusSessions {
+  JStatusSessionsCount count = 1;
+  JStatusSessionsRate rate = 2;
+
+}
+
+message JStatusIdleCPU {
+  float used = 1;
+  float allowed = 2;
+}
+
+message JStatusStackSize {
+  int32 current = 1;
+  int32 max = 2;
+}
+
+message JStatusResponse {
+  string systemStatus = 1;
+  string version = 2;
+  JStatusUptime uptime = 3;
+  JStatusSessions sessions = 4;
+  JStatusIdleCPU idleCPU = 5;
+  JStatusStackSize stackSizeKB = 6;
 }

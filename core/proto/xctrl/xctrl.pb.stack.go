@@ -5,15 +5,12 @@ package xctrl
 
 import (
 	fmt "fmt"
+	"git.xswitch.cn/xswitch/xctrl/stack/api"
+	"git.xswitch.cn/xswitch/xctrl/stack/client"
+	"git.xswitch.cn/xswitch/xctrl/stack/server"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
-)
-
-import (
 	context "context"
-	api "git.xswitch.cn/xswitch/xctrl/stack/api"
-	client "git.xswitch.cn/xswitch/xctrl/stack/client"
-	server "git.xswitch.cn/xswitch/xctrl/stack/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -110,6 +107,8 @@ type XNodeService interface {
 	NativeAPI(ctx context.Context, in *NativeRequest, opts ...client.CallOption) (*NativeResponse, error)
 	// 执行原生JSAPI
 	NativeJSAPI(ctx context.Context, in *NativeJSRequest, opts ...client.CallOption) (*NativeJSResponse, error)
+	// 状态
+	JStatus(ctx context.Context, in *JStatusRequest, opts ...client.CallOption) (*JStatusResponse, error)
 }
 
 type xNodeService struct {
@@ -464,6 +463,16 @@ func (c *xNodeService) NativeJSAPI(ctx context.Context, in *NativeJSRequest, opt
 	return out, nil
 }
 
+func (c *xNodeService) JStatus(ctx context.Context, in *JStatusRequest, opts ...client.CallOption) (*JStatusResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.JStatus", in)
+	out := new(JStatusResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -535,6 +544,8 @@ type XNodeHandler interface {
 	NativeAPI(context.Context, *NativeRequest, *NativeResponse) error
 	// 执行原生JSAPI
 	NativeJSAPI(context.Context, *NativeJSRequest, *NativeJSResponse) error
+	// 状态
+	JStatus(context.Context, *JStatusRequest, *JStatusResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -573,6 +584,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		NativeApp(ctx context.Context, in *NativeRequest, out *NativeResponse) error
 		NativeAPI(ctx context.Context, in *NativeRequest, out *NativeResponse) error
 		NativeJSAPI(ctx context.Context, in *NativeJSRequest, out *NativeJSResponse) error
+		JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -719,4 +731,8 @@ func (h *xNodeHandler) NativeAPI(ctx context.Context, in *NativeRequest, out *Na
 
 func (h *xNodeHandler) NativeJSAPI(ctx context.Context, in *NativeJSRequest, out *NativeJSResponse) error {
 	return h.XNodeHandler.NativeJSAPI(ctx, in, out)
+}
+
+func (h *xNodeHandler) JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error {
+	return h.XNodeHandler.JStatus(ctx, in, out)
 }
