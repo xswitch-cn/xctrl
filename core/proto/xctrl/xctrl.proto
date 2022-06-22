@@ -109,7 +109,7 @@ message NativeResponse {
   string result = 5;
 }
 
-message NativeJsData {
+message NativeJSRequestData {
   string command = 1;
   // a string or a native JSON struct to google.protobuf.Any or .Struct
   string data = 2;
@@ -117,7 +117,7 @@ message NativeJsData {
 
 message NativeJSRequest {
   string ctrl_uuid = 1;
-  NativeJsData data = 2;
+  NativeJSRequestData data = 2;
 }
 
 message NativeJSResponse {
