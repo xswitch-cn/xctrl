@@ -126,8 +126,7 @@ message NativeJSResponse {
   string node_uuid = 3;
   // optional
   string seq = 4;
-  // a string or a native JSON struct to google.protobuf.Any or .Struct
-  string data = 5;
+  bytes data = 5;
 }
 
 message Request {
