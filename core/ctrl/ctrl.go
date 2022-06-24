@@ -120,12 +120,8 @@ func Transfer(ctrlID string, channel *xctrl.ChannelEvent) error {
 // Call 发起 request 请求
 func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, error) {
 	req.Version = "2.0"
-	if req.Method == "XNode.ConferenceInfo" {
-		req.Method = "XNode.NativeJSAPI"
-	}
-	if req.Method == "XNode.JStatus" {
-		req.Method = "XNode.NativeJSAPI"
-	}
+	//change part of the request's method into NativeJSAPI
+	req.Method = TranslateMethod(req.Method)
 
 	body, err := json.Marshal(req)
 	if err != nil {
@@ -137,14 +133,8 @@ func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, err
 
 // XCall 发起 request 请求
 func XCall(topic string, method string, params interface{}, timeout time.Duration) (*nats.Message, error) {
-	//XNode.JStatus->XNode.NativeJSAPI
-	if method == "XNode.JStatus" {
-		method = "XNode.NativeJSAPI"
-	}
-	//XNode.ConferenceInfo->XNode.NativeJSAPI
-	if method == "XNode.ConferenceInfo" {
-		method = "XNode.NativeJSAPI"
-	}
+	//change part of the request's method into NativeJSAPI
+	method = TranslateMethod(method)
 	req := XRequest{
 		Version: "2.0",
 		Method:  method,
@@ -336,4 +326,17 @@ func DoResultCallback(msg *Message) {
 		// xlog.Errorf("do callback %s", id)
 		opt.cb(msg, opt.data)
 	}
+}
+
+// TranslateMethod change request method to NativeJSAPI
+func TranslateMethod(method string) string {
+	//XNode.JStatus->XNode.NativeJSAPI
+	if method == "XNode.JStatus" {
+		return "XNode.NativeJSAPI"
+	}
+	//XNode.ConferenceInfo->XNode.NativeJSAPI
+	if method == "XNode.ConferenceInfo" {
+		return "XNode.NativeJSAPI"
+	}
+	return method
 }
