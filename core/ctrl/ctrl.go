@@ -120,6 +120,13 @@ func Transfer(ctrlID string, channel *xctrl.ChannelEvent) error {
 // Call 发起 request 请求
 func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, error) {
 	req.Version = "2.0"
+	if req.Method == "XNode.ConferenceInfo" {
+		req.Method = "XNode.NativeJSAPI"
+	}
+	if req.Method == "XNode.JStatus" {
+		req.Method = "XNode.NativeJSAPI"
+	}
+
 	body, err := json.Marshal(req)
 	if err != nil {
 		fmt.Errorf("execute native api error: %v", err)
@@ -128,11 +135,15 @@ func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, err
 	return globalCtrl.conn.Request(topic, body, timeout)
 }
 
-// Call 发起 request 请求
+// XCall 发起 request 请求
 func XCall(topic string, method string, params interface{}, timeout time.Duration) (*nats.Message, error) {
 	//XNode.JStatus->XNode.NativeJSAPI
-	if method=="XNode.JStatus"{
-		method="XNode.NativeJSAPI"
+	if method == "XNode.JStatus" {
+		method = "XNode.NativeJSAPI"
+	}
+	//XNode.ConferenceInfo->XNode.NativeJSAPI
+	if method == "XNode.ConferenceInfo" {
+		method = "XNode.NativeJSAPI"
 	}
 	req := XRequest{
 		Version: "2.0",

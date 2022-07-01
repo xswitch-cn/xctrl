@@ -109,6 +109,8 @@ type XNodeService interface {
 	NativeJSAPI(ctx context.Context, in *NativeJSRequest, opts ...client.CallOption) (*NativeJSResponse, error)
 	// 状态
 	JStatus(ctx context.Context, in *JStatusRequest, opts ...client.CallOption) (*JStatusResponse, error)
+	// 获取会议信息
+	ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error)
 }
 
 type xNodeService struct {
@@ -473,6 +475,16 @@ func (c *xNodeService) JStatus(ctx context.Context, in *JStatusRequest, opts ...
 	return out, nil
 }
 
+func (c *xNodeService) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.ConferenceInfo", in)
+	out := new(ConferenceInfoResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -546,6 +558,8 @@ type XNodeHandler interface {
 	NativeJSAPI(context.Context, *NativeJSRequest, *NativeJSResponse) error
 	// 状态
 	JStatus(context.Context, *JStatusRequest, *JStatusResponse) error
+	// 获取会议信息
+	ConferenceInfo(context.Context, *ConferenceInfoRequest, *ConferenceInfoResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -585,6 +599,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		NativeAPI(ctx context.Context, in *NativeRequest, out *NativeResponse) error
 		NativeJSAPI(ctx context.Context, in *NativeJSRequest, out *NativeJSResponse) error
 		JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error
+		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -735,4 +750,8 @@ func (h *xNodeHandler) NativeJSAPI(ctx context.Context, in *NativeJSRequest, out
 
 func (h *xNodeHandler) JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error {
 	return h.XNodeHandler.JStatus(ctx, in, out)
+}
+
+func (h *xNodeHandler) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error {
+	return h.XNodeHandler.ConferenceInfo(ctx, in, out)
 }
