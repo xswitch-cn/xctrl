@@ -838,6 +838,14 @@ message JStatusStackSize {
 }
 
 message JStatusResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string seq = 4;
+  JStatusResponseData data = 5;
+}
+
+message JStatusResponseData {
   string systemStatus = 1;
   string version = 2;
   JStatusUptime uptime = 3;
