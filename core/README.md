@@ -96,7 +96,7 @@ type Handler interface {
 func EnableRequest(topic string) error
 ```
 
-订阅Request请求消息。主要用于处理FreeSWITCH的请求，如`dialplan`、`directory`、`config`等。
+订阅Request请求消息。主要用于处理FreeSWITCH的请求，如`dialplan`、`directory`、`config`等。这种订阅总是异步处理的。
 
 ## ctrl.EnableApp
 
@@ -106,7 +106,8 @@ func EnableApp(topic string) error
 
 订阅一个`Topic`，是一个全能的订阅方式，包括接收Node的事件、返回结果等。
 
-对于`Event.Channel`事件，它将启用一个`bus`订阅进行处理，因而，对于同一个Channel UUID来说，回调是串行的。
+对于`Event.Channel`事件，回调函数里它将以当前的channel的uuid为topic和queue启用一个`bus`消息总线进行订阅处理，一方面避免nats回调端的阻塞，另一方面，
+使channel在bus中成为一个串行的订阅。因而，对于同一个Channel UUID来说，回调是串行的，保证channel的START,RING,ANSWER,DESTROY等事件处理的有序性。
 
 对于其它事件，它将使用新的Go Routine进行回调，因而，无法保证顺序。
 
