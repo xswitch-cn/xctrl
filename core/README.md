@@ -301,9 +301,9 @@ func EventCallback(ctx context.Context, ev nats.Event) error {
 ```graphviz
 digraph G {
 	START -> DESTROY
-	START -> RINGING -> ANSWER -> DESTROY[color=green]
-	START -> ANSWER -> DESTROY[color=blue]
-	START -> ANSWER -> BRIDGE -> UNBRIDGE -> DESTROY[color=red]
+	START -> RINGING -> ANSWERED -> DESTROY[color=green]
+	START -> ANSWERED -> DESTROY[color=blue]
+	START -> ANSWERED -> BRIDGE -> UNBRIDGE -> DESTROY[color=red]
 }
 ```
 
@@ -312,18 +312,18 @@ digraph G {
 ```graphviz
 digraph G {
 	CALLING -> RINGING -> DESTROY
-	CALLING -> RINGING -> ANSWER -> DESTROY[color=green]
+	CALLING -> RINGING -> ANSWERED -> DESTROY[color=green]
 	CALLING -> ANSWER -> DESTROY[style=dashed color=grey]
-	CALLING -> RINGING -> MEDIA -> READY -> ANSWER -> DESTROY[color=blue label="M"]
-	CALLING -> RINGING -> ANSWER -> MEDIA -> READY-> DESTROY[color=red label="N"]
-	CALLING -> RINGING -> MEDIA -> BRIDGE -> ANSWER -> UNBRIDGE -> DESTROY[color=purple label="M"]
-	CALLING -> RINGING -> ANSWER -> MEDIA -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
+	CALLING -> RINGING -> MEDIA -> READY -> ANSWERED -> DESTROY[color=blue label="M"]
+	CALLING -> RINGING -> ANSWERED -> MEDIA -> READY-> DESTROY[color=red label="N"]
+	CALLING -> RINGING -> MEDIA -> BRIDGE -> ANSWERED -> UNBRIDGE -> DESTROY[color=purple label="M"]
+	CALLING -> RINGING -> ANSWERED -> MEDIA -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
 }
 ```
 
-在调用`XNode.Dial`外呼的时候，在`ignore_early_media=false`（默认）的情况下，收到`MEDIA`就会触发READY事件。如果为`true`，则需要等到`ANSWER`以后才会触发`READY`状态。不管什么情况，都需要在收到`READY`状态后才可以对Channel进行控制。
+在调用`XNode.Dial`外呼的时候，在`ignore_early_media=false`（默认）的情况下，收到`MEDIA`就会触发READY事件。如果为`true`，则需要等到`ANSWERED`以后才会触发`READY`状态。不管什么情况，都需要在收到`READY`状态后才可以对Channel进行控制。
 
-在执行`XNode.Bridge`时，没有`READY`事件，这时可以根据`ANSWER`或`BRIDGE`事件处理业务逻辑。
+在执行`XNode.Bridge`时，没有`READY`事件，这时可以根据`ANSWERED`或`BRIDGE`事件处理业务逻辑。
 
 在XNode中，一个Channel从创建开始（`state = START`或`state = CALLING`），到销毁（`state = DESTROY`），是一个完整的生命周期。销毁前，会发送`Event.CDR`事件，通常会在单独的Topic上发出（可配置）。
 
