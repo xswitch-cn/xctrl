@@ -301,7 +301,7 @@ func EventCallback(ctx context.Context, ev nats.Event) error {
 ```graphviz
 digraph G {
 	START -> DESTROY
-	START -> RING -> ANSWER -> DESTROY[color=green]
+	START -> RINGING -> ANSWER -> DESTROY[color=green]
 	START -> ANSWER -> DESTROY[color=blue]
 	START -> ANSWER -> BRIDGE -> UNBRIDGE -> DESTROY[color=red]
 }
@@ -311,13 +311,13 @@ digraph G {
 
 ```graphviz
 digraph G {
-	CALLING -> RING -> DESTROY
-	CALLING -> RING -> ANSWER -> DESTROY[color=green]
+	CALLING -> RINGING -> DESTROY
+	CALLING -> RINGING -> ANSWER -> DESTROY[color=green]
 	CALLING -> ANSWER -> DESTROY[style=dashed color=grey]
-	CALLING -> RING -> MEDIA -> READY -> ANSWER -> DESTROY[color=blue label="M"]
-	CALLING -> RING -> ANSWER -> MEDIA -> READY-> DESTROY[color=red label="N"]
-	CALLING -> RING -> MEDIA -> BRIDGE -> ANSWER -> UNBRIDGE -> DESTROY[color=purple label="M"]
-	CALLING -> RING -> ANSWER -> MEDIA -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
+	CALLING -> RINGING -> MEDIA -> READY -> ANSWER -> DESTROY[color=blue label="M"]
+	CALLING -> RINGING -> ANSWER -> MEDIA -> READY-> DESTROY[color=red label="N"]
+	CALLING -> RINGING -> MEDIA -> BRIDGE -> ANSWER -> UNBRIDGE -> DESTROY[color=purple label="M"]
+	CALLING -> RINGING -> ANSWER -> MEDIA -> BRIDGE -> UNBRIDGE -> DESTROY[color=pink label=N]
 }
 ```
 
