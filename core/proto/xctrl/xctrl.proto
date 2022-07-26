@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "xswitch.cn/core/proto/xctrl";
+option go_package = "core/proto/xctrl";
 
 package xctrl;
 
