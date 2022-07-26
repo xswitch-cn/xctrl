@@ -124,9 +124,7 @@ message NativeJSResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;
-  // optional
   string seq = 4;
-  // a string or a native JSON struct to google.protobuf.Any or .Struct
   string data = 5;
 }
 
