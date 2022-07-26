@@ -143,9 +143,15 @@ message Response {
   string uuid = 4;
 }
 
+message Application {
+  string app = 1;
+  string data = 2;
+}
+
 message DialRequest {
   string ctrl_uuid = 1;
   Destination destination = 2;
+  repeated Application apps = 3;
 }
 
 message DialResponse {
