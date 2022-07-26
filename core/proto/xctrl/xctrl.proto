@@ -440,6 +440,7 @@ message Destination {
   bool ringall = 1;
   map<string, string> global_params = 2;
   repeated CallParam call_params = 3;
+  repeated string channel_params = 4;
 }
 
 /*
