@@ -423,6 +423,7 @@ message ChannelEvent {
   string cause = 17;
   bool answered = 19;
   string node_ip = 20;
+  string domain = 21;
 }
 
 message CallParam {
