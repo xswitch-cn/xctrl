@@ -863,6 +863,7 @@ message JStatusResponseData {
 message ConferenceInfoRequestDataData {
   string conferenceName = 1;
   bool showMembers = 2;
+  map<string, string> memberFilters = 3;
 }
 
 message ConferenceInfoRequestData {
