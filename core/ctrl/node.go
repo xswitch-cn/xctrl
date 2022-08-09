@@ -51,7 +51,7 @@ func (x *nodeList) Store(hostname string, node *xctrl.Node) {
 
 // Delete 删除节点信息
 func (x *nodeList) Delete(hostname string) {
-	x.sm.RLock()
+	x.sm.Lock()
 	delete(x.list, hostname)
-	x.sm.RUnlock()
+	x.sm.Unlock()
 }
