@@ -44,9 +44,9 @@ func GetNodeList() map[string]*xctrl.Node {
 
 // Store 保存节点信息
 func (x *nodeList) Store(hostname string, node *xctrl.Node) {
-	x.sm.RLock()
+	x.sm.Lock()
 	x.list[hostname] = node
-	x.sm.RUnlock()
+	x.sm.Unlock()
 }
 
 // Delete 删除节点信息
