@@ -7,7 +7,6 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/stack/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/stack/codec"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry/etcd"
 	"git.xswitch.cn/xswitch/xctrl/stack/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/encoding"
@@ -68,7 +67,6 @@ func newOptions(opt ...server.Option) server.Options {
 		Codecs:   make(map[string]codec.NewCodec),
 		Metadata: map[string]string{},
 		Broker:   nats.NewBroker(),
-		Registry: etcd.NewRegistry(),
 		Address:  server.DefaultAddress,
 		Name:     server.DefaultName,
 		Id:       server.DefaultId,
