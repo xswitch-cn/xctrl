@@ -3,7 +3,6 @@ module git.xswitch.cn/xswitch/xctrl
 go 1.16
 
 require (
-	github.com/casbin/casbin/v2 v2.17.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/go-acme/lego/v3 v3.9.0
@@ -32,5 +31,3 @@ require (
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
-
-replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
