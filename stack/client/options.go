@@ -8,7 +8,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/stack/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/stack/codec"
 	"git.xswitch.cn/xswitch/xctrl/stack/registry"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry/etcd"
 	"git.xswitch.cn/xswitch/xctrl/stack/selector"
 )
 
@@ -287,7 +286,6 @@ func NewOptions(options ...Option) Options {
 		PoolTTL:  DefaultPoolTTL,
 		Broker:   nats.NewBroker(),
 		Selector: selector.DefaultSelector,
-		Registry: etcd.NewRegistry(),
 	}
 
 	for _, o := range options {

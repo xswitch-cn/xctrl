@@ -17,23 +17,21 @@ require (
 	github.com/gorilla/handlers v1.5.1
 	github.com/kr/pretty v0.1.0
 	github.com/miekg/dns v1.1.27
-	github.com/mitchellh/hashstructure v1.1.0
+	github.com/nats-io/nats-server/v2 v2.1.2 // indirect
 	github.com/nats-io/nats.go v1.10.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/common v0.15.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.3
-	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
-	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
 	golang.org/x/net v0.0.0-20220127074510-2fabfed7e28f
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	google.golang.org/grpc v1.27.1
 	google.golang.org/protobuf v1.26.0
+	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0

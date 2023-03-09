@@ -12,7 +12,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/stack/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/stack/client"
 	"git.xswitch.cn/xswitch/xctrl/stack/registry"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry/etcd"
 	"git.xswitch.cn/xswitch/xctrl/stack/selector"
 	"git.xswitch.cn/xswitch/xctrl/stack/server"
 )
@@ -263,14 +262,12 @@ func NewService(name string, version string, brokerAddress string, registryAddre
 	}
 
 	b := nats.NewBroker(broker.Addrs(strings.Split(brokerAddress, ",")...))
-	r := etcd.NewRegistry(registry.Addrs(strings.Split(registryAddress, ",")...))
 
 	srv := stack.NewService(
 		stack.Name(name),
 		stack.Version(version),
 		stack.Broker(b),
 		stack.WrapHandler(LogMiddlewareWrapper),
-		stack.Registry(r),
 		stack.RegisterInterval(15*time.Second),
 		stack.RegisterTTL(30*time.Second),
 	)
