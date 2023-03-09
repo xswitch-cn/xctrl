@@ -5,7 +5,6 @@ import (
 	"context"
 
 	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/client/grpc"
 	"git.xswitch.cn/xswitch/xctrl/stack/server"
 )
 
@@ -68,14 +67,6 @@ func FromContext(ctx context.Context) (Service, bool) {
 // NewContext returns a new Context with the Service embedded within it.
 func NewContext(ctx context.Context, s Service) context.Context {
 	return context.WithValue(ctx, serviceKey{}, s)
-}
-
-// NewPublisher returns a new Publisher
-func NewPublisher(topic string, c client.Client) Publisher {
-	if c == nil {
-		c = grpc.NewClient()
-	}
-	return &publisher{c, topic}
 }
 
 // RegisterHandler is syntactic sugar for registering a handler

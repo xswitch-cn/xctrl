@@ -3,7 +3,6 @@ package handler
 import (
 	"git.xswitch.cn/xswitch/xctrl/stack/api/router"
 	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/client/grpc"
 )
 
 var (
@@ -24,10 +23,6 @@ func NewOptions(opts ...Option) Options {
 	var options Options
 	for _, o := range opts {
 		o(&options)
-	}
-
-	if options.Client == nil {
-		WithClient(grpc.NewClient())(&options)
 	}
 
 	// set namespace if blank
