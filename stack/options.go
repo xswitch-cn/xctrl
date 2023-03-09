@@ -7,7 +7,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/stack/broker"
 	"git.xswitch.cn/xswitch/xctrl/stack/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	cgrpc "git.xswitch.cn/xswitch/xctrl/stack/client/grpc"
 	"git.xswitch.cn/xswitch/xctrl/stack/debug/profile"
 	sgrpc "git.xswitch.cn/xswitch/xctrl/stack/server/grpc"
 
@@ -40,7 +39,6 @@ type Options struct {
 func newOptions(opts ...Option) Options {
 	opt := Options{
 		Broker:   nats.NewBroker(),
-		Client:   cgrpc.NewClient(),
 		Server:   sgrpc.NewServer(),
 		Registry: registry.DefaultRegistry,
 		Context:  context.Background(),
