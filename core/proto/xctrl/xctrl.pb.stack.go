@@ -5,12 +5,15 @@ package xctrl
 
 import (
 	fmt "fmt"
-	"git.xswitch.cn/xswitch/xctrl/stack/api"
-	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/server"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
+)
+
+import (
 	context "context"
+	api "xswitch.cn/stack/api"
+	client "xswitch.cn/stack/client"
+	server "xswitch.cn/stack/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -111,6 +114,8 @@ type XNodeService interface {
 	JStatus(ctx context.Context, in *JStatusRequest, opts ...client.CallOption) (*JStatusResponse, error)
 	// 获取会议信息
 	ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error)
+	//呼叫中心FIFO队列（先入先出）
+	FIFO(ctx context.Context, in *FIFORequest, opts ...client.CallOption) (*FIFOResponse, error)
 }
 
 type xNodeService struct {
@@ -485,6 +490,16 @@ func (c *xNodeService) ConferenceInfo(ctx context.Context, in *ConferenceInfoReq
 	return out, nil
 }
 
+func (c *xNodeService) FIFO(ctx context.Context, in *FIFORequest, opts ...client.CallOption) (*FIFOResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.FIFO", in)
+	out := new(FIFOResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -560,6 +575,8 @@ type XNodeHandler interface {
 	JStatus(context.Context, *JStatusRequest, *JStatusResponse) error
 	// 获取会议信息
 	ConferenceInfo(context.Context, *ConferenceInfoRequest, *ConferenceInfoResponse) error
+	//呼叫中心FIFO队列（先入先出）
+	FIFO(context.Context, *FIFORequest, *FIFOResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -600,6 +617,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		NativeJSAPI(ctx context.Context, in *NativeJSRequest, out *NativeJSResponse) error
 		JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error
 		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
+		FIFO(ctx context.Context, in *FIFORequest, out *FIFOResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -754,4 +772,8 @@ func (h *xNodeHandler) JStatus(ctx context.Context, in *JStatusRequest, out *JSt
 
 func (h *xNodeHandler) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error {
 	return h.XNodeHandler.ConferenceInfo(ctx, in, out)
+}
+
+func (h *xNodeHandler) FIFO(ctx context.Context, in *FIFORequest, out *FIFOResponse) error {
+	return h.XNodeHandler.FIFO(ctx, in, out)
 }
