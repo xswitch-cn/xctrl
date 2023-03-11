@@ -86,6 +86,10 @@ service XNode {
   rpc JStatus(JStatusRequest) returns (JStatusResponse) {}
   // 获取会议信息
   rpc ConferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
+
+  //呼叫中心FIFO队列（先入先出）
+  rpc FIFO(FIFORequest) returns (FIFOResponse) {}
+
 }
 
 message AcceptRequest {
@@ -950,4 +954,18 @@ message ConferenceInfoResponseFlags {
   bool has_floor = 9;
   bool is_moderator = 10;
   bool end_conference = 11;
+}
+message FIFORequest {
+  string uuid = 1;
+  string name = 2;
+  string  inout = 3;
+  string wait_music = 4;
+  string exit_announce = 5;
+  int32 priority = 6;
+}
+message FIFOResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
 }

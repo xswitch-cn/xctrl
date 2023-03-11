@@ -950,3 +950,21 @@ func (channel *Channel) Subscribe(topic string, cb nats.EventCallback, queue str
 
 	return sub, nil
 }
+
+//FIFO 呼叫中心FIFO队列（先入先出）
+func (channel *Channel) FIFO(req *xctrl.FIFORequest) *xctrl.FIFOResponse {
+	if channel == nil {
+		return &xctrl.FIFOResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().FIFO(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.FIFOResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
