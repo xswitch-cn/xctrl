@@ -90,6 +90,9 @@ service XNode {
   //呼叫中心FIFO队列（先入先出）
   rpc FIFO(FIFORequest) returns (FIFOResponse) {}
 
+  //呼叫中心Callcenter
+  rpc Callcenter(CallcenterRequest) returns (CallcenterResponse) {}
+
 }
 
 message AcceptRequest {
@@ -964,6 +967,17 @@ message FIFORequest {
   int32 priority = 6;
 }
 message FIFOResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
+}
+
+message CallcenterRequest {
+  string uuid = 1;
+  string name = 2;
+}
+message CallcenterResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;

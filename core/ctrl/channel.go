@@ -968,3 +968,21 @@ func (channel *Channel) FIFO(req *xctrl.FIFORequest) *xctrl.FIFOResponse {
 	}
 	return response
 }
+
+//Callcenter 呼叫中心Callcenter
+func (channel *Channel) Callcenter(req *xctrl.CallcenterRequest) *xctrl.CallcenterResponse {
+	if channel == nil {
+		return &xctrl.CallcenterResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().Callcenter(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.CallcenterResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
