@@ -340,7 +340,7 @@ func (r *ctrlClient) NewMessage(topic string, message interface{}, opts ...clien
 
 func (r *ctrlClient) NewRequest(service, method string, request interface{}, reqOpts ...client.RequestOption) client.Request {
 	//change part of the request's method into NativeJSAPI
-	method=TranslateMethod(method)
+	method = TranslateMethod(method)
 	return newRequest(service, method, request, r.opts.ContentType, reqOpts...)
 }
 
