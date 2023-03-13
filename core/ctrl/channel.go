@@ -986,3 +986,21 @@ func (channel *Channel) Callcenter(req *xctrl.CallcenterRequest) *xctrl.Callcent
 	}
 	return response
 }
+
+//Conference 会议
+func (channel *Channel) Conference(req *xctrl.ConferenceRequest) *xctrl.ConferenceResponse {
+	if channel == nil {
+		return &xctrl.ConferenceResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().Conference(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.ConferenceResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
