@@ -93,6 +93,10 @@ service XNode {
   //呼叫中心Callcenter
   rpc Callcenter(CallcenterRequest) returns (CallcenterResponse) {}
 
+  //会议Conference
+  rpc Conference(ConferenceRequest) returns (ConferenceResponse) {}
+
+
 }
 
 message AcceptRequest {
@@ -978,6 +982,19 @@ message CallcenterRequest {
   string name = 2;
 }
 message CallcenterResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
+}
+
+message ConferenceRequest {
+  string uuid = 1;
+  string name = 2;
+  string profile = 3;
+  repeated string flags = 4;
+}
+message ConferenceResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;

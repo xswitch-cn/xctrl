@@ -188,3 +188,58 @@ func TestChannel_Callcenter(t *testing.T) {
 	}
 
 }
+
+func TestChannel_Conference(t *testing.T) {
+	//获取nats地址
+	url := os.Getenv("NATS_ADDRESS")
+	if url == "" {
+		url = "nats://localhost:4222"
+	}
+	//初始化 ctrl
+	err := Init(nil, true, url)
+	if err != nil {
+		t.Error(err)
+	}
+
+	node_uuid := "test.node-uuid"
+
+	//订阅主题
+	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+		var request Request
+		json.Unmarshal(e.Message().Body, request)
+
+		response := &xctrl.Response{
+			Code:     200,
+			Message:  "OK",
+			NodeUuid: node_uuid,
+			Uuid:     "test-uuid",
+		}
+
+		rpc := &Response{
+			Version: "2.0",
+			ID:      request.ID,
+			Result:  ToRawMessage(response),
+		}
+		PublishJSON(e.Reply(), rpc)
+		return nil
+	}, node_uuid)
+
+	channel := &Channel{
+		CtrlUuid: UUID(),
+	}
+	channel.NodeUuid = node_uuid
+
+	req := &xctrl.ConferenceRequest{
+		Uuid:    UUID(),
+		Name:    "test_call_center",
+		Profile: "example",
+		Flags:   []string{"mute", "vmute", "deaf", "moderator", "mintwo"},
+	}
+
+	res := channel.Conference(req)
+
+	if res.Code != 408 {
+		t.Error(res)
+	}
+
+}

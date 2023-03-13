@@ -5,16 +5,15 @@ package xctrl
 
 import (
 	fmt "fmt"
-	"git.xswitch.cn/xswitch/xctrl/stack/api"
-	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/server"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
 )
 
 import (
 	context "context"
-
+	api "xswitch.cn/stack/api"
+	client "xswitch.cn/stack/client"
+	server "xswitch.cn/stack/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -119,6 +118,8 @@ type XNodeService interface {
 	FIFO(ctx context.Context, in *FIFORequest, opts ...client.CallOption) (*FIFOResponse, error)
 	//呼叫中心Callcenter
 	Callcenter(ctx context.Context, in *CallcenterRequest, opts ...client.CallOption) (*CallcenterResponse, error)
+	//会议Conference
+	Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error)
 }
 
 type xNodeService struct {
@@ -513,6 +514,16 @@ func (c *xNodeService) Callcenter(ctx context.Context, in *CallcenterRequest, op
 	return out, nil
 }
 
+func (c *xNodeService) Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.Conference", in)
+	out := new(ConferenceResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -592,6 +603,8 @@ type XNodeHandler interface {
 	FIFO(context.Context, *FIFORequest, *FIFOResponse) error
 	//呼叫中心Callcenter
 	Callcenter(context.Context, *CallcenterRequest, *CallcenterResponse) error
+	//会议Conference
+	Conference(context.Context, *ConferenceRequest, *ConferenceResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -634,6 +647,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
 		FIFO(ctx context.Context, in *FIFORequest, out *FIFOResponse) error
 		Callcenter(ctx context.Context, in *CallcenterRequest, out *CallcenterResponse) error
+		Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -796,4 +810,8 @@ func (h *xNodeHandler) FIFO(ctx context.Context, in *FIFORequest, out *FIFORespo
 
 func (h *xNodeHandler) Callcenter(ctx context.Context, in *CallcenterRequest, out *CallcenterResponse) error {
 	return h.XNodeHandler.Callcenter(ctx, in, out)
+}
+
+func (h *xNodeHandler) Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error {
+	return h.XNodeHandler.Conference(ctx, in, out)
 }
