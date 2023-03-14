@@ -99,6 +99,9 @@ service XNode {
   //会议AI
   rpc AI(AIRequest) returns (AIResponse) {}
 
+  //HttAPI
+  rpc HttAPI(HttAPIRequest) returns (HttAPIResponse) {}
+
 }
 
 message AcceptRequest {
@@ -1009,6 +1012,18 @@ message AIRequest {
   map<string, string> data = 3;
 }
 message AIResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
+}
+
+message HttAPIRequest {
+  string uuid = 1;
+  string url = 2;
+  map<string, string> data = 3;
+}
+message HttAPIResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;

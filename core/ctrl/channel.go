@@ -1022,3 +1022,20 @@ func (channel *Channel) AI(req *xctrl.AIRequest) *xctrl.AIResponse {
 	}
 	return response
 }
+
+func (channel *Channel) HttAPI(req *xctrl.HttAPIRequest) *xctrl.HttAPIResponse {
+	if channel == nil {
+		return &xctrl.HttAPIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().HttAPI(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.HttAPIResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}

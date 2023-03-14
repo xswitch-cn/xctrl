@@ -201,7 +201,7 @@ func TestChannel_Conference(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid"
+	node_uuid := "test.node-uuid-conference"
 
 	//订阅主题
 	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
@@ -256,7 +256,7 @@ func TestChannel_AI(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid"
+	node_uuid := "test.node-uuid-ai"
 
 	//订阅主题
 	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
@@ -291,6 +291,60 @@ func TestChannel_AI(t *testing.T) {
 	}
 
 	res := channel.AI(req)
+
+	if res.Code != 408 {
+		t.Error(res)
+	}
+
+}
+
+func TestChannel_HttAPI(t *testing.T) {
+	//获取nats地址
+	url := os.Getenv("NATS_ADDRESS")
+	if url == "" {
+		url = "nats://localhost:4222"
+	}
+	//初始化 ctrl
+	err := Init(nil, true, url)
+	if err != nil {
+		t.Error(err)
+	}
+
+	node_uuid := "test.node-uuid-httapi"
+
+	//订阅主题
+	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+		var request Request
+		json.Unmarshal(e.Message().Body, request)
+		response := &xctrl.Response{
+			Code:     200,
+			Message:  "OK",
+			NodeUuid: node_uuid,
+			Uuid:     "test-uuid",
+		}
+		rpc := &Response{
+			Version: "2.0",
+			ID:      request.ID,
+			Result:  ToRawMessage(response),
+		}
+		PublishJSON(e.Reply(), rpc)
+		return nil
+	}, node_uuid)
+
+	channel := &Channel{
+		CtrlUuid: UUID(),
+	}
+	channel.NodeUuid = node_uuid
+	req := &xctrl.HttAPIRequest{
+		Uuid: UUID(),
+		Url:  "http://localhost:3000",
+		Data: map[string]string{
+			"var1": "value1",
+			"var2": "value-httai",
+		},
+	}
+
+	res := channel.HttAPI(req)
 
 	if res.Code != 408 {
 		t.Error(res)
