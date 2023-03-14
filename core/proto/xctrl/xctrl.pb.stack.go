@@ -122,6 +122,8 @@ type XNodeService interface {
 	Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error)
 	//会议AI
 	AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error)
+	//HttAPI
+	HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error)
 }
 
 type xNodeService struct {
@@ -536,6 +538,16 @@ func (c *xNodeService) AI(ctx context.Context, in *AIRequest, opts ...client.Cal
 	return out, nil
 }
 
+func (c *xNodeService) HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.HttAPI", in)
+	out := new(HttAPIResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -619,6 +631,8 @@ type XNodeHandler interface {
 	Conference(context.Context, *ConferenceRequest, *ConferenceResponse) error
 	//会议AI
 	AI(context.Context, *AIRequest, *AIResponse) error
+	//HttAPI
+	HttAPI(context.Context, *HttAPIRequest, *HttAPIResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -663,6 +677,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		Callcenter(ctx context.Context, in *CallcenterRequest, out *CallcenterResponse) error
 		Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error
 		AI(ctx context.Context, in *AIRequest, out *AIResponse) error
+		HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAPIResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -833,4 +848,8 @@ func (h *xNodeHandler) Conference(ctx context.Context, in *ConferenceRequest, ou
 
 func (h *xNodeHandler) AI(ctx context.Context, in *AIRequest, out *AIResponse) error {
 	return h.XNodeHandler.AI(ctx, in, out)
+}
+
+func (h *xNodeHandler) HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAPIResponse) error {
+	return h.XNodeHandler.HttAPI(ctx, in, out)
 }

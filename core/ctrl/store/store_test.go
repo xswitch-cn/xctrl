@@ -1,10 +1,9 @@
 package store
 
 import (
+	"git.xswitch.cn/xswitch/xctrl/stack/store"
 	"testing"
 	"time"
-
-	"git.xswitch.cn/xswitch/xctrl/stack/store"
 )
 
 func init() {
