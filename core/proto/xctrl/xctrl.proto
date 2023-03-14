@@ -96,6 +96,8 @@ service XNode {
   //会议Conference
   rpc Conference(ConferenceRequest) returns (ConferenceResponse) {}
 
+  //会议AI
+  rpc AI(AIRequest) returns (AIResponse) {}
 
 }
 
@@ -995,6 +997,18 @@ message ConferenceRequest {
   repeated string flags = 4;
 }
 message ConferenceResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
+}
+
+message AIRequest {
+  string uuid = 1;
+  string url = 2;
+  map<string, string> data = 3;
+}
+message AIResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;

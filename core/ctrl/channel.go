@@ -1004,3 +1004,21 @@ func (channel *Channel) Conference(req *xctrl.ConferenceRequest) *xctrl.Conferen
 	}
 	return response
 }
+
+//AI
+func (channel *Channel) AI(req *xctrl.AIRequest) *xctrl.AIResponse {
+	if channel == nil {
+		return &xctrl.AIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().AI(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.AIResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
