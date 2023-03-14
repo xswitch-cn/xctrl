@@ -120,6 +120,8 @@ type XNodeService interface {
 	Callcenter(ctx context.Context, in *CallcenterRequest, opts ...client.CallOption) (*CallcenterResponse, error)
 	//会议Conference
 	Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error)
+	//会议AI
+	AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error)
 }
 
 type xNodeService struct {
@@ -524,6 +526,16 @@ func (c *xNodeService) Conference(ctx context.Context, in *ConferenceRequest, op
 	return out, nil
 }
 
+func (c *xNodeService) AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.AI", in)
+	out := new(AIResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -605,6 +617,8 @@ type XNodeHandler interface {
 	Callcenter(context.Context, *CallcenterRequest, *CallcenterResponse) error
 	//会议Conference
 	Conference(context.Context, *ConferenceRequest, *ConferenceResponse) error
+	//会议AI
+	AI(context.Context, *AIRequest, *AIResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -648,6 +662,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		FIFO(ctx context.Context, in *FIFORequest, out *FIFOResponse) error
 		Callcenter(ctx context.Context, in *CallcenterRequest, out *CallcenterResponse) error
 		Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error
+		AI(ctx context.Context, in *AIRequest, out *AIResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -814,4 +829,8 @@ func (h *xNodeHandler) Callcenter(ctx context.Context, in *CallcenterRequest, ou
 
 func (h *xNodeHandler) Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error {
 	return h.XNodeHandler.Conference(ctx, in, out)
+}
+
+func (h *xNodeHandler) AI(ctx context.Context, in *AIRequest, out *AIResponse) error {
+	return h.XNodeHandler.AI(ctx, in, out)
 }
