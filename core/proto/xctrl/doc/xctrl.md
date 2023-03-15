@@ -58,6 +58,9 @@
     - [HangupRequest](#xctrl-HangupRequest)
     - [Header](#xctrl-Header)
     - [HoldRequest](#xctrl-HoldRequest)
+    - [HttAPIRequest](#xctrl-HttAPIRequest)
+    - [HttAPIRequest.DataEntry](#xctrl-HttAPIRequest-DataEntry)
+    - [HttAPIResponse](#xctrl-HttAPIResponse)
     - [InterceptRequest](#xctrl-InterceptRequest)
     - [JStatusIdleCPU](#xctrl-JStatusIdleCPU)
     - [JStatusRequest](#xctrl-JStatusRequest)
@@ -1159,6 +1162,57 @@
 
 
 
+<a name="xctrl-HttAPIRequest"></a>
+
+### HttAPIRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| uuid | [string](#string) |  |  |
+| url | [string](#string) |  |  |
+| data | [HttAPIRequest.DataEntry](#xctrl-HttAPIRequest-DataEntry) | repeated |  |
+
+
+
+
+
+
+<a name="xctrl-HttAPIRequest-DataEntry"></a>
+
+### HttAPIRequest.DataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="xctrl-HttAPIResponse"></a>
+
+### HttAPIResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| code | [int32](#int32) |  |  |
+| message | [string](#string) |  |  |
+| node_uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="xctrl-InterceptRequest"></a>
 
 ### InterceptRequest
@@ -2078,6 +2132,7 @@ CDR = 13;
 | Callcenter | [CallcenterRequest](#xctrl-CallcenterRequest) | [CallcenterResponse](#xctrl-CallcenterResponse) | 呼叫中心Callcenter |
 | Conference | [ConferenceRequest](#xctrl-ConferenceRequest) | [ConferenceResponse](#xctrl-ConferenceResponse) | 会议Conference |
 | AI | [AIRequest](#xctrl-AIRequest) | [AIResponse](#xctrl-AIResponse) | 会议AI |
+| HttAPI | [HttAPIRequest](#xctrl-HttAPIRequest) | [HttAPIResponse](#xctrl-HttAPIResponse) | HttAPI |
 
  
 
