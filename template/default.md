@@ -33,6 +33,7 @@
 
 {{range .Messages}}
 <a name="{{.FullName | anchor}}"></a>
+<a name="user-content-{{.FullName | anchor}}"></a>
 
 ### {{.LongName}}
 {{.Description}}
@@ -57,6 +58,7 @@
 
 {{range .Enums}}
 <a name="{{.FullName | anchor}}"></a>
+<a name="user-content-{{.FullName | anchor}}"></a>
 
 ### {{.LongName}}
 {{.Description}}
