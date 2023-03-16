@@ -1,7 +1,11 @@
-# Protocol Documentation
-<a name="top"></a>
+# XSwitch XCC Proto Buffer 协议参考文档
 
-## Table of Contents
+这是[XCC API文档](https://docs.xswitch.cn/xcc-api/)的协议参考，使用[Google Protocol Buffers](https://protobuf.dev/)描述。
+
+<a name="top"></a>
+<a name="user-content-top"></a>
+
+## 目录
 {{range .Files}}
 {{$file_name := .Name}}- [{{.Name}}](#{{.Name | anchor}})
   {{- if .Messages }}
@@ -26,6 +30,7 @@
 {{range .Files}}
 {{$file_name := .Name}}
 <a name="{{.Name | anchor}}"></a>
+<a name="user-content-{{.Name | anchor}}"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## {{.Name}}
@@ -73,6 +78,7 @@
 
 {{if .HasExtensions}}
 <a name="{{$file_name | anchor}}-extensions"></a>
+<a name="user-content-{{$file_name | anchor}}-extensions"></a>
 
 ### File-level Extensions
 | Extension | Type | Base | Number | Description |
@@ -84,6 +90,7 @@
 
 {{range .Services}}
 <a name="{{.FullName | anchor}}"></a>
+<a name="user-content-{{.FullName | anchor}}"></a>
 
 ### {{.Name}}
 {{.Description}}
@@ -102,5 +109,5 @@
 | .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
 | ----------- | ----- | --- | ---- | ------ | -- | -- | --- | ---- |
 {{range .Scalars -}}
-  | <a name="{{.ProtoType | anchor}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} | {{.GoType}} | {{.CSharp}} | {{.PhpType}} | {{.RubyType}} |
+  | <a name="{{.ProtoType | anchor}}" /><a name="user-content-{{.ProtoType | anchor}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} | {{.GoType}} | {{.CSharp}} | {{.PhpType}} | {{.RubyType}} |
 {{end}}

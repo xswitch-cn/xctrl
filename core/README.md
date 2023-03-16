@@ -362,3 +362,5 @@ type NativeJsData struct {
 ## 其它
 
 目前，`EnableXXX`之类的都是在Queue方式订阅的，没有考虑到多Ctrl的情况。有待进一步设计。
+
+更多文档参见[proto/doc](proto/doc)。
