@@ -3,6 +3,7 @@ package ctrl
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -349,5 +350,64 @@ func TestChannel_HttAPI(t *testing.T) {
 	if res.Code != 408 {
 		t.Error(res)
 	}
+
+}
+
+func TestConferenceInfo(t *testing.T) {
+	//获取nats地址
+	url := os.Getenv("NATS_ADDRESS")
+	if url == "" {
+		url = "nats://localhost:4222"
+	}
+	//初始化 ctrl
+	err := Init(nil, true, url)
+	if err != nil {
+		t.Error(err)
+	}
+	node_uuid := "test.node-uuid.conferenceInfo"
+	channel := &Channel{
+		CtrlUuid: UUID(),
+	}
+	channel.NodeUuid = node_uuid
+	//订阅主题
+	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+		var request Request
+		json.Unmarshal(e.Message().Body, request)
+		response := &xctrl.Response{
+			Code:     200,
+			Message:  "OK",
+			NodeUuid: node_uuid,
+			Uuid:     "test-uuid",
+		}
+		rpc := &Response{
+			Version: "2.0",
+			ID:      request.ID,
+			Result:  ToRawMessage(response),
+		}
+		PublishJSON(e.Reply(), rpc)
+		return nil
+	}, node_uuid)
+	data := xctrl.ConferenceInfoRequestDataData{
+		ConferenceName: "ConferenceName",
+		ShowMembers:    true,
+		MemberFilters: map[string]string{
+			"role-id": "3",
+			"target":  "moderator",
+		},
+	}
+	req := &xctrl.ConferenceInfoRequest{
+		CtrlUuid: channel.CtrlUuid,
+		Data: &xctrl.ConferenceInfoRequestData{
+			Command: "conferenceInfo",
+			Data:    &data,
+		},
+	}
+	response, err := Service().ConferenceInfo(context.Background(), req, channel.NodeAddress())
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(response)
 
 }
