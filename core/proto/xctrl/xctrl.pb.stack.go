@@ -124,6 +124,8 @@ type XNodeService interface {
 	AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error)
 	//HttAPI
 	HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error)
+	//Lua
+	Lua(ctx context.Context, in *LuaRequest, opts ...client.CallOption) (*LuaResponse, error)
 }
 
 type xNodeService struct {
@@ -548,6 +550,16 @@ func (c *xNodeService) HttAPI(ctx context.Context, in *HttAPIRequest, opts ...cl
 	return out, nil
 }
 
+func (c *xNodeService) Lua(ctx context.Context, in *LuaRequest, opts ...client.CallOption) (*LuaResponse, error) {
+	req := c.c.NewRequest(c.name, "XNode.Lua", in)
+	out := new(LuaResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -633,6 +645,8 @@ type XNodeHandler interface {
 	AI(context.Context, *AIRequest, *AIResponse) error
 	//HttAPI
 	HttAPI(context.Context, *HttAPIRequest, *HttAPIResponse) error
+	//Lua
+	Lua(context.Context, *LuaRequest, *LuaResponse) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -678,6 +692,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		Conference(ctx context.Context, in *ConferenceRequest, out *ConferenceResponse) error
 		AI(ctx context.Context, in *AIRequest, out *AIResponse) error
 		HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAPIResponse) error
+		Lua(ctx context.Context, in *LuaRequest, out *LuaResponse) error
 	}
 	type XNode struct {
 		xNode
@@ -852,4 +867,8 @@ func (h *xNodeHandler) AI(ctx context.Context, in *AIRequest, out *AIResponse) e
 
 func (h *xNodeHandler) HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAPIResponse) error {
 	return h.XNodeHandler.HttAPI(ctx, in, out)
+}
+
+func (h *xNodeHandler) Lua(ctx context.Context, in *LuaRequest, out *LuaResponse) error {
+	return h.XNodeHandler.Lua(ctx, in, out)
 }

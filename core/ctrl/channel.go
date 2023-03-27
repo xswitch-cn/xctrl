@@ -951,7 +951,7 @@ func (channel *Channel) Subscribe(topic string, cb nats.EventCallback, queue str
 	return sub, nil
 }
 
-//FIFO 呼叫中心FIFO队列（先入先出）
+// FIFO 呼叫中心FIFO队列（先入先出）
 func (channel *Channel) FIFO(req *xctrl.FIFORequest) *xctrl.FIFOResponse {
 	if channel == nil {
 		return &xctrl.FIFOResponse{
@@ -969,7 +969,7 @@ func (channel *Channel) FIFO(req *xctrl.FIFORequest) *xctrl.FIFOResponse {
 	return response
 }
 
-//Callcenter 呼叫中心Callcenter
+// Callcenter 呼叫中心Callcenter
 func (channel *Channel) Callcenter(req *xctrl.CallcenterRequest) *xctrl.CallcenterResponse {
 	if channel == nil {
 		return &xctrl.CallcenterResponse{
@@ -987,7 +987,7 @@ func (channel *Channel) Callcenter(req *xctrl.CallcenterRequest) *xctrl.Callcent
 	return response
 }
 
-//Conference 会议
+// Conference 会议
 func (channel *Channel) Conference(req *xctrl.ConferenceRequest) *xctrl.ConferenceResponse {
 	if channel == nil {
 		return &xctrl.ConferenceResponse{
@@ -1005,7 +1005,7 @@ func (channel *Channel) Conference(req *xctrl.ConferenceRequest) *xctrl.Conferen
 	return response
 }
 
-//AI
+// AI
 func (channel *Channel) AI(req *xctrl.AIRequest) *xctrl.AIResponse {
 	if channel == nil {
 		return &xctrl.AIResponse{
@@ -1033,6 +1033,24 @@ func (channel *Channel) HttAPI(req *xctrl.HttAPIRequest) *xctrl.HttAPIResponse {
 	response, err := Service().HttAPI(context.Background(), req, channel.NodeAddress())
 	if err != nil {
 		response = new(xctrl.HttAPIResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
+// Lua
+func (channel *Channel) Lua(req *xctrl.LuaRequest) *xctrl.LuaResponse {
+	if channel == nil {
+		return &xctrl.LuaResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+	response, err := Service().Lua(context.Background(), req, channel.NodeAddress())
+	if err != nil {
+		response = new(xctrl.LuaResponse)
 		e := errors.Parse(err.Error())
 		response.Code = e.Code
 		response.Message = e.Detail

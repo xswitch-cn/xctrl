@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"os"
 	"testing"
 	"time"
@@ -408,6 +409,54 @@ func TestConferenceInfo(t *testing.T) {
 		fmt.Println(err)
 	}
 
+	fmt.Println(response)
+
+}
+
+func TestLua(t *testing.T) {
+	//获取nats地址
+	url := os.Getenv("NATS_ADDRESS")
+	if url == "" {
+		url = "nats://localhost:4222"
+	}
+	//初始化 ctrl
+	err := Init(nil, true, url)
+	if err != nil {
+		t.Error(err)
+	}
+	node_uuid := "test.node-uuid.lua"
+	channel := &Channel{
+		CtrlUuid: UUID(),
+	}
+	channel.NodeUuid = node_uuid
+	//订阅主题
+	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+		var request Request
+		json.Unmarshal(e.Message().Body, request)
+		response := &xctrl.Response{
+			Code:     200,
+			Message:  "OK",
+			NodeUuid: node_uuid,
+			Uuid:     "test-uuid",
+		}
+		rpc := &Response{
+			Version: "2.0",
+			ID:      request.ID,
+			Result:  ToRawMessage(response),
+		}
+		PublishJSON(e.Reply(), rpc)
+		return nil
+	}, node_uuid)
+
+	req := &xctrl.LuaRequest{
+		Uuid:   uuid.New().String(),
+		Script: "file.lua",
+	}
+	response, err := Service().Lua(context.Background(), req, channel.NodeAddress())
+
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(response)
 
 }
