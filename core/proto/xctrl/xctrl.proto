@@ -102,6 +102,9 @@ service XNode {
   //HttAPI
   rpc HttAPI(HttAPIRequest) returns (HttAPIResponse) {}
 
+  //Lua
+  rpc Lua(LuaRequest) returns (LuaResponse) {}
+
 }
 
 message AcceptRequest {
@@ -1024,6 +1027,17 @@ message HttAPIRequest {
   map<string, string> data = 3;
 }
 message HttAPIResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  string uuid = 4;
+}
+
+message LuaRequest {
+  string uuid = 1;
+  string script = 2;
+}
+message LuaResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;
