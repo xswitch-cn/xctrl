@@ -190,11 +190,6 @@ func (r *ctrlClient) Call(ctx context.Context, request client.Request, response 
 		opt(&callOpts)
 	}
 
-	//next, err := r.next(request, callOpts)
-	//if err != nil {
-	//	return err
-	//}
-
 	// TODO 默认设置消息最长响应时间为24小时
 	if callOpts.RequestTimeout <= 0 {
 		callOpts.RequestTimeout = 24 * time.Hour
@@ -229,20 +224,8 @@ func (r *ctrlClient) Call(ctx context.Context, request client.Request, response 
 		rcall = callOpts.CallWrappers[i-1](rcall)
 	}
 
-	// select next node
-	//node, err := next()
-	//service := request.Service()
-	//if err != nil {
-	//	if err == selector.ErrNotFound {
-	//		return errors.InternalServerError("nats.jsonrpc.client", "service %s: %s", service, err.Error())
-	//	}
-	//	return errors.InternalServerError("nats.jsonrpc.client", "error getting next %s node: %s", service, err.Error())
-	//}
-
 	// make the call
 	err := rcall(ctx, nil, request, response, callOpts)
-	//err = rcall(ctx, node, request, response, callOpts)
-	//r.opts.Selector.Mark(service, node, err)
 	return err
 }
 
