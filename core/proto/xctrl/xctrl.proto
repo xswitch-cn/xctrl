@@ -105,6 +105,8 @@ service XNode {
   //Lua
   rpc Lua(LuaRequest) returns (LuaResponse) {}
 
+  // Node Register
+  rpc Register(Request) returns(Response) {}
 }
 
 message AcceptRequest {
