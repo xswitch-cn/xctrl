@@ -5,15 +5,15 @@ package xctrl
 
 import (
 	fmt "fmt"
+	api "git.xswitch.cn/xswitch/xctrl/stack/api"
+	client "git.xswitch.cn/xswitch/xctrl/stack/client"
+	server "git.xswitch.cn/xswitch/xctrl/stack/server"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
 )
 
 import (
 	context "context"
-	api "xswitch.cn/stack/api"
-	client "xswitch.cn/stack/client"
-	server "xswitch.cn/stack/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
