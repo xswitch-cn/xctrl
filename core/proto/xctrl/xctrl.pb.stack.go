@@ -5,15 +5,15 @@ package xctrl
 
 import (
 	fmt "fmt"
+	api "git.xswitch.cn/xswitch/xctrl/stack/api"
+	client "git.xswitch.cn/xswitch/xctrl/stack/client"
+	server "git.xswitch.cn/xswitch/xctrl/stack/server"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
 )
 
 import (
 	context "context"
-	api "xswitch.cn/stack/api"
-	client "xswitch.cn/stack/client"
-	server "xswitch.cn/stack/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -126,6 +126,8 @@ type XNodeService interface {
 	HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error)
 	//Lua
 	Lua(ctx context.Context, in *LuaRequest, opts ...client.CallOption) (*LuaResponse, error)
+	// Node Register
+	Register(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 }
 
 type xNodeService struct {
@@ -560,6 +562,16 @@ func (c *xNodeService) Lua(ctx context.Context, in *LuaRequest, opts ...client.C
 	return out, nil
 }
 
+func (c *xNodeService) Register(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "XNode.Register", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for XNode service
 
 type XNodeHandler interface {
@@ -647,6 +659,8 @@ type XNodeHandler interface {
 	HttAPI(context.Context, *HttAPIRequest, *HttAPIResponse) error
 	//Lua
 	Lua(context.Context, *LuaRequest, *LuaResponse) error
+	// Node Register
+	Register(context.Context, *Request, *Response) error
 }
 
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
@@ -693,6 +707,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		AI(ctx context.Context, in *AIRequest, out *AIResponse) error
 		HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAPIResponse) error
 		Lua(ctx context.Context, in *LuaRequest, out *LuaResponse) error
+		Register(ctx context.Context, in *Request, out *Response) error
 	}
 	type XNode struct {
 		xNode
@@ -871,4 +886,8 @@ func (h *xNodeHandler) HttAPI(ctx context.Context, in *HttAPIRequest, out *HttAP
 
 func (h *xNodeHandler) Lua(ctx context.Context, in *LuaRequest, out *LuaResponse) error {
 	return h.XNodeHandler.Lua(ctx, in, out)
+}
+
+func (h *xNodeHandler) Register(ctx context.Context, in *Request, out *Response) error {
+	return h.XNodeHandler.Register(ctx, in, out)
 }
