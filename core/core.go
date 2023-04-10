@@ -3,7 +3,7 @@ package core
 import (
 	"encoding/json"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/server"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 // Response .

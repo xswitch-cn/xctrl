@@ -3,7 +3,7 @@ package store
 import (
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/store"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
 )
 
 // Register .

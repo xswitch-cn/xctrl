@@ -10,12 +10,12 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/codec"
-	"git.xswitch.cn/xswitch/xctrl/stack/errors"
-	"git.xswitch.cn/xswitch/xctrl/stack/metadata"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry"
-	"git.xswitch.cn/xswitch/xctrl/stack/selector"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
 const defaultTimeout = 60 * time.Second

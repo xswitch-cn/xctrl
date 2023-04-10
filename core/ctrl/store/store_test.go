@@ -1,7 +1,7 @@
 package store
 
 import (
-	"git.xswitch.cn/xswitch/xctrl/stack/store"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
 	"testing"
 	"time"
 )

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/store"
-	"git.xswitch.cn/xswitch/xctrl/stack/store/redis"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/store/redis"
 )
 
 var storage store.Store
