@@ -10,7 +10,7 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"github.com/google/uuid"
 )
 

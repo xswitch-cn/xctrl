@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/stack"
+	"git.xswitch.cn/xswitch/xctrl/xctrl"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/broker"
-	"git.xswitch.cn/xswitch/xctrl/stack/broker/nats"
-	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry"
-	"git.xswitch.cn/xswitch/xctrl/stack/selector"
-	"git.xswitch.cn/xswitch/xctrl/stack/server"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 type serviceKey struct{}
@@ -25,9 +25,9 @@ type Service interface {
 	// The service name
 	Name() string
 	// Init initialises options
-	Init(...stack.Option)
+	Init(...xctrl.Option)
 	// Options returns the current options
-	Options() stack.Options
+	Options() xctrl.Options
 	// Client is used to call services
 	Client() client.Client
 	// Server is for handling requests and events
@@ -39,10 +39,10 @@ type Service interface {
 }
 
 // Option set option callback
-type Option func(*stack.Options)
+type Option func(*xctrl.Options)
 
-func Broker(b broker.Broker) stack.Option {
-	return func(o *stack.Options) {
+func Broker(b broker.Broker) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Broker = b
 		// Update Client and Server
 		o.Client.Init(client.Broker(b))
@@ -50,8 +50,8 @@ func Broker(b broker.Broker) stack.Option {
 	}
 }
 
-func Client(c client.Client) stack.Option {
-	return func(o *stack.Options) {
+func Client(c client.Client) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Client = c
 	}
 }
@@ -59,8 +59,8 @@ func Client(c client.Client) stack.Option {
 // Context specifies a context for the service.
 // Can be used to signal shutdown of the service.
 // Can be used for extra option values.
-func Context(ctx context.Context) stack.Option {
-	return func(o *stack.Options) {
+func Context(ctx context.Context) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Context = ctx
 	}
 }
@@ -68,22 +68,22 @@ func Context(ctx context.Context) stack.Option {
 // HandleSignal toggles automatic installation of the signal handler that
 // traps TERM, INT, and QUIT.  Users of this feature to disable the signal
 // handler, should control liveness of the service through the context.
-func HandleSignal(b bool) stack.Option {
-	return func(o *stack.Options) {
+func HandleSignal(b bool) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Signal = b
 	}
 }
 
-func Server(s server.Server) stack.Option {
-	return func(o *stack.Options) {
+func Server(s server.Server) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server = s
 	}
 }
 
 // Registry sets the registry for the service
 // and the underlying components
-func Registry(r registry.Registry) stack.Option {
-	return func(o *stack.Options) {
+func Registry(r registry.Registry) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Registry = r
 		// Update Client and Server
 		o.Client.Init(client.Registry(r))
@@ -96,50 +96,50 @@ func Registry(r registry.Registry) stack.Option {
 }
 
 // Selector sets the selector for the service client
-func Selector(s selector.Selector) stack.Option {
-	return func(o *stack.Options) {
+func Selector(s selector.Selector) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Client.Init(client.Selector(s))
 	}
 }
 
 // Address sets the address of the server
-func Address(addr string) stack.Option {
-	return func(o *stack.Options) {
+func Address(addr string) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.Address(addr))
 	}
 }
 
 // Name of the service
-func Name(n string) stack.Option {
-	return func(o *stack.Options) {
+func Name(n string) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.Name(n))
 	}
 }
 
 // Version of the service
-func Version(v string) stack.Option {
-	return func(o *stack.Options) {
+func Version(v string) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.Version(v))
 	}
 }
 
 // Metadata associated with the service
-func Metadata(md map[string]string) stack.Option {
-	return func(o *stack.Options) {
+func Metadata(md map[string]string) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.Metadata(md))
 	}
 }
 
 // RegisterTTL specifies the TTL to use when registering the service
-func RegisterTTL(t time.Duration) stack.Option {
-	return func(o *stack.Options) {
+func RegisterTTL(t time.Duration) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.RegisterTTL(t))
 	}
 }
 
 // RegisterInterval specifies the interval on which to re-register
-func RegisterInterval(t time.Duration) stack.Option {
-	return func(o *stack.Options) {
+func RegisterInterval(t time.Duration) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Server.Init(server.RegisterInterval(t))
 	}
 }
@@ -147,8 +147,8 @@ func RegisterInterval(t time.Duration) stack.Option {
 // WrapClient is a convenience method for wrapping a Client with
 // some middleware component. A list of wrappers can be provided.
 // Wrappers are applied in reverse order so the last is executed first.
-func WrapClient(w ...client.Wrapper) stack.Option {
-	return func(o *stack.Options) {
+func WrapClient(w ...client.Wrapper) xctrl.Option {
+	return func(o *xctrl.Options) {
 		// apply in reverse
 		for i := len(w); i > 0; i-- {
 			o.Client = w[i-1](o.Client)
@@ -157,15 +157,15 @@ func WrapClient(w ...client.Wrapper) stack.Option {
 }
 
 // WrapCall is a convenience method for wrapping a Client CallFunc
-func WrapCall(w ...client.CallWrapper) stack.Option {
-	return func(o *stack.Options) {
+func WrapCall(w ...client.CallWrapper) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.Client.Init(client.WrapCall(w...))
 	}
 }
 
 // WrapHandler adds a handler Wrapper to a list of options passed into the server
-func WrapHandler(w ...server.HandlerWrapper) stack.Option {
-	return func(o *stack.Options) {
+func WrapHandler(w ...server.HandlerWrapper) xctrl.Option {
+	return func(o *xctrl.Options) {
 		var wrappers []server.Option
 
 		for _, wrap := range w {
@@ -178,8 +178,8 @@ func WrapHandler(w ...server.HandlerWrapper) stack.Option {
 }
 
 // WrapSubscriber adds a subscriber Wrapper to a list of options passed into the server
-func WrapSubscriber(w ...server.SubscriberWrapper) stack.Option {
-	return func(o *stack.Options) {
+func WrapSubscriber(w ...server.SubscriberWrapper) xctrl.Option {
+	return func(o *xctrl.Options) {
 		var wrappers []server.Option
 
 		for _, wrap := range w {
@@ -193,26 +193,26 @@ func WrapSubscriber(w ...server.SubscriberWrapper) stack.Option {
 
 // Before and Afters
 
-func BeforeStart(fn func() error) stack.Option {
-	return func(o *stack.Options) {
+func BeforeStart(fn func() error) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.BeforeStart = append(o.BeforeStart, fn)
 	}
 }
 
-func BeforeStop(fn func() error) stack.Option {
-	return func(o *stack.Options) {
+func BeforeStop(fn func() error) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.BeforeStop = append(o.BeforeStop, fn)
 	}
 }
 
-func AfterStart(fn func() error) stack.Option {
-	return func(o *stack.Options) {
+func AfterStart(fn func() error) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.AfterStart = append(o.AfterStart, fn)
 	}
 }
 
-func AfterStop(fn func() error) stack.Option {
-	return func(o *stack.Options) {
+func AfterStop(fn func() error) xctrl.Option {
+	return func(o *xctrl.Options) {
 		o.AfterStop = append(o.AfterStop, fn)
 	}
 }
@@ -255,21 +255,21 @@ func LogMiddlewareWrapper(fn server.HandlerFunc) server.HandlerFunc {
 // NewService returns a new mucp service
 func NewService(name string, version string, brokerAddress string, registryAddress string) Service {
 	if name == "mock" {
-		return stack.NewService(
-			stack.Name(name),
-			stack.Version(version),
+		return xctrl.NewService(
+			xctrl.Name(name),
+			xctrl.Version(version),
 		)
 	}
 
 	b := nats.NewBroker(broker.Addrs(strings.Split(brokerAddress, ",")...))
 
-	srv := stack.NewService(
-		stack.Name(name),
-		stack.Version(version),
-		stack.Broker(b),
-		stack.WrapHandler(LogMiddlewareWrapper),
-		stack.RegisterInterval(15*time.Second),
-		stack.RegisterTTL(30*time.Second),
+	srv := xctrl.NewService(
+		xctrl.Name(name),
+		xctrl.Version(version),
+		xctrl.Broker(b),
+		xctrl.WrapHandler(LogMiddlewareWrapper),
+		xctrl.RegisterInterval(15*time.Second),
+		xctrl.RegisterTTL(30*time.Second),
 	)
 	return srv
 }

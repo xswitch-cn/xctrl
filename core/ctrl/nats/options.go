@@ -4,8 +4,8 @@ import (
 	"context"
 	"crypto/tls"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/codec"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 type optionsKey struct{}

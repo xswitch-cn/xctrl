@@ -10,9 +10,9 @@ import (
 
 	"github.com/google/uuid"
 
-	"git.xswitch.cn/xswitch/xctrl/stack/client"
-	"git.xswitch.cn/xswitch/xctrl/stack/registry"
-	"git.xswitch.cn/xswitch/xctrl/stack/selector"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
