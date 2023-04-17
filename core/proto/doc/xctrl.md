@@ -139,24 +139,13 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [AIRequest.DataEntry](#xctrl-AIRequest-DataEntry) | repeated |  |
+| data | [map<string,string>](#map<string,string>) |  |  |
 
 
 
 
 
 
-<a name="xctrl-AIRequest-DataEntry"></a>
-<a name="user-content-xctrl-AIRequest-DataEntry"></a>
-
-### AIRequest.DataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -292,24 +281,13 @@
 | dial_string | [string](#string) |  |  |
 | timeout | [uint32](#uint32) |  |  |
 | max_duration | [uint32](#uint32) |  |  |
-| params | [CallParam.ParamsEntry](#xctrl-CallParam-ParamsEntry) | repeated |  |
+| params | [map<string,string>](#map<string,string>) | repeated |  |
 
 
 
 
 
 
-<a name="xctrl-CallParam-ParamsEntry"></a>
-<a name="user-content-xctrl-CallParam-ParamsEntry"></a>
-
-### CallParam.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -435,7 +413,7 @@
 | answer_epoch | [uint32](#uint32) |  |  |
 | hangup_epoch | [uint32](#uint32) |  |  |
 | peers | [string](#string) | repeated | list of uuids |
-| params | [ChannelEvent.ParamsEntry](#xctrl-ChannelEvent-ParamsEntry) | repeated |  |
+| params | [map<string,string>](#map<string,string>) |  |  |
 | billsec | [string](#string) |  |  |
 | duration | [string](#string) |  |  |
 | cause | [string](#string) |  |  |
@@ -448,17 +426,6 @@
 
 
 
-<a name="xctrl-ChannelEvent-ParamsEntry"></a>
-<a name="user-content-xctrl-ChannelEvent-ParamsEntry"></a>
-
-### ChannelEvent.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -510,24 +477,14 @@
 | ----- | ---- | ----- | ----------- |
 | conferenceName | [string](#string) |  |  |
 | showMembers | [bool](#bool) |  |  |
-| memberFilters | [ConferenceInfoRequestDataData.MemberFiltersEntry](#xctrl-ConferenceInfoRequestDataData-MemberFiltersEntry) | repeated |  |
+| memberFilters | [map<string,string>](#map<string,string>) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoRequestDataData-MemberFiltersEntry"></a>
-<a name="user-content-xctrl-ConferenceInfoRequestDataData-MemberFiltersEntry"></a>
 
-### ConferenceInfoRequestDataData.MemberFiltersEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -812,7 +769,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ringall | [bool](#bool) |  |  |
-| global_params | [Destination.GlobalParamsEntry](#xctrl-Destination-GlobalParamsEntry) | repeated |  |
+| global_params | [map<string,string>](#map<string,string>) | repeated |  |
 | call_params | [CallParam](#xctrl-CallParam) | repeated |  |
 | channel_params | [string](#string) | repeated |  |
 
@@ -821,17 +778,6 @@
 
 
 
-<a name="xctrl-Destination-GlobalParamsEntry"></a>
-<a name="user-content-xctrl-Destination-GlobalParamsEntry"></a>
-
-### Destination.GlobalParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -1234,24 +1180,13 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [HttAPIRequest.DataEntry](#xctrl-HttAPIRequest-DataEntry) | repeated |  |
+| data | [map<string,string>](#map<string,string>) |  |  |
 
 
 
 
 
 
-<a name="xctrl-HttAPIRequest-DataEntry"></a>
-<a name="user-content-xctrl-HttAPIRequest-DataEntry"></a>
-
-### HttAPIRequest.DataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -1898,24 +1833,13 @@ CDR = 13;
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| data | [SetVarRequest.DataEntry](#xctrl-SetVarRequest-DataEntry) | repeated |  |
+| data | [map<string,string>](#map<string,string>) |  |  |
 
 
 
 
 
 
-<a name="xctrl-SetVarRequest-DataEntry"></a>
-<a name="user-content-xctrl-SetVarRequest-DataEntry"></a>
-
-### SetVarRequest.DataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -1937,7 +1861,7 @@ CDR = 13;
 | speech_timeout | [uint32](#uint32) |  |  |
 | partial_events | [bool](#bool) |  |  |
 | disable_detected_data_event | [bool](#bool) |  |  |
-| params | [SpeechRequest.ParamsEntry](#xctrl-SpeechRequest-ParamsEntry) | repeated |  |
+| params | [map<string,string>](#map<string,string>) |  |  |
 | grammar | [string](#string) |  |  |
 | max_speech_timeout | [uint32](#uint32) |  |  |
 
@@ -1946,17 +1870,6 @@ CDR = 13;
 
 
 
-<a name="xctrl-SpeechRequest-ParamsEntry"></a>
-<a name="user-content-xctrl-SpeechRequest-ParamsEntry"></a>
-
-### SpeechRequest.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -2099,24 +2012,12 @@ CDR = 13;
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  | optional |
-| data | [VarResponse.DataEntry](#xctrl-VarResponse-DataEntry) | repeated |  |
+| data | [map<string,string>](#map<string,string>) |  |  |
 
 
 
 
 
-
-<a name="xctrl-VarResponse-DataEntry"></a>
-<a name="user-content-xctrl-VarResponse-DataEntry"></a>
-
-### VarResponse.DataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
