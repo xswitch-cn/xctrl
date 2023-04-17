@@ -281,24 +281,13 @@
 | dial_string | [string](#string) |  |  |
 | timeout | [uint32](#uint32) |  |  |
 | max_duration | [uint32](#uint32) |  |  |
-| params | [CallParam.ParamsEntry](#xctrl-CallParam-ParamsEntry) | repeated |  |
+| params | [map<string,string>](#map<string,string>) | repeated |  |
 
 
 
 
 
 
-<a name="xctrl-CallParam-ParamsEntry"></a>
-<a name="user-content-xctrl-CallParam-ParamsEntry"></a>
-
-### CallParam.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -424,7 +413,7 @@
 | answer_epoch | [uint32](#uint32) |  |  |
 | hangup_epoch | [uint32](#uint32) |  |  |
 | peers | [string](#string) | repeated | list of uuids |
-| params | [ChannelEvent.ParamsEntry](#xctrl-ChannelEvent-ParamsEntry) | repeated |  |
+| params | [map<string,string>](#map<string,string>) |  |  |
 | billsec | [string](#string) |  |  |
 | duration | [string](#string) |  |  |
 | cause | [string](#string) |  |  |
@@ -437,17 +426,6 @@
 
 
 
-<a name="xctrl-ChannelEvent-ParamsEntry"></a>
-<a name="user-content-xctrl-ChannelEvent-ParamsEntry"></a>
-
-### ChannelEvent.ParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
@@ -791,7 +769,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ringall | [bool](#bool) |  |  |
-| global_params | [Destination.GlobalParamsEntry](#xctrl-Destination-GlobalParamsEntry) | repeated |  |
+| global_params | [map<string,string>](#map<string,string>) | repeated |  |
 | call_params | [CallParam](#xctrl-CallParam) | repeated |  |
 | channel_params | [string](#string) | repeated |  |
 
@@ -800,17 +778,6 @@
 
 
 
-<a name="xctrl-Destination-GlobalParamsEntry"></a>
-<a name="user-content-xctrl-Destination-GlobalParamsEntry"></a>
-
-### Destination.GlobalParamsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
 
 
 
