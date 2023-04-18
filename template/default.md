@@ -9,38 +9,28 @@
 
 ## 目录
 {{range .Files}}
-{{$file_name := .Name}}- [{{.Name}}](#{{.Name | anchor}})
-  {{- if .Messages }}
-  {{range .Messages}}  - [{{.LongName}}](#{{.FullName | anchor}})
-  {{end}}
-  {{- end -}}
-  {{- if .Enums }}
-  {{range .Enums}}  - [{{.LongName}}](#{{.FullName | anchor}})
-  {{end}}
-  {{- end -}}
-  {{- if .Extensions }}
-  {{range .Extensions}}  - [File-level Extensions](#{{$file_name | anchor}}-extensions)
-  {{end}}
-  {{- end -}}
-  {{- if .Services }}
-  {{range .Services}}  - [{{.Name}}](#{{.FullName | anchor}})
-  {{end}}
-  {{- end -}}
+{{$file_name := .Name}}- [{{.Name}}](#{{.Name}})
+{{range .Messages}}  - [{{.LongName}}](#{{.FullName}})
+{{end}}
+{{range .Enums}}  - [{{.LongName}}](#{{.FullName}})
+{{end}}
+{{range .Extensions}}  - [File-level Extensions](#{{$file_name}}-extensions)
+{{end}}
+{{range .Services}}  - [{{.Name}}](#{{.FullName}})
+{{end}}
 {{end}}
 - [Scalar Value Types](#scalar-value-types)
 
 {{range .Files}}
 {{$file_name := .Name}}
-<a name="{{.Name | anchor}}"></a>
-<a name="user-content-{{.Name | anchor}}"></a>
+<a name="{{.Name}}"/>
 <p align="right"><a href="#top">Top</a></p>
 
 ## {{.Name}}
 {{.Description}}
 
 {{range .Messages}}
-<a name="{{.FullName | anchor}}"></a>
-<a name="user-content-{{.FullName | anchor}}"></a>
+<a name="{{.FullName}}"/>
 
 ### {{.LongName}}
 {{.Description}}
@@ -49,7 +39,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 {{range .Fields -}}
-  | {{.Name}} | [{{.LongType}}](#{{.FullType | anchor}}) | {{.Label}} | {{if (index .Options "deprecated"|default false)}}**Deprecated.** {{end}}{{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
+| {{.Name}} | [{{.LongType}}](#{{.FullType}}) | {{.Label}} | {{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
 {{end}}
 {{end}}
 
@@ -57,15 +47,14 @@
 | Extension | Type | Base | Number | Description |
 | --------- | ---- | ---- | ------ | ----------- |
 {{range .Extensions -}}
-  | {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
+| {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
 {{end}}
 {{end}}
 
 {{end}} <!-- end messages -->
 
 {{range .Enums}}
-<a name="{{.FullName | anchor}}"></a>
-<a name="user-content-{{.FullName | anchor}}"></a>
+<a name="{{.FullName}}"/>
 
 ### {{.LongName}}
 {{.Description}}
@@ -73,26 +62,24 @@
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 {{range .Values -}}
-  | {{.Name}} | {{.Number}} | {{nobr .Description}} |
+| {{.Name}} | {{.Number}} | {{nobr .Description}} |
 {{end}}
 
 {{end}} <!-- end enums -->
 
 {{if .HasExtensions}}
-<a name="{{$file_name | anchor}}-extensions"></a>
-<a name="user-content-{{$file_name | anchor}}-extensions"></a>
+<a name="{{$file_name}}-extensions"/>
 
 ### File-level Extensions
 | Extension | Type | Base | Number | Description |
 | --------- | ---- | ---- | ------ | ----------- |
 {{range .Extensions -}}
-  | {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: `{{.DefaultValue}}`{{end}} |
+| {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: `{{.DefaultValue}}`{{end}} |
 {{end}}
 {{end}} <!-- end HasExtensions -->
 
 {{range .Services}}
-<a name="{{.FullName | anchor}}"></a>
-<a name="user-content-{{.FullName | anchor}}"></a>
+<a name="{{.FullName}}"/>
 
 ### {{.Name}}
 {{.Description}}
@@ -100,7 +87,7 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 {{range .Methods -}}
-  | {{.Name}} | [{{.RequestLongType}}](#{{.RequestFullType | anchor}}){{if .RequestStreaming}} stream{{end}} | [{{.ResponseLongType}}](#{{.ResponseFullType | anchor}}){{if .ResponseStreaming}} stream{{end}} | {{nobr .Description}} |
+| {{.Name}} | [{{.RequestLongType}}](#{{.RequestFullType}}) | [{{.ResponseLongType}}](#{{.RequestFullType}}) | {{nobr .Description}} |
 {{end}}
 {{end}} <!-- end services -->
 
@@ -108,8 +95,8 @@
 
 ## Scalar Value Types
 
-| .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
-| ----------- | ----- | --- | ---- | ------ | -- | -- | --- | ---- |
+| .proto Type | Notes | C++ Type | Java Type | Python Type |
+| ----------- | ----- | -------- | --------- | ----------- |
 {{range .Scalars -}}
-  | <a name="{{.ProtoType | anchor}}" /><a name="user-content-{{.ProtoType | anchor}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} | {{.GoType}} | {{.CSharp}} | {{.PhpType}} | {{.RubyType}} |
+| <a name="{{.ProtoType}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} |
 {{end}}
