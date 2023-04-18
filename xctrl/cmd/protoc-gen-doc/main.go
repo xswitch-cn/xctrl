@@ -14,7 +14,7 @@
 package main
 
 import (
-	"git.xswitch.cn/xswitch/xctrl/xctrl/cmd/protoc-gen-doc"
+	gendoc "github.com/chuanlinzhang/protoc-gen-doc"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/plugin"
 	"io/ioutil"
