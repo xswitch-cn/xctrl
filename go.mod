@@ -3,7 +3,6 @@ module git.xswitch.cn/xswitch/xctrl
 go 1.16
 
 require (
-	github.com/chuanlinzhang/protoc-gen-doc v0.0.2
 	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/go-acme/lego/v3 v3.9.0
@@ -22,6 +21,7 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
+	github.com/pseudomuto/protoc-gen-doc v1.5.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.3

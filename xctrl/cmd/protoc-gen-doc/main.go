@@ -14,7 +14,7 @@
 package main
 
 import (
-	gendoc "github.com/chuanlinzhang/protoc-gen-doc"
+	gendoc "github.com/pseudomuto/protoc-gen-doc"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/plugin"
 	"io/ioutil"
