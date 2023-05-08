@@ -1,6 +1,9 @@
 package ds_builder
 
-import "strings"
+import (
+	log "git.xswitch.cn/xswitch/xctrl/xctrl/logger"
+	"strings"
+)
 
 type CallParams struct {
 	Endpoint  string
@@ -43,8 +46,12 @@ func DsBuilder(params *CallParams) string {
 	sb.WriteString(params.IP)
 	sb.WriteString(":")
 	sb.WriteString(params.Port)
-	sb.WriteString(";transport=")
-	sb.WriteString(params.Transport)
+	if params.Transport == "udp" || params.Transport == "tcp" || params.Transport == "tls" {
+		sb.WriteString(";transport=")
+		sb.WriteString(params.Transport)
+	} else {
+		log.Warn("Transport in params is wrong or not found")
+	}
 
 	return sb.String()
 }
