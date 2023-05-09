@@ -11,7 +11,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
@@ -77,21 +76,6 @@ func HandleSignal(b bool) xctrl.Option {
 func Server(s server.Server) xctrl.Option {
 	return func(o *xctrl.Options) {
 		o.Server = s
-	}
-}
-
-// Registry sets the registry for the service
-// and the underlying components
-func Registry(r registry.Registry) xctrl.Option {
-	return func(o *xctrl.Options) {
-		o.Registry = r
-		// Update Client and Server
-		o.Client.Init(client.Registry(r))
-		o.Server.Init(server.Registry(r))
-		// Update Selector
-		o.Client.Options().Selector.Init(selector.Registry(r))
-		// Update Broker
-		o.Broker.Init(broker.Registry(r))
 	}
 }
 

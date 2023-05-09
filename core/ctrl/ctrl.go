@@ -10,7 +10,6 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"github.com/google/uuid"
 )
 
@@ -19,7 +18,6 @@ type Ctrl struct {
 	conn             nats.Conn
 	uuid             string
 	serviceName      string
-	registry         registry.Registry
 	service          xctrl.XNodeService // 同步调用
 	asyncService     xctrl.XNodeService // 异步调用
 	aService         xctrl.XNodeService // 异步调用2
@@ -60,11 +58,6 @@ var globalCtrl *Ctrl
 // UUID get ctrl uuid
 func UUID() string {
 	return globalCtrl.uuid
-}
-
-// ServiceList 服务列表
-func ServiceList() ([]*registry.Service, error) {
-	return globalCtrl.registry.ListServices()
 }
 
 // Service 同步调用

@@ -60,9 +60,8 @@ func main() {
 
 	if natsAddress == "" {
 		natsAddress = "nats://127.0.0.1:4222"
-		// }
 
-		// // log.Infof("connecting to nats: %s", natsAddress)
+		log.Infof("connecting to nats: %s", natsAddress)
 		err := ctrl.Init(boy, true, natsAddress)
 		fmt.Println(err)
 		if err != nil {

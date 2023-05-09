@@ -1,14 +1,10 @@
 package store
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
-
 	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/store/redis"
 	"github.com/google/uuid"
 )
 
@@ -35,7 +31,6 @@ func NewSession(domain string) *Session {
 		fmt.Printf("%s new session created, domain=%s", s.ID, domain)
 	}
 
-	s.Write("trace", make([]*xctrl.Trace, 0))
 	s.Write("domain", s.Domain)
 	s.Write("created_at", s.CreatedAt)
 	return s
@@ -53,7 +48,6 @@ func NewSessionById(id string, domain string) *Session {
 		fmt.Printf("%s new session created, domain=%s", s.ID, domain)
 	}
 
-	s.Write("trace", make([]*xctrl.Trace, 0))
 	s.Write("domain", s.Domain)
 	s.Write("created_at", s.CreatedAt)
 	return s
@@ -107,31 +101,4 @@ func (s *Session) ReadString(key string) string {
 		fmt.Errorf(s.ID, err)
 	}
 	return result
-}
-
-// WriteTrace .
-func (s *Session) WriteTrace(t *xctrl.Trace) error {
-	return s.Write("trace", append(s.ReadTrace(), t))
-}
-
-// ReadTrace .
-func (s *Session) ReadTrace() []*xctrl.Trace {
-	trace := make([]*xctrl.Trace, 0)
-	if err := Read(s.key("trace"), &trace); err != nil {
-		fmt.Errorf("err = %s", err)
-	}
-	return trace
-}
-
-//AppendTrace
-func (s *Session) AppendTrace(t *xctrl.Trace) error {
-	value, _ := json.Marshal(t)
-	record := new(store.Record)
-	record.Key = s.key("trace")
-	record.Value = value
-	if err := redis.Rediskv.Append(record, store.WriteTTL(time.Hour*6)); err != nil {
-		return fmt.Errorf(`redis: write [%s] error %v`, record.Key, err)
-	}
-	return nil
-
 }

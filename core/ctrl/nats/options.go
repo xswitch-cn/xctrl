@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 type optionsKey struct{}
@@ -34,7 +33,6 @@ type Options struct {
 
 	TLSConfig *tls.Config
 	// Registry used for clustering
-	Registry registry.Registry
 	// Other options for implementations of the interface
 	// can be stored in a context
 	Context context.Context
@@ -133,13 +131,6 @@ func Trace(enable bool) Option {
 func Queue(name string) SubscribeOption {
 	return func(o *SubscribeOptions) {
 		o.Queue = name
-	}
-}
-
-// Registry is registry
-func Registry(r registry.Registry) Option {
-	return func(o *Options) {
-		o.Registry = r
 	}
 }
 
