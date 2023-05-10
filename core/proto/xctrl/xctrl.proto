@@ -110,8 +110,12 @@ service XNode {
 }
 
 message AcceptRequest {
+  // Controller UUID
   string ctrl_uuid = 1;
+  // optional, Channel UUID
   string uuid = 2;
+  // optional, default to false
+  // when true, all subsequest events will be delivered to the new controller if already controlled by other controller, otherwise it will fail
   bool takeover = 3;
 }
 
@@ -594,7 +598,7 @@ message DTMFRequest {
   // not implemented yet
   uint32 max_tries = 9;
   string regex = 10;
-  // invalid  meida
+  // Media to playback when received DTMF doesn't match the regex
   Media media_invalid = 11;
   // default false
   bool play_last_invalid_prompt = 12;
