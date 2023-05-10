@@ -188,3 +188,7 @@ order by
 | <a name="user-content-string" /><a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
 | <a name="user-content-bytes" /><a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
 
+
+<a name="user-content-map-string-string" />
+
+map&lt;[string](#string), [string](#string)&gt;

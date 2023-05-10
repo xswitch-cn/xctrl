@@ -134,7 +134,7 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [map<string, string>](#map<string, string>) |  |  |
+| data | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -270,7 +270,7 @@
 | dial_string | [string](#string) |  |  |
 | timeout | [uint32](#uint32) |  |  |
 | max_duration | [uint32](#uint32) |  |  |
-| params | [map<string, string>](#map<string, string>) |  |  |
+| params | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -396,7 +396,7 @@
 | answer_epoch | [uint32](#uint32) |  |  |
 | hangup_epoch | [uint32](#uint32) |  |  |
 | peers | [string](#string) | repeated | list of uuids |
-| params | [map<string, string>](#map<string, string>) |  |  |
+| params | [map<string, string>](#map-string-string) |  |  |
 | billsec | [string](#string) |  |  |
 | duration | [string](#string) |  |  |
 | cause | [string](#string) |  |  |
@@ -454,7 +454,7 @@
 | ----- | ---- | ----- | ----------- |
 | conferenceName | [string](#string) |  |  |
 | showMembers | [bool](#bool) |  |  |
-| memberFilters | [map<string, string>](#map<string, string>) |  |  |
+| memberFilters | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -739,7 +739,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ringall | [bool](#bool) |  |  |
-| global_params | [map<string, string>](#map<string, string>) |  |  |
+| global_params | [map<string, string>](#map-string-string) |  |  |
 | call_params | [CallParam](#xctrl.CallParam) | repeated |  |
 | channel_params | [string](#string) | repeated |  |
 
@@ -1144,7 +1144,7 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [map<string, string>](#map<string, string>) |  |  |
+| data | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -1827,7 +1827,7 @@ CDR = 13;
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| data | [map<string, string>](#map<string, string>) |  |  |
+| data | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -1849,7 +1849,7 @@ CDR = 13;
 | speech_timeout | [uint32](#uint32) |  |  |
 | partial_events | [bool](#bool) |  |  |
 | disable_detected_data_event | [bool](#bool) |  |  |
-| params | [map<string, string>](#map<string, string>) |  |  |
+| params | [map<string, string>](#map-string-string) |  |  |
 | grammar | [string](#string) |  |  |
 | max_speech_timeout | [uint32](#uint32) |  |  |
 
@@ -1994,7 +1994,7 @@ CDR = 13;
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  | optional |
-| data | [map<string, string>](#map<string, string>) |  |  |
+| data | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -2148,3 +2148,7 @@ CDR = 13;
 | <a name="user-content-string" /><a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
 | <a name="user-content-bytes" /><a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
 
+
+<a name="user-content-map-string-string" />
+
+map&lt;[string](#string), [string](#string)&gt;

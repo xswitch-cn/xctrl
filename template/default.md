@@ -104,3 +104,7 @@
 {{range .Scalars -}}
 | <a name="user-content-{{.ProtoType}}" /><a name="{{.ProtoType}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} |
 {{end}}
+
+<a name="user-content-map-string-string" />
+
+map&lt;[string](#string), [string](#string)&gt;
