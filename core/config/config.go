@@ -8,5 +8,3 @@ import (
 func fromCache(key string) (string, error) {
 	return store.NewConfig().Read(key)
 }
-
-// FromDB .
