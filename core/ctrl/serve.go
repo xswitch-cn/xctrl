@@ -11,55 +11,12 @@ import (
 	"github.com/google/uuid"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
 )
-
-// register 注册node节点
-func (h *Ctrl) register(n *xctrl.Node) {
-	h.registry.Register(&registry.Service{
-		Name:    h.serviceName,
-		Version: n.GetVersion(),
-		Nodes: []*registry.Node{
-			{
-				Id:      n.GetUuid(),
-				Address: fmt.Sprintf(`cn.xswitch.node.%s`, n.GetUuid()),
-				Metadata: map[string]string{
-					"protocol": "xctrl",
-					"rack":     fmt.Sprintf("%d", n.GetRack()),
-				},
-			},
-		},
-	}, registry.RegisterTTL(120*time.Second))
-
-	// 节点注册
-	nodes.Store(n.Name, n)
-}
-
-// deRegister 取消节点注册
-func (h *Ctrl) deRegister(n *xctrl.Node) {
-	h.registry.Deregister(&registry.Service{
-		Name:    h.serviceName,
-		Version: n.GetVersion(),
-		Nodes: []*registry.Node{
-			{
-				Id:      n.GetUuid(),
-				Address: n.GetAddress(),
-				Metadata: map[string]string{
-					"protocol": "xctrl",
-					"rack":     fmt.Sprintf("%d", n.GetRack()),
-				},
-			},
-		},
-	})
-
-	// 节点离线
-	nodes.Delete(n.Name)
-}
 
 // NodeRegister 节点注册
 func (h *Ctrl) nodeRegister(ctx context.Context, frame *json.RawMessage) error {
@@ -76,7 +33,7 @@ func (h *Ctrl) nodeRegister(ctx context.Context, frame *json.RawMessage) error {
 	// 	n.GetAddress(),
 	// 	n.GetRack())
 
-	h.register(n)
+	//h.register(n)
 	return nil
 }
 
@@ -96,7 +53,7 @@ func (h *Ctrl) nodeUnregister(ctx context.Context, frame *json.RawMessage) error
 	// 	n.GetAddress(),
 	// 	n.GetRack())
 
-	h.deRegister(n)
+	//h.deRegister(n)
 	return nil
 }
 
@@ -114,7 +71,7 @@ func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 	// 	n.GetUuid(),
 	// 	n.GetAddress(),
 	// 	n.GetRack())
-	h.register(n)
+	//h.register(n)
 	return nil
 }
 
@@ -146,7 +103,7 @@ func (h *Ctrl) handleNode(ctx context.Context, data nats.Event) error {
 // newNodeService 创建 XNodeService
 func (h *Ctrl) newNodeService() xctrl.XNodeService {
 	c := newClient(h.conn, false)
-	s := selector.NewSelector(selector.Registry(h.registry))
+	s := selector.NewSelector(selector.Registry(nil))
 	c.Init(client.Selector(s))
 	return xctrl.NewXNodeService(h.serviceName, c)
 }
@@ -154,7 +111,7 @@ func (h *Ctrl) newNodeService() xctrl.XNodeService {
 // newAsyncService 异步调用 XNodeService
 func (h *Ctrl) newAsyncService() xctrl.XNodeService {
 	c := newClient(h.conn, true)
-	s := selector.NewSelector(selector.Registry(h.registry))
+	s := selector.NewSelector(selector.Registry(nil))
 	c.Init(client.Selector(s))
 	return xctrl.NewXNodeService(h.serviceName, c)
 }
@@ -162,7 +119,7 @@ func (h *Ctrl) newAsyncService() xctrl.XNodeService {
 // newAService 同步调用 XNodeService，但可以使用context控制timeout
 func (h *Ctrl) newAService() xctrl.XNodeService {
 	c := newClient(h.conn, false)
-	s := selector.NewSelector(selector.Registry(h.registry))
+	s := selector.NewSelector(selector.Registry(nil))
 	c.Init(client.Selector(s))
 	c.SetAService()
 	return xctrl.NewXNodeService(h.serviceName, c)
@@ -413,7 +370,6 @@ func initCtrl(handler Handler, trace bool, addrs ...string) (*Ctrl, error) {
 		conn:             nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
 		uuid:             uuid.New().String(),
 		serviceName:      "cn.xswitch.nodes",
-		registry:         registry.NewMemoryRegistry(),
 		handler:          handler,
 		enableNodeStatus: false,
 		channelHub:       map[string]*Channel{},

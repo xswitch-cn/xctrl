@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
@@ -151,24 +151,24 @@ func (r *ctrlClient) next(request client.Request, opts client.CallOptions) (sele
 	service := request.Service()
 
 	// return remote address
-	if len(opts.Address) > 0 {
-		nodes := make([]*registry.Node, len(opts.Address))
-
-		for i, addr := range opts.Address {
-			nodes[i] = &registry.Node{
-				Address: addr,
-				// Set the protocol
-				Metadata: map[string]string{
-					"protocol": "mucp",
-				},
-			}
-		}
-
-		// crude return method
-		return func() (*registry.Node, error) {
-			return nodes[time.Now().Unix()%int64(len(nodes))], nil
-		}, nil
-	}
+	//if len(opts.Address) > 0 {
+	//	nodes := make([]*registry.Node, len(opts.Address))
+	//
+	//	for i, addr := range opts.Address {
+	//		nodes[i] = &registry.Node{
+	//			Address: addr,
+	//			// Set the protocol
+	//			Metadata: map[string]string{
+	//				"protocol": "mucp",
+	//			},
+	//		}
+	//	}
+	//
+	//	// crude return method
+	//	return func() (*registry.Node, error) {
+	//		return nodes[time.Now().Unix()%int64(len(nodes))], nil
+	//	}, nil
+	//}
 
 	// get next nodes from the selector
 	next, err := r.opts.Selector.Select(service, opts.SelectOptions...)
@@ -225,11 +225,11 @@ func (r *ctrlClient) Call(ctx context.Context, request client.Request, response 
 	}
 
 	// make the call
-	err := rcall(ctx, nil, request, response, callOpts)
+	err := rcall(ctx, request, response, callOpts)
 	return err
 }
 
-func (r *ctrlClient) call(ctx context.Context, node *registry.Node, req client.Request, resp interface{}, opts client.CallOptions) error {
+func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interface{}, opts client.CallOptions) error {
 	var err error
 	request := new(Request)
 	requestID, ok := metadata.Get(ctx, "request-seq-id")
