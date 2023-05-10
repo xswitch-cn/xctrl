@@ -2,7 +2,7 @@ module git.xswitch.cn/xswitch/xctrl/example/inbound
 
 go 1.16
 
-//replace git.xswitch.cn/xswitch/xctrl => ../../
+replace git.xswitch.cn/xswitch/xctrl => ../../
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 

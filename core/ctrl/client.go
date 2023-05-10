@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -15,7 +15,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
 const defaultTimeout = 60 * time.Second
@@ -37,12 +36,6 @@ func newOptions(options ...client.Option) client.Options {
 
 	for _, o := range options {
 		o(&opts)
-	}
-
-	if opts.Selector == nil {
-		opts.Selector = selector.NewSelector(
-		//selector.Registry(opts.Registry),
-		)
 	}
 
 	if opts.Context == nil {
@@ -146,50 +139,14 @@ func (r *ctrlClient) Options() client.Options {
 	return r.opts
 }
 
-// next returns an iterator for the next nodes to call
-func (r *ctrlClient) next(request client.Request, opts client.CallOptions) (selector.Next, error) {
-	service := request.Service()
-
-	// return remote address
-	//if len(opts.Address) > 0 {
-	//	nodes := make([]*registry.Node, len(opts.Address))
-	//
-	//	for i, addr := range opts.Address {
-	//		nodes[i] = &registry.Node{
-	//			Address: addr,
-	//			// Set the protocol
-	//			Metadata: map[string]string{
-	//				"protocol": "mucp",
-	//			},
-	//		}
-	//	}
-	//
-	//	// crude return method
-	//	return func() (*registry.Node, error) {
-	//		return nodes[time.Now().Unix()%int64(len(nodes))], nil
-	//	}, nil
-	//}
-
-	// get next nodes from the selector
-	next, err := r.opts.Selector.Select(service, opts.SelectOptions...)
-	if err != nil {
-		if err == selector.ErrNotFound {
-			return nil, errors.InternalServerError("nats.jsonrpc.client", "service %s: %s", service, err.Error())
-		}
-		return nil, errors.InternalServerError("nats.jsonrpc.client", "error selecting %s node: %s", service, err.Error())
-	}
-
-	return next, nil
-}
-
 func (r *ctrlClient) Call(ctx context.Context, request client.Request, response interface{}, opts ...client.CallOption) error {
 
 	// make a copy of call opts
 	callOpts := r.opts.CallOptions
+	// todo check this
 	for _, opt := range opts {
 		opt(&callOpts)
 	}
-
 	// TODO 默认设置消息最长响应时间为24小时
 	if callOpts.RequestTimeout <= 0 {
 		callOpts.RequestTimeout = 24 * time.Hour

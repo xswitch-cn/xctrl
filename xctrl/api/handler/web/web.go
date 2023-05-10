@@ -2,8 +2,6 @@
 package web
 
 import (
-	"errors"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -13,7 +11,6 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/handler"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
 const (
@@ -53,33 +50,7 @@ func (wh *webHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // getService returns the service for this request from the selector
 func (wh *webHandler) getService(r *http.Request) (string, error) {
-	var service *api.Service
-
-	if wh.s != nil {
-		// we were given the service
-		service = wh.s
-	} else if wh.opts.Router != nil {
-		// try get service from router
-		s, err := wh.opts.Router.Route(r)
-		if err != nil {
-			return "", err
-		}
-		service = s
-	} else {
-		// we have no way of routing the request
-		return "", errors.New("no route found")
-	}
-
-	// create a random selector
-	next := selector.Random(service.Services)
-
-	// get the next node
-	s, err := next()
-	if err != nil {
-		return "", nil
-	}
-
-	return fmt.Sprintf("http://%s", s.Address), nil
+	return "", nil
 }
 
 // serveWebSocket used to serve a web socket proxied connection

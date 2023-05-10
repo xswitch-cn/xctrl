@@ -19,8 +19,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/logger"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
-	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/ctx"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/qson"
 	jsonpatch "github.com/evanphx/json-patch/v5"
@@ -64,14 +62,6 @@ type buffer struct {
 func (b *buffer) Write(_ []byte) (int, error) {
 	return 0, nil
 }
-
-// strategy is a hack for selection
-//func strategy(services []*registry.Service) selector.Strategy {
-//	return func(_ []*registry.Service) selector.Next {
-//		// ignore input to this function, use services above
-//		return selector.Random(services)
-//	}
-//}
 
 func (h *rpcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	bsize := handler.DefaultMaxRecvSize
@@ -142,7 +132,7 @@ func (h *rpcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create strategy
-	so := selector.WithStrategy(nil)
+	// so := selector.WithStrategy(nil)
 
 	// walk the standard call path
 	// get payload

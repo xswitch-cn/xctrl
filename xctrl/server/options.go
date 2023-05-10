@@ -6,14 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
 )
 
 type Options struct {
 	Codecs       map[string]codec.NewCodec
-	Broker       broker.Broker
 	Metadata     map[string]string
 	Name         string
 	Address      string
@@ -48,10 +45,6 @@ func newOptions(opt ...Option) Options {
 
 	for _, o := range opt {
 		o(&opts)
-	}
-
-	if opts.Broker == nil {
-		opts.Broker = nats.NewBroker()
 	}
 
 	if opts.RegisterCheck == nil {
@@ -113,9 +106,9 @@ func Advertise(a string) Option {
 }
 
 // Broker to use for pub/sub
-func Broker(b broker.Broker) Option {
+func Broker() Option {
 	return func(o *Options) {
-		o.Broker = b
+		// o.Broker = b
 	}
 }
 

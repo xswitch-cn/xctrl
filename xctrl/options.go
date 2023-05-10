@@ -4,18 +4,13 @@ import (
 	"context"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/debug/profile"
-	//sgrpc "git.xswitch.cn/xswitch/xctrl/xctrl/server/grpc"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 type Options struct {
-	Broker broker.Broker
 	Client client.Client
 	Server server.Server
 	//Registry registry.Registry
@@ -37,7 +32,6 @@ type Options struct {
 
 func newOptions(opts ...Option) Options {
 	opt := Options{
-		Broker:  nats.NewBroker(),
 		Server:  nil,
 		Context: context.Background(),
 		Signal:  true,
@@ -50,12 +44,12 @@ func newOptions(opts ...Option) Options {
 	return opt
 }
 
-func Broker(b broker.Broker) Option {
+func Broker() Option {
 	return func(o *Options) {
-		o.Broker = b
+		// o.Broker = b
 		// Update Client and Server
-		o.Client.Init(client.Broker(b))
-		o.Server.Init(server.Broker(b))
+		o.Client.Init(client.Broker())
+		o.Server.Init(server.Broker())
 	}
 }
 
@@ -112,9 +106,9 @@ func Server(s server.Server) Option {
 //}
 
 // Selector sets the selector for the service client
-func Selector(s selector.Selector) Option {
+func Selector() Option {
 	return func(o *Options) {
-		o.Client.Init(client.Selector(s))
+		// o.Client.Init(client.Selector(s))
 	}
 }
 

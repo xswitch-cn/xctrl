@@ -2061,40 +2061,41 @@ func (x *ConsultRequest) GetDestination() *Destination {
 	return nil
 }
 
-// enum Method {
-// Invalid = 0;
-// // 节点注册
-// NodeRegister = 1;
-// // 节点离线
-// NodeUnregister = 2;
-// // 节点数据更新
-// NodeUpdate = 3;
 //
-// // 通道
-// Channel = 4;
-// // FreeSWITCH原生消息
-// Native = 5;
+//enum Method {
+//Invalid = 0;
+//// 节点注册
+//NodeRegister = 1;
+//// 节点离线
+//NodeUnregister = 2;
+//// 节点数据更新
+//NodeUpdate = 3;
 //
-// // old VCC event
-// Vcc = 6;
-// // 如果API请求有后续事件
-// Result = 7;
-// //　异步Dial结果
-// DialResult = 8;
-// // NativeAPI结果
-// NativeResult = 9;
+//// 通道
+//Channel = 4;
+//// FreeSWITCH原生消息
+//Native = 5;
 //
-// // 获取配置信息
-// FetchXML = 10;
-// // 获取Dialplan
-// Dialplan = 11;
+//// old VCC event
+//Vcc = 6;
+//// 如果API请求有后续事件
+//Result = 7;
+////　异步Dial结果
+//DialResult = 8;
+//// NativeAPI结果
+//NativeResult = 9;
 //
-// // 话机消息
-// NativeEvent = 12;
+//// 获取配置信息
+//FetchXML = 10;
+//// 获取Dialplan
+//Dialplan = 11;
 //
-// // 话单
-// CDR = 13;
-// }
+//// 话机消息
+//NativeEvent = 12;
+//
+//// 话单
+//CDR = 13;
+//}
 type RecordEvent struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

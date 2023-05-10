@@ -9,7 +9,6 @@ import (
 	api "git.xswitch.cn/xswitch/xctrl/xctrl/api/proto"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/ctx"
 )
 
@@ -72,9 +71,9 @@ func (a *apiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// create the context from headers
 	cx := ctx.FromRequest(r)
 	// create strategy
-	so := selector.WithStrategy(strategy(service.Services))
+	//so := selector.WithStrategy(strategy(service.Services))
 
-	if err := c.Call(cx, req, rsp, client.WithSelectOption(so)); err != nil {
+	if err := c.Call(cx, req, rsp, client.WithSelectOption(nil)); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		ce := errors.Parse(err.Error())
 		switch ce.Code {

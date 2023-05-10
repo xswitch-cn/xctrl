@@ -39,53 +39,6 @@ func (r *staticRouter) isClosed() bool {
 	}
 }
 
-/*
-// watch for endpoint changes
-func (r *staticRouter) watch() {
-	var attempts int
-
-	for {
-		if r.isClosed() {
-			return
-		}
-
-		// watch for changes
-		w, err := r.opts.Registry.Watch()
-		if err != nil {
-			attempts++
-			log.Println("Error watching endpoints", err)
-			time.Sleep(time.Duration(attempts) * time.Second)
-			continue
-		}
-
-		ch := make(chan bool)
-
-		go func() {
-			select {
-			case <-ch:
-				w.Stop()
-			case <-r.exit:
-				w.Stop()
-			}
-		}()
-
-		// reset if we get here
-		attempts = 0
-
-		for {
-			// process next event
-			res, err := w.Next()
-			if err != nil {
-				log.Println("Error getting next endpoint", err)
-				close(ch)
-				break
-			}
-			r.process(res)
-		}
-	}
-}
-*/
-
 func (r *staticRouter) Register(ep *api.Endpoint) error {
 	if err := api.Validate(ep); err != nil {
 		return err
@@ -175,31 +128,6 @@ func (r *staticRouter) Endpoint(req *http.Request) (*api.Service, error) {
 	}
 
 	epf := strings.Split(ep.apiep.Name, ".")
-	//services, err := r.opts.Registry.GetService(epf[0])
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	// hack for stream endpoint
-	//if ep.apiep.Stream {
-	//	svcs := rutil.Copy(services)
-	//	for _, svc := range svcs {
-	//		if len(svc.Endpoints) == 0 {
-	//			e := &registry.Endpoint{}
-	//			e.Name = strings.Join(epf[1:], ".")
-	//			e.Metadata = make(map[string]string)
-	//			e.Metadata["stream"] = "true"
-	//			svc.Endpoints = append(svc.Endpoints, e)
-	//		}
-	//		for _, e := range svc.Endpoints {
-	//			e.Name = strings.Join(epf[1:], ".")
-	//			e.Metadata = make(map[string]string)
-	//			e.Metadata["stream"] = "true"
-	//		}
-	//	}
-	//
-	//	services = svcs
-	//}
 
 	svc := &api.Service{
 		Name: epf[0],
