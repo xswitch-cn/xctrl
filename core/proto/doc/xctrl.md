@@ -169,9 +169,9 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ctrl_uuid | [string](#string) |  |  |
-| uuid | [string](#string) |  |  |
-| takeover | [bool](#bool) |  |  |
+| ctrl_uuid | [string](#string) |  | Controller UUID |
+| uuid | [string](#string) |  | optional, Channel UUID |
+| takeover | [bool](#bool) |  | optional, default to false.when true, all subsequest events will be delivered to the new controller if already controlled by other controller, otherwise it will fail |
 
 
 
@@ -700,7 +700,7 @@
 | media | [Media](#xctrl.Media) |  | play or tts |
 | max_tries | [uint32](#uint32) |  | not implemented yet |
 | regex | [string](#string) |  |  |
-| media_invalid | [Media](#xctrl.Media) |  | invalid  meida |
+| media_invalid | [Media](#xctrl.Media) |  | Media to playback when received DTMF doesn't match the regex |
 | play_last_invalid_prompt | [bool](#bool) |  | default false |
 
 
