@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"==[-
 	"github.com/google/uuid"
 )
 
@@ -98,16 +98,15 @@ type Stream interface {
 //
 // Example:
 //
-//      type Greeter struct {}
+//	type Greeter struct {}
 //
-//      func (g *Greeter) Hello(context, request, response) error {
-//              return nil
-//      }
-//
+//	func (g *Greeter) Hello(context, request, response) error {
+//	        return nil
+//	}
 type Handler interface {
 	Name() string
 	Handler() interface{}
-	Endpoints() []*registry.Endpoint
+	//Endpoints() []*registry.Endpoint
 	Options() HandlerOptions
 }
 
@@ -116,7 +115,7 @@ type Handler interface {
 type Subscriber interface {
 	Topic() string
 	Subscriber() interface{}
-	Endpoints() []*registry.Endpoint
+	//Endpoints() []*registry.Endpoint
 	Options() SubscriberOptions
 }
 

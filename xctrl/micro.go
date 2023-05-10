@@ -73,8 +73,3 @@ func NewContext(ctx context.Context, s Service) context.Context {
 func RegisterHandler(s server.Server, h interface{}, opts ...server.HandlerOption) error {
 	return s.Handle(s.NewHandler(h, opts...))
 }
-
-// RegisterSubscriber is syntactic sugar for registering a subscriber
-func RegisterSubscriber(topic string, s server.Server, h interface{}, opts ...server.SubscriberOption) error {
-	return s.Subscribe(s.NewSubscriber(topic, h, opts...))
-}

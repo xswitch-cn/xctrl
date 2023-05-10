@@ -9,13 +9,11 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 type Options struct {
 	Codecs       map[string]codec.NewCodec
 	Broker       broker.Broker
-	Registry     registry.Registry
 	Metadata     map[string]string
 	Name         string
 	Address      string
@@ -54,10 +52,6 @@ func newOptions(opt ...Option) Options {
 
 	if opts.Broker == nil {
 		opts.Broker = nats.NewBroker()
-	}
-
-	if opts.Registry == nil {
-		opts.Registry = registry.DefaultRegistry
 	}
 
 	if opts.RegisterCheck == nil {
@@ -129,13 +123,6 @@ func Broker(b broker.Broker) Option {
 func Codec(contentType string, c codec.NewCodec) Option {
 	return func(o *Options) {
 		o.Codecs[contentType] = c
-	}
-}
-
-// Registry used for discovery
-func Registry(r registry.Registry) Option {
-	return func(o *Options) {
-		o.Registry = r
 	}
 }
 

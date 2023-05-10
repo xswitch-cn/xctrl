@@ -41,7 +41,7 @@ func newOptions(options ...client.Option) client.Options {
 
 	if opts.Selector == nil {
 		opts.Selector = selector.NewSelector(
-			selector.Registry(opts.Registry),
+		//selector.Registry(opts.Registry),
 		)
 	}
 

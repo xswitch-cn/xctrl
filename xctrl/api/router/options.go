@@ -3,12 +3,11 @@ package router
 import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/resolver"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/resolver/vpath"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 type Options struct {
 	Handler  string
-	Registry registry.Registry
 	Resolver resolver.Resolver
 }
 
@@ -16,8 +15,8 @@ type Option func(o *Options)
 
 func NewOptions(opts ...Option) Options {
 	options := Options{
-		Handler:  "meta",
-		Registry: registry.NewRegistry(),
+		Handler: "meta",
+		//Registry: registry.NewRegistry(),
 	}
 
 	for _, o := range opts {
@@ -36,12 +35,6 @@ func NewOptions(opts ...Option) Options {
 func WithHandler(h string) Option {
 	return func(o *Options) {
 		o.Handler = h
-	}
-}
-
-func WithRegistry(r registry.Registry) Option {
-	return func(o *Options) {
-		o.Registry = r
 	}
 }
 

@@ -13,8 +13,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/router/util"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/logger"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
-	rutil "git.xswitch.cn/xswitch/xctrl/xctrl/util/registry"
 )
 
 type endpoint struct {
@@ -177,31 +175,31 @@ func (r *staticRouter) Endpoint(req *http.Request) (*api.Service, error) {
 	}
 
 	epf := strings.Split(ep.apiep.Name, ".")
-	services, err := r.opts.Registry.GetService(epf[0])
-	if err != nil {
-		return nil, err
-	}
+	//services, err := r.opts.Registry.GetService(epf[0])
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	// hack for stream endpoint
-	if ep.apiep.Stream {
-		svcs := rutil.Copy(services)
-		for _, svc := range svcs {
-			if len(svc.Endpoints) == 0 {
-				e := &registry.Endpoint{}
-				e.Name = strings.Join(epf[1:], ".")
-				e.Metadata = make(map[string]string)
-				e.Metadata["stream"] = "true"
-				svc.Endpoints = append(svc.Endpoints, e)
-			}
-			for _, e := range svc.Endpoints {
-				e.Name = strings.Join(epf[1:], ".")
-				e.Metadata = make(map[string]string)
-				e.Metadata["stream"] = "true"
-			}
-		}
-
-		services = svcs
-	}
+	//if ep.apiep.Stream {
+	//	svcs := rutil.Copy(services)
+	//	for _, svc := range svcs {
+	//		if len(svc.Endpoints) == 0 {
+	//			e := &registry.Endpoint{}
+	//			e.Name = strings.Join(epf[1:], ".")
+	//			e.Metadata = make(map[string]string)
+	//			e.Metadata["stream"] = "true"
+	//			svc.Endpoints = append(svc.Endpoints, e)
+	//		}
+	//		for _, e := range svc.Endpoints {
+	//			e.Name = strings.Join(epf[1:], ".")
+	//			e.Metadata = make(map[string]string)
+	//			e.Metadata["stream"] = "true"
+	//		}
+	//	}
+	//
+	//	services = svcs
+	//}
 
 	svc := &api.Service{
 		Name: epf[0],
@@ -214,7 +212,7 @@ func (r *staticRouter) Endpoint(req *http.Request) (*api.Service, error) {
 			Body:    ep.apiep.Body,
 			Stream:  ep.apiep.Stream,
 		},
-		Services: services,
+		Services: nil,
 	}
 
 	return svc, nil

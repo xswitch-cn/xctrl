@@ -7,7 +7,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
@@ -16,9 +16,9 @@ type Options struct {
 	ContentType string
 
 	// Plugged interfaces
-	Broker   broker.Broker
-	Codecs   map[string]codec.NewCodec
-	Registry registry.Registry
+	Broker broker.Broker
+	Codecs map[string]codec.NewCodec
+	//Registry registry.Registry
 	Selector selector.Selector
 
 	// Connection Pool
@@ -120,11 +120,11 @@ func PoolTTL(d time.Duration) Option {
 }
 
 // Registry to find nodes for a given service
-func Registry(r registry.Registry) Option {
-	return func(o *Options) {
-		o.Registry = r
-	}
-}
+//func Registry(r registry.Registry) Option {
+//	return func(o *Options) {
+//		o.Registry = r
+//	}
+//}
 
 // Select is used to select a node to route a request to
 func Selector(s selector.Selector) Option {

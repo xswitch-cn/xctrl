@@ -8,18 +8,17 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/debug/profile"
-	sgrpc "git.xswitch.cn/xswitch/xctrl/xctrl/server/grpc"
+	//sgrpc "git.xswitch.cn/xswitch/xctrl/xctrl/server/grpc"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 type Options struct {
-	Broker   broker.Broker
-	Client   client.Client
-	Server   server.Server
-	Registry registry.Registry
+	Broker broker.Broker
+	Client client.Client
+	Server server.Server
+	//Registry registry.Registry
 
 	// Before and After funcs
 	BeforeStart []func() error
@@ -38,11 +37,10 @@ type Options struct {
 
 func newOptions(opts ...Option) Options {
 	opt := Options{
-		Broker:   nats.NewBroker(),
-		Server:   sgrpc.NewServer(),
-		Registry: registry.DefaultRegistry,
-		Context:  context.Background(),
-		Signal:   true,
+		Broker:  nats.NewBroker(),
+		Server:  nil,
+		Context: context.Background(),
+		Signal:  true,
 	}
 
 	for _, o := range opts {
@@ -100,18 +98,18 @@ func Server(s server.Server) Option {
 
 // Registry sets the registry for the service
 // and the underlying components
-func Registry(r registry.Registry) Option {
-	return func(o *Options) {
-		o.Registry = r
-		// Update Client and Server
-		o.Client.Init(client.Registry(r))
-		o.Server.Init(server.Registry(r))
-		// Update Selector
-		o.Client.Options().Selector.Init(selector.Registry(r))
-		// Update Broker
-		o.Broker.Init(broker.Registry(r))
-	}
-}
+//func Registry(r registry.Registry) Option {
+//	return func(o *Options) {
+//		o.Registry = r
+//		// Update Client and Server
+//		o.Client.Init(client.Registry(r))
+//		o.Server.Init(server.Registry(r))
+//		// Update Selector
+//		o.Client.Options().Selector.Init(selector.Registry(r))
+//		// Update Broker
+//		o.Broker.Init(broker.Registry(r))
+//	}
+//}
 
 // Selector sets the selector for the service client
 func Selector(s selector.Selector) Option {

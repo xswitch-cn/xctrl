@@ -4,19 +4,17 @@ package registry
 import (
 	"errors"
 	"fmt"
-	"net/http"
-	"regexp"
-	"strings"
-	"sync"
-	"time"
-
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/router"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/router/util"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/logger"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry/cache"
+	"net/http"
+	"regexp"
+	"strings"
+	"sync"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry/cache"
 )
 
 // endpoint struct, that holds compiled pcre
@@ -32,7 +30,7 @@ type registryRouter struct {
 	opts router.Options
 
 	// registry cache
-	rc cache.Cache
+	//rc cache.Cache
 
 	sync.RWMutex
 	eps map[string]*api.Service
@@ -50,225 +48,225 @@ func (r *registryRouter) isClosed() bool {
 }
 
 // refresh list of api services
-func (r *registryRouter) refresh() {
-	var attempts int
-
-	for {
-		services, err := r.opts.Registry.ListServices()
-		if err != nil {
-			attempts++
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("unable to list services: %v", err)
-			}
-			time.Sleep(time.Duration(attempts) * time.Second)
-			continue
-		}
-
-		attempts = 0
-
-		// for each service, get service and store endpoints
-		for _, s := range services {
-			service, err := r.rc.GetService(s.Name)
-			if err != nil {
-				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-					logger.Errorf("unable to get service: %v", err)
-				}
-				continue
-			}
-			r.store(service)
-		}
-
-		// refresh list in 10 minutes... cruft
-		// use registry watching
-		select {
-		case <-time.After(time.Minute * 10):
-		case <-r.exit:
-			return
-		}
-	}
-}
+//func (r *registryRouter) refresh() {
+//	var attempts int
+//
+//	for {
+//		services, err := r.opts.Registry.ListServices()
+//		if err != nil {
+//			attempts++
+//			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
+//				logger.Errorf("unable to list services: %v", err)
+//			}
+//			time.Sleep(time.Duration(attempts) * time.Second)
+//			continue
+//		}
+//
+//		attempts = 0
+//
+//		// for each service, get service and store endpoints
+//		for _, s := range services {
+//			service, err := r.rc.GetService(s.Name)
+//			if err != nil {
+//				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
+//					logger.Errorf("unable to get service: %v", err)
+//				}
+//				continue
+//			}
+//			r.store(service)
+//		}
+//
+//		// refresh list in 10 minutes... cruft
+//		// use registry watching
+//		select {
+//		case <-time.After(time.Minute * 10):
+//		case <-r.exit:
+//			return
+//		}
+//	}
+//}
 
 // process watch event
-func (r *registryRouter) process(res *registry.Result) {
-	// skip these things
-	if res == nil || res.Service == nil {
-		return
-	}
-
-	// get entry from cache
-	service, err := r.rc.GetService(res.Service.Name)
-	if err != nil {
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Errorf("unable to get service: %v", err)
-		}
-		return
-	}
-
-	// update our local endpoints
-	r.store(service)
-}
+//func (r *registryRouter) process(res *registry.Result) {
+//	// skip these things
+//	if res == nil || res.Service == nil {
+//		return
+//	}
+//
+//	// get entry from cache
+//	service, err := r.rc.GetService(res.Service.Name)
+//	if err != nil {
+//		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
+//			logger.Errorf("unable to get service: %v", err)
+//		}
+//		return
+//	}
+//
+//	// update our local endpoints
+//	r.store(service)
+//}
 
 // store local endpoint cache
-func (r *registryRouter) store(services []*registry.Service) {
-	// endpoints
-	eps := map[string]*api.Service{}
-
-	// services
-	names := map[string]bool{}
-
-	// create a new endpoint mapping
-	for _, service := range services {
-		// set names we need later
-		names[service.Name] = true
-
-		// map per endpoint
-		for _, sep := range service.Endpoints {
-			// create a key service:endpoint_name
-			key := fmt.Sprintf("%s.%s", service.Name, sep.Name)
-			// decode endpoint
-			end := api.Decode(sep.Metadata)
-
-			// if we got nothing skip
-			if err := api.Validate(end); err != nil {
-				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-					logger.Tracef("endpoint validation failed: %v", err)
-				}
-				continue
-			}
-
-			// try get endpoint
-			ep, ok := eps[key]
-			if !ok {
-				ep = &api.Service{Name: service.Name}
-			}
-
-			// overwrite the endpoint
-			ep.Endpoint = end
-			// append services
-			ep.Services = append(ep.Services, service)
-			// store it
-			eps[key] = ep
-		}
-	}
-
-	r.Lock()
-	defer r.Unlock()
-
-	// delete any existing eps for services we know
-	for key, service := range r.eps {
-		// skip what we don't care about
-		if !names[service.Name] {
-			continue
-		}
-
-		// ok we know this thing
-		// delete delete delete
-		delete(r.eps, key)
-	}
-
-	// now set the eps we have
-	for name, ep := range eps {
-		r.eps[name] = ep
-		cep := &endpoint{}
-
-		for _, h := range ep.Endpoint.Host {
-			if h == "" || h == "*" {
-				continue
-			}
-			hostreg, err := regexp.CompilePOSIX(h)
-			if err != nil {
-				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-					logger.Tracef("endpoint have invalid host regexp: %v", err)
-				}
-				continue
-			}
-			cep.hostregs = append(cep.hostregs, hostreg)
-		}
-
-		for _, p := range ep.Endpoint.Path {
-			var pcreok bool
-
-			if p[0] == '^' && p[len(p)-1] == '$' {
-				pcrereg, err := regexp.CompilePOSIX(p)
-				if err == nil {
-					cep.pcreregs = append(cep.pcreregs, pcrereg)
-					pcreok = true
-				}
-			}
-
-			rule, err := util.Parse(p)
-			if err != nil && !pcreok {
-				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-					logger.Tracef("endpoint have invalid path pattern: %v", err)
-				}
-				continue
-			} else if err != nil && pcreok {
-				continue
-			}
-
-			tpl := rule.Compile()
-			pathreg, err := util.NewPattern(tpl.Version, tpl.OpCodes, tpl.Pool, "")
-			if err != nil {
-				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-					logger.Tracef("endpoint have invalid path pattern: %v", err)
-				}
-				continue
-			}
-			cep.pathregs = append(cep.pathregs, pathreg)
-		}
-
-		r.ceps[name] = cep
-	}
-}
+//func (r *registryRouter) store(services []*registry.Service) {
+//	// endpoints
+//	eps := map[string]*api.Service{}
+//
+//	// services
+//	names := map[string]bool{}
+//
+//	// create a new endpoint mapping
+//	for _, service := range services {
+//		// set names we need later
+//		names[service.Name] = true
+//
+//		// map per endpoint
+//		for _, sep := range service.Endpoints {
+//			// create a key service:endpoint_name
+//			key := fmt.Sprintf("%s.%s", service.Name, sep.Name)
+//			// decode endpoint
+//			end := api.Decode(sep.Metadata)
+//
+//			// if we got nothing skip
+//			if err := api.Validate(end); err != nil {
+//				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
+//					logger.Tracef("endpoint validation failed: %v", err)
+//				}
+//				continue
+//			}
+//
+//			// try get endpoint
+//			ep, ok := eps[key]
+//			if !ok {
+//				ep = &api.Service{Name: service.Name}
+//			}
+//
+//			// overwrite the endpoint
+//			ep.Endpoint = end
+//			// append services
+//			ep.Services = append(ep.Services, service)
+//			// store it
+//			eps[key] = ep
+//		}
+//	}
+//
+//	r.Lock()
+//	defer r.Unlock()
+//
+//	// delete any existing eps for services we know
+//	for key, service := range r.eps {
+//		// skip what we don't care about
+//		if !names[service.Name] {
+//			continue
+//		}
+//
+//		// ok we know this thing
+//		// delete delete delete
+//		delete(r.eps, key)
+//	}
+//
+//	// now set the eps we have
+//	for name, ep := range eps {
+//		r.eps[name] = ep
+//		cep := &endpoint{}
+//
+//		for _, h := range ep.Endpoint.Host {
+//			if h == "" || h == "*" {
+//				continue
+//			}
+//			hostreg, err := regexp.CompilePOSIX(h)
+//			if err != nil {
+//				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
+//					logger.Tracef("endpoint have invalid host regexp: %v", err)
+//				}
+//				continue
+//			}
+//			cep.hostregs = append(cep.hostregs, hostreg)
+//		}
+//
+//		for _, p := range ep.Endpoint.Path {
+//			var pcreok bool
+//
+//			if p[0] == '^' && p[len(p)-1] == '$' {
+//				pcrereg, err := regexp.CompilePOSIX(p)
+//				if err == nil {
+//					cep.pcreregs = append(cep.pcreregs, pcrereg)
+//					pcreok = true
+//				}
+//			}
+//
+//			rule, err := util.Parse(p)
+//			if err != nil && !pcreok {
+//				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
+//					logger.Tracef("endpoint have invalid path pattern: %v", err)
+//				}
+//				continue
+//			} else if err != nil && pcreok {
+//				continue
+//			}
+//
+//			tpl := rule.Compile()
+//			pathreg, err := util.NewPattern(tpl.Version, tpl.OpCodes, tpl.Pool, "")
+//			if err != nil {
+//				if logger.V(logger.TraceLevel, logger.DefaultLogger) {
+//					logger.Tracef("endpoint have invalid path pattern: %v", err)
+//				}
+//				continue
+//			}
+//			cep.pathregs = append(cep.pathregs, pathreg)
+//		}
+//
+//		r.ceps[name] = cep
+//	}
+//}
 
 // watch for endpoint changes
-func (r *registryRouter) watch() {
-	var attempts int
-
-	for {
-		if r.isClosed() {
-			return
-		}
-
-		// watch for changes
-		w, err := r.opts.Registry.Watch()
-		if err != nil {
-			attempts++
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("error watching endpoints: %v", err)
-			}
-			time.Sleep(time.Duration(attempts) * time.Second)
-			continue
-		}
-
-		ch := make(chan bool)
-
-		go func() {
-			select {
-			case <-ch:
-				w.Stop()
-			case <-r.exit:
-				w.Stop()
-			}
-		}()
-
-		// reset if we get here
-		attempts = 0
-
-		for {
-			// process next event
-			res, err := w.Next()
-			if err != nil {
-				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-					logger.Errorf("error getting next endoint: %v", err)
-				}
-				close(ch)
-				break
-			}
-			r.process(res)
-		}
-	}
-}
+//func (r *registryRouter) watch() {
+//	var attempts int
+//
+//	for {
+//		if r.isClosed() {
+//			return
+//		}
+//
+//		// watch for changes
+//		w, err := r.opts.Registry.Watch()
+//		if err != nil {
+//			attempts++
+//			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
+//				logger.Errorf("error watching endpoints: %v", err)
+//			}
+//			time.Sleep(time.Duration(attempts) * time.Second)
+//			continue
+//		}
+//
+//		ch := make(chan bool)
+//
+//		go func() {
+//			select {
+//			case <-ch:
+//				w.Stop()
+//			case <-r.exit:
+//				w.Stop()
+//			}
+//		}()
+//
+//		// reset if we get here
+//		attempts = 0
+//
+//		for {
+//			// process next event
+//			//res, err := w.Next()
+//			//if err != nil {
+//			//	if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
+//			//		logger.Errorf("error getting next endoint: %v", err)
+//			//	}
+//			//	close(ch)
+//			//	break
+//			//}
+//			//r.process(res)
+//		}
+//	}
+//}
 
 func (r *registryRouter) Options() router.Options {
 	return r.opts
@@ -280,7 +278,7 @@ func (r *registryRouter) Close() error {
 		return nil
 	default:
 		close(r.exit)
-		r.rc.Stop()
+		//r.rc.Stop()
 	}
 	return nil
 }
@@ -434,7 +432,7 @@ func (r *registryRouter) Route(req *http.Request) (*api.Service, error) {
 	name := rp.Name
 
 	// get service
-	services, err := r.rc.GetService(name)
+	//services, err := r.rc.GetService(name)
 	if err != nil {
 		return nil, err
 	}
@@ -457,7 +455,7 @@ func (r *registryRouter) Route(req *http.Request) (*api.Service, error) {
 				Name:    rp.Method,
 				Handler: handler,
 			},
-			Services: services,
+			Services: nil,
 		}, nil
 	// http handler
 	case "http", "proxy", "web":
@@ -471,28 +469,28 @@ func (r *registryRouter) Route(req *http.Request) (*api.Service, error) {
 				Method:  []string{req.Method},
 				Path:    []string{req.URL.Path},
 			},
-			Services: services,
+			Services: nil,
 		}, nil
 	}
 
 	return nil, errors.New("unknown handler")
 }
 
-func newRouter(opts ...router.Option) *registryRouter {
-	options := router.NewOptions(opts...)
-	r := &registryRouter{
-		exit: make(chan bool),
-		opts: options,
-		rc:   cache.New(options.Registry),
-		eps:  make(map[string]*api.Service),
-		ceps: make(map[string]*endpoint),
-	}
-	go r.watch()
-	go r.refresh()
-	return r
-}
-
-// NewRouter returns the default router
-func NewRouter(opts ...router.Option) router.Router {
-	return newRouter(opts...)
-}
+//func newRouter(opts ...router.Option) *registryRouter {
+//	options := router.NewOptions(opts...)
+//	r := &registryRouter{
+//		exit: make(chan bool),
+//		opts: options,
+//		rc:   cache.New(options.Registry),
+//		eps:  make(map[string]*api.Service),
+//		ceps: make(map[string]*endpoint),
+//	}
+//	go r.watch()
+//	go r.refresh()
+//	return r
+//}
+//
+//// NewRouter returns the default router
+//func NewRouter(opts ...router.Option) router.Router {
+//	return newRouter(opts...)
+//}

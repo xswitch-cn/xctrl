@@ -11,11 +11,11 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/resolver/vpath"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/router"
 	regRouter "git.xswitch.cn/xswitch/xctrl/xctrl/api/router/registry"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 func testHttp(t *testing.T, path, service, ns string) {
-	r := registry.NewMemoryRegistry()
+	//r := registry.NewMemoryRegistry()
 
 	l, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -23,18 +23,18 @@ func testHttp(t *testing.T, path, service, ns string) {
 	}
 	defer l.Close()
 
-	s := &registry.Service{
-		Name: service,
-		Nodes: []*registry.Node{
-			{
-				Id:      service + "-1",
-				Address: l.Addr().String(),
-			},
-		},
-	}
+	//s := &registry.Service{
+	//	Name: service,
+	//	Nodes: []*registry.Node{
+	//		{
+	//			Id:      service + "-1",
+	//			Address: l.Addr().String(),
+	//		},
+	//	},
+	//}
 
-	r.Register(s)
-	defer r.Deregister(s)
+	//r.Register(s)
+	//defer r.Deregister(s)
 
 	// setup the test handler
 	m := http.NewServeMux()
@@ -55,7 +55,7 @@ func testHttp(t *testing.T, path, service, ns string) {
 	// initialise the handler
 	rt := regRouter.NewRouter(
 		router.WithHandler("http"),
-		router.WithRegistry(r),
+		//router.WithRegistry(r),
 		router.WithResolver(vpath.NewResolver(
 			resolver.WithNamespace(resolver.StaticNamespace(ns)),
 		)),

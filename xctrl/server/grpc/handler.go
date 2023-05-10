@@ -1,52 +1,13 @@
 package grpc
 
 import (
-	"reflect"
-
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 type rpcHandler struct {
-	name      string
-	handler   interface{}
-	endpoints []*registry.Endpoint
-	opts      server.HandlerOptions
-}
-
-func newRpcHandler(handler interface{}, opts ...server.HandlerOption) server.Handler {
-	options := server.HandlerOptions{
-		Metadata: make(map[string]map[string]string),
-	}
-
-	for _, o := range opts {
-		o(&options)
-	}
-
-	typ := reflect.TypeOf(handler)
-	hdlr := reflect.ValueOf(handler)
-	name := reflect.Indirect(hdlr).Type().Name()
-
-	var endpoints []*registry.Endpoint
-
-	for m := 0; m < typ.NumMethod(); m++ {
-		if e := extractEndpoint(typ.Method(m)); e != nil {
-			e.Name = name + "." + e.Name
-
-			for k, v := range options.Metadata[e.Name] {
-				e.Metadata[k] = v
-			}
-
-			endpoints = append(endpoints, e)
-		}
-	}
-
-	return &rpcHandler{
-		name:      name,
-		handler:   handler,
-		endpoints: endpoints,
-		opts:      options,
-	}
+	name    string
+	handler interface{}
+	opts    server.HandlerOptions
 }
 
 func (r *rpcHandler) Name() string {
@@ -55,10 +16,6 @@ func (r *rpcHandler) Name() string {
 
 func (r *rpcHandler) Handler() interface{} {
 	return r.handler
-}
-
-func (r *rpcHandler) Endpoints() []*registry.Endpoint {
-	return r.endpoints
 }
 
 func (r *rpcHandler) Options() server.HandlerOptions {

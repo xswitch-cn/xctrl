@@ -67,7 +67,7 @@ func (c *registrySelector) Select(service string, opts ...SelectOption) (Next, e
 		return nil, ErrNoneAvailable
 	}
 
-	return sopts.Strategy(services), nil
+	return nil, nil
 }
 
 func (c *registrySelector) Mark(service string, node *registry.Node, err error) {
@@ -96,9 +96,9 @@ func NewSelector(opts ...Option) Selector {
 		opt(&sopts)
 	}
 
-	if sopts.Registry == nil {
-		sopts.Registry = registry.DefaultRegistry
-	}
+	//if sopts.Registry == nil {
+	//	sopts.Registry = registry.DefaultRegistry
+	//}
 
 	s := &registrySelector{
 		so: sopts,

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	api "git.xswitch.cn/xswitch/xctrl/xctrl/api/proto"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
+	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"github.com/oxtoacart/bpool"
 )
