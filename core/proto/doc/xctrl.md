@@ -115,6 +115,7 @@
 
 
 
+<a name="user-content-xctrl.proto"/>
 <a name="xctrl.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -122,6 +123,7 @@
 
 
 
+<a name="user-content-xctrl.AIRequest"/>
 <a name="xctrl.AIRequest"/>
 
 ### AIRequest
@@ -139,6 +141,7 @@
 
 
 
+<a name="user-content-xctrl.AIResponse"/>
 <a name="xctrl.AIResponse"/>
 
 ### AIResponse
@@ -157,6 +160,7 @@
 
 
 
+<a name="user-content-xctrl.AcceptRequest"/>
 <a name="xctrl.AcceptRequest"/>
 
 ### AcceptRequest
@@ -174,6 +178,7 @@
 
 
 
+<a name="user-content-xctrl.Action"/>
 <a name="xctrl.Action"/>
 
 ### Action
@@ -192,6 +197,7 @@
 
 
 
+<a name="user-content-xctrl.Application"/>
 <a name="xctrl.Application"/>
 
 ### Application
@@ -208,6 +214,7 @@
 
 
 
+<a name="user-content-xctrl.BridgeRequest"/>
 <a name="xctrl.BridgeRequest"/>
 
 ### BridgeRequest
@@ -228,6 +235,7 @@
 
 
 
+<a name="user-content-xctrl.BroadcastRequest"/>
 <a name="xctrl.BroadcastRequest"/>
 
 ### BroadcastRequest
@@ -246,6 +254,7 @@
 
 
 
+<a name="user-content-xctrl.CallParam"/>
 <a name="xctrl.CallParam"/>
 
 ### CallParam
@@ -268,6 +277,7 @@
 
 
 
+<a name="user-content-xctrl.CallcenterRequest"/>
 <a name="xctrl.CallcenterRequest"/>
 
 ### CallcenterRequest
@@ -284,6 +294,7 @@
 
 
 
+<a name="user-content-xctrl.CallcenterResponse"/>
 <a name="xctrl.CallcenterResponse"/>
 
 ### CallcenterResponse
@@ -302,6 +313,7 @@
 
 
 
+<a name="user-content-xctrl.ChannelBridgeRequest"/>
 <a name="xctrl.ChannelBridgeRequest"/>
 
 ### ChannelBridgeRequest
@@ -321,6 +333,7 @@
 
 
 
+<a name="user-content-xctrl.ChannelData"/>
 <a name="xctrl.ChannelData"/>
 
 ### ChannelData
@@ -340,6 +353,7 @@
 
 
 
+<a name="user-content-xctrl.ChannelDataResponse"/>
 <a name="xctrl.ChannelDataResponse"/>
 
 ### ChannelDataResponse
@@ -360,6 +374,7 @@
 
 
 
+<a name="user-content-xctrl.ChannelEvent"/>
 <a name="xctrl.ChannelEvent"/>
 
 ### ChannelEvent
@@ -394,6 +409,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoRequest"/>
 <a name="xctrl.ConferenceInfoRequest"/>
 
 ### ConferenceInfoRequest
@@ -410,6 +426,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoRequestData"/>
 <a name="xctrl.ConferenceInfoRequestData"/>
 
 ### ConferenceInfoRequestData
@@ -426,6 +443,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoRequestDataData"/>
 <a name="xctrl.ConferenceInfoRequestDataData"/>
 
 ### ConferenceInfoRequestDataData
@@ -443,6 +461,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponse"/>
 <a name="xctrl.ConferenceInfoResponse"/>
 
 ### ConferenceInfoResponse
@@ -462,6 +481,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponseConference"/>
 <a name="xctrl.ConferenceInfoResponseConference"/>
 
 ### ConferenceInfoResponseConference
@@ -503,6 +523,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponseData"/>
 <a name="xctrl.ConferenceInfoResponseData"/>
 
 ### ConferenceInfoResponseData
@@ -518,6 +539,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponseFlags"/>
 <a name="xctrl.ConferenceInfoResponseFlags"/>
 
 ### ConferenceInfoResponseFlags
@@ -543,6 +565,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponseMembers"/>
 <a name="xctrl.ConferenceInfoResponseMembers"/>
 
 ### ConferenceInfoResponseMembers
@@ -570,6 +593,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfoResponseVariables"/>
 <a name="xctrl.ConferenceInfoResponseVariables"/>
 
 ### ConferenceInfoResponseVariables
@@ -580,6 +604,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceRequest"/>
 <a name="xctrl.ConferenceRequest"/>
 
 ### ConferenceRequest
@@ -598,6 +623,7 @@
 
 
 
+<a name="user-content-xctrl.ConferenceResponse"/>
 <a name="xctrl.ConferenceResponse"/>
 
 ### ConferenceResponse
@@ -616,6 +642,7 @@
 
 
 
+<a name="user-content-xctrl.ConsultRequest"/>
 <a name="xctrl.ConsultRequest"/>
 
 ### ConsultRequest
@@ -633,6 +660,7 @@
 
 
 
+<a name="user-content-xctrl.Ctrl"/>
 <a name="xctrl.Ctrl"/>
 
 ### Ctrl
@@ -653,6 +681,7 @@
 
 
 
+<a name="user-content-xctrl.DTMFRequest"/>
 <a name="xctrl.DTMFRequest"/>
 
 ### DTMFRequest
@@ -679,6 +708,7 @@
 
 
 
+<a name="user-content-xctrl.DTMFResponse"/>
 <a name="xctrl.DTMFResponse"/>
 
 ### DTMFResponse
@@ -699,6 +729,7 @@
 
 
 
+<a name="user-content-xctrl.Destination"/>
 <a name="xctrl.Destination"/>
 
 ### Destination
@@ -717,6 +748,7 @@
 
 
 
+<a name="user-content-xctrl.DetectFaceRequest"/>
 <a name="xctrl.DetectFaceRequest"/>
 
 ### DetectFaceRequest
@@ -740,6 +772,7 @@
 
 
 
+<a name="user-content-xctrl.DetectRequest"/>
 <a name="xctrl.DetectRequest"/>
 
 ### DetectRequest
@@ -759,6 +792,7 @@
 
 
 
+<a name="user-content-xctrl.DetectResponse"/>
 <a name="xctrl.DetectResponse"/>
 
 ### DetectResponse
@@ -778,6 +812,7 @@
 
 
 
+<a name="user-content-xctrl.DetectedData"/>
 <a name="xctrl.DetectedData"/>
 
 ### DetectedData
@@ -802,6 +837,7 @@
 
 
 
+<a name="user-content-xctrl.DetectedFaceEvent"/>
 <a name="xctrl.DetectedFaceEvent"/>
 
 ### DetectedFaceEvent
@@ -823,6 +859,7 @@
 
 
 
+<a name="user-content-xctrl.DialRequest"/>
 <a name="xctrl.DialRequest"/>
 
 ### DialRequest
@@ -840,6 +877,7 @@
 
 
 
+<a name="user-content-xctrl.DialResponse"/>
 <a name="xctrl.DialResponse"/>
 
 ### DialResponse
@@ -859,6 +897,7 @@
 
 
 
+<a name="user-content-xctrl.DigitsRequest"/>
 <a name="xctrl.DigitsRequest"/>
 
 ### DigitsRequest
@@ -885,6 +924,7 @@
 
 
 
+<a name="user-content-xctrl.DigitsResponse"/>
 <a name="xctrl.DigitsResponse"/>
 
 ### DigitsResponse
@@ -905,6 +945,7 @@
 
 
 
+<a name="user-content-xctrl.Echo2Request"/>
 <a name="xctrl.Echo2Request"/>
 
 ### Echo2Request
@@ -923,6 +964,7 @@
 
 
 
+<a name="user-content-xctrl.EngineData"/>
 <a name="xctrl.EngineData"/>
 
 ### EngineData
@@ -939,6 +981,7 @@
 
 
 
+<a name="user-content-xctrl.FIFORequest"/>
 <a name="xctrl.FIFORequest"/>
 
 ### FIFORequest
@@ -959,6 +1002,7 @@
 
 
 
+<a name="user-content-xctrl.FIFOResponse"/>
 <a name="xctrl.FIFOResponse"/>
 
 ### FIFOResponse
@@ -977,6 +1021,7 @@
 
 
 
+<a name="user-content-xctrl.GetChannelDataRequest"/>
 <a name="xctrl.GetChannelDataRequest"/>
 
 ### GetChannelDataRequest
@@ -994,6 +1039,7 @@
 
 
 
+<a name="user-content-xctrl.GetStateRequest"/>
 <a name="xctrl.GetStateRequest"/>
 
 ### GetStateRequest
@@ -1010,6 +1056,7 @@
 
 
 
+<a name="user-content-xctrl.GetVarRequest"/>
 <a name="xctrl.GetVarRequest"/>
 
 ### GetVarRequest
@@ -1027,6 +1074,7 @@
 
 
 
+<a name="user-content-xctrl.HangupRequest"/>
 <a name="xctrl.HangupRequest"/>
 
 ### HangupRequest
@@ -1045,6 +1093,7 @@
 
 
 
+<a name="user-content-xctrl.Header"/>
 <a name="xctrl.Header"/>
 
 ### Header
@@ -1065,6 +1114,7 @@
 
 
 
+<a name="user-content-xctrl.HoldRequest"/>
 <a name="xctrl.HoldRequest"/>
 
 ### HoldRequest
@@ -1083,6 +1133,7 @@
 
 
 
+<a name="user-content-xctrl.HttAPIRequest"/>
 <a name="xctrl.HttAPIRequest"/>
 
 ### HttAPIRequest
@@ -1100,6 +1151,7 @@
 
 
 
+<a name="user-content-xctrl.HttAPIResponse"/>
 <a name="xctrl.HttAPIResponse"/>
 
 ### HttAPIResponse
@@ -1118,6 +1170,7 @@
 
 
 
+<a name="user-content-xctrl.InterceptRequest"/>
 <a name="xctrl.InterceptRequest"/>
 
 ### InterceptRequest
@@ -1135,6 +1188,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusIdleCPU"/>
 <a name="xctrl.JStatusIdleCPU"/>
 
 ### JStatusIdleCPU
@@ -1151,6 +1205,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusRequest"/>
 <a name="xctrl.JStatusRequest"/>
 
 ### JStatusRequest
@@ -1167,6 +1222,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusRequest.JStatusData"/>
 <a name="xctrl.JStatusRequest.JStatusData"/>
 
 ### JStatusRequest.JStatusData
@@ -1183,6 +1239,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusResponse"/>
 <a name="xctrl.JStatusResponse"/>
 
 ### JStatusResponse
@@ -1202,6 +1259,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusResponseData"/>
 <a name="xctrl.JStatusResponseData"/>
 
 ### JStatusResponseData
@@ -1222,6 +1280,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusSessions"/>
 <a name="xctrl.JStatusSessions"/>
 
 ### JStatusSessions
@@ -1238,6 +1297,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusSessionsCount"/>
 <a name="xctrl.JStatusSessionsCount"/>
 
 ### JStatusSessionsCount
@@ -1257,6 +1317,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusSessionsRate"/>
 <a name="xctrl.JStatusSessionsRate"/>
 
 ### JStatusSessionsRate
@@ -1275,6 +1336,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusStackSize"/>
 <a name="xctrl.JStatusStackSize"/>
 
 ### JStatusStackSize
@@ -1291,6 +1353,7 @@
 
 
 
+<a name="user-content-xctrl.JStatusUptime"/>
 <a name="xctrl.JStatusUptime"/>
 
 ### JStatusUptime
@@ -1312,6 +1375,7 @@
 
 
 
+<a name="user-content-xctrl.LuaRequest"/>
 <a name="xctrl.LuaRequest"/>
 
 ### LuaRequest
@@ -1328,6 +1392,7 @@
 
 
 
+<a name="user-content-xctrl.LuaResponse"/>
 <a name="xctrl.LuaResponse"/>
 
 ### LuaResponse
@@ -1346,6 +1411,7 @@
 
 
 
+<a name="user-content-xctrl.Media"/>
 <a name="xctrl.Media"/>
 
 ### Media
@@ -1366,6 +1432,7 @@
 
 
 
+<a name="user-content-xctrl.MuteRequest"/>
 <a name="xctrl.MuteRequest"/>
 
 ### MuteRequest
@@ -1385,6 +1452,7 @@
 
 
 
+<a name="user-content-xctrl.NativeJSRequest"/>
 <a name="xctrl.NativeJSRequest"/>
 
 ### NativeJSRequest
@@ -1401,6 +1469,7 @@
 
 
 
+<a name="user-content-xctrl.NativeJSRequestData"/>
 <a name="xctrl.NativeJSRequestData"/>
 
 ### NativeJSRequestData
@@ -1417,6 +1486,7 @@
 
 
 
+<a name="user-content-xctrl.NativeJSResponse"/>
 <a name="xctrl.NativeJSResponse"/>
 
 ### NativeJSResponse
@@ -1436,6 +1506,7 @@
 
 
 
+<a name="user-content-xctrl.NativeRequest"/>
 <a name="xctrl.NativeRequest"/>
 
 ### NativeRequest
@@ -1454,6 +1525,7 @@
 
 
 
+<a name="user-content-xctrl.NativeResponse"/>
 <a name="xctrl.NativeResponse"/>
 
 ### NativeResponse
@@ -1473,6 +1545,7 @@
 
 
 
+<a name="user-content-xctrl.Node"/>
 <a name="xctrl.Node"/>
 
 ### Node
@@ -1502,6 +1575,7 @@
 
 
 
+<a name="user-content-xctrl.Payload"/>
 <a name="xctrl.Payload"/>
 
 ### Payload
@@ -1528,6 +1602,7 @@
 
 
 
+<a name="user-content-xctrl.PlayRequest"/>
 <a name="xctrl.PlayRequest"/>
 
 ### PlayRequest
@@ -1545,6 +1620,7 @@
 
 
 
+<a name="user-content-xctrl.RecordEvent"/>
 <a name="xctrl.RecordEvent"/>
 
 ### RecordEvent
@@ -1600,6 +1676,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.RecordRequest"/>
 <a name="xctrl.RecordRequest"/>
 
 ### RecordRequest
@@ -1624,6 +1701,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.RecordResponse"/>
 <a name="xctrl.RecordResponse"/>
 
 ### RecordResponse
@@ -1643,6 +1721,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.Request"/>
 <a name="xctrl.Request"/>
 
 ### Request
@@ -1659,6 +1738,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.Response"/>
 <a name="xctrl.Response"/>
 
 ### Response
@@ -1677,6 +1757,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.RingBackDetectionRequest"/>
 <a name="xctrl.RingBackDetectionRequest"/>
 
 ### RingBackDetectionRequest
@@ -1698,6 +1779,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.SendDTMFRequest"/>
 <a name="xctrl.SendDTMFRequest"/>
 
 ### SendDTMFRequest
@@ -1715,6 +1797,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.SendINFORequest"/>
 <a name="xctrl.SendINFORequest"/>
 
 ### SendINFORequest
@@ -1733,6 +1816,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.SetVarRequest"/>
 <a name="xctrl.SetVarRequest"/>
 
 ### SetVarRequest
@@ -1750,6 +1834,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.SpeechRequest"/>
 <a name="xctrl.SpeechRequest"/>
 
 ### SpeechRequest
@@ -1773,6 +1858,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.StashResult"/>
 <a name="xctrl.StashResult"/>
 
 ### StashResult
@@ -1792,6 +1878,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.StateResponse"/>
 <a name="xctrl.StateResponse"/>
 
 ### StateResponse
@@ -1821,6 +1908,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.StopDetectRequest"/>
 <a name="xctrl.StopDetectRequest"/>
 
 ### StopDetectRequest
@@ -1837,6 +1925,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.StopRequest"/>
 <a name="xctrl.StopRequest"/>
 
 ### StopRequest
@@ -1853,6 +1942,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.ThreeWayRequest"/>
 <a name="xctrl.ThreeWayRequest"/>
 
 ### ThreeWayRequest
@@ -1871,6 +1961,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.TransferRequest"/>
 <a name="xctrl.TransferRequest"/>
 
 ### TransferRequest
@@ -1890,6 +1981,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.VarResponse"/>
 <a name="xctrl.VarResponse"/>
 
 ### VarResponse
@@ -1909,6 +2001,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.VideoResizeEvent"/>
 <a name="xctrl.VideoResizeEvent"/>
 
 ### VideoResizeEvent
@@ -1931,6 +2024,7 @@ CDR = 13;
  <!-- end messages -->
 
 
+<a name="user-content-xctrl.HangupRequest.HangupFlag"/>
 <a name="xctrl.HangupRequest.HangupFlag"/>
 
 ### HangupRequest.HangupFlag
@@ -1944,6 +2038,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.MediaType"/>
 <a name="xctrl.MediaType"/>
 
 ### MediaType
@@ -1957,6 +2052,7 @@ CDR = 13;
 
 
 
+<a name="user-content-xctrl.RecordRequest.RecordAction"/>
 <a name="xctrl.RecordRequest.RecordAction"/>
 
 ### RecordRequest.RecordAction
@@ -1976,6 +2072,7 @@ CDR = 13;
  <!-- end HasExtensions -->
 
 
+<a name="user-content-xctrl.XNode"/>
 <a name="xctrl.XNode"/>
 
 ### XNode
@@ -2035,19 +2132,19 @@ CDR = 13;
 
 | .proto Type | Notes | C++ Type | Java Type | Python Type |
 | ----------- | ----- | -------- | --------- | ----------- |
-| <a name="double" /> double |  | double | double | float |
-| <a name="float" /> float |  | float | float | float |
-| <a name="int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int |
-| <a name="int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long |
-| <a name="uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long |
-| <a name="uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long |
-| <a name="sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int |
-| <a name="sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long |
-| <a name="fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int |
-| <a name="fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long |
-| <a name="sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int |
-| <a name="sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long |
-| <a name="bool" /> bool |  | bool | boolean | boolean |
-| <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
-| <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
+| <a name="user-content-double" /><a name="double" /> double |  | double | double | float |
+| <a name="user-content-float" /><a name="float" /> float |  | float | float | float |
+| <a name="user-content-int32" /><a name="int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int |
+| <a name="user-content-int64" /><a name="int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long |
+| <a name="user-content-uint32" /><a name="uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long |
+| <a name="user-content-uint64" /><a name="uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long |
+| <a name="user-content-sint32" /><a name="sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int |
+| <a name="user-content-sint64" /><a name="sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long |
+| <a name="user-content-fixed32" /><a name="fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int |
+| <a name="user-content-fixed64" /><a name="fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long |
+| <a name="user-content-sfixed32" /><a name="sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int |
+| <a name="user-content-sfixed64" /><a name="sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long |
+| <a name="user-content-bool" /><a name="bool" /> bool |  | bool | boolean | boolean |
+| <a name="user-content-string" /><a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
+| <a name="user-content-bytes" /><a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
 

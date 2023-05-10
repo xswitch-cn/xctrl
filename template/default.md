@@ -23,6 +23,7 @@
 
 {{range .Files}}
 {{$file_name := .Name}}
+<a name="user-content-{{.Name}}"/>
 <a name="{{.Name}}"/>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -30,6 +31,7 @@
 {{.Description}}
 
 {{range .Messages}}
+<a name="user-content-{{.FullName}}"/>
 <a name="{{.FullName}}"/>
 
 ### {{.LongName}}
@@ -54,6 +56,7 @@
 {{end}} <!-- end messages -->
 
 {{range .Enums}}
+<a name="user-content-{{.FullName}}"/>
 <a name="{{.FullName}}"/>
 
 ### {{.LongName}}
@@ -79,6 +82,7 @@
 {{end}} <!-- end HasExtensions -->
 
 {{range .Services}}
+<a name="user-content-{{.FullName}}"/>
 <a name="{{.FullName}}"/>
 
 ### {{.Name}}
@@ -98,5 +102,5 @@
 | .proto Type | Notes | C++ Type | Java Type | Python Type |
 | ----------- | ----- | -------- | --------- | ----------- |
 {{range .Scalars -}}
-| <a name="{{.ProtoType}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} |
+| <a name="user-content-{{.ProtoType}}" /><a name="{{.ProtoType}}" /> {{.ProtoType}} | {{.Notes}} | {{.CppType}} | {{.JavaType}} | {{.PythonType}} |
 {{end}}
