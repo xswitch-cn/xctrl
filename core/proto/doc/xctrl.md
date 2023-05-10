@@ -9,127 +9,120 @@
 
 ## 目录
 
-- [core/proto/xctrl/xctrl.proto](#core_proto_xctrl_xctrl-proto)
-  - [AIRequest](#xctrl-AIRequest)
-  - [AIRequest.DataEntry](#xctrl-AIRequest-DataEntry)
-  - [AIResponse](#xctrl-AIResponse)
-  - [AcceptRequest](#xctrl-AcceptRequest)
-  - [Action](#xctrl-Action)
-  - [Application](#xctrl-Application)
-  - [BridgeRequest](#xctrl-BridgeRequest)
-  - [BroadcastRequest](#xctrl-BroadcastRequest)
-  - [CallParam](#xctrl-CallParam)
-  - [CallParam.ParamsEntry](#xctrl-CallParam-ParamsEntry)
-  - [CallcenterRequest](#xctrl-CallcenterRequest)
-  - [CallcenterResponse](#xctrl-CallcenterResponse)
-  - [ChannelBridgeRequest](#xctrl-ChannelBridgeRequest)
-  - [ChannelData](#xctrl-ChannelData)
-  - [ChannelDataResponse](#xctrl-ChannelDataResponse)
-  - [ChannelEvent](#xctrl-ChannelEvent)
-  - [ChannelEvent.ParamsEntry](#xctrl-ChannelEvent-ParamsEntry)
-  - [ConferenceInfoRequest](#xctrl-ConferenceInfoRequest)
-  - [ConferenceInfoRequestData](#xctrl-ConferenceInfoRequestData)
-  - [ConferenceInfoRequestDataData](#xctrl-ConferenceInfoRequestDataData)
-  - [ConferenceInfoRequestDataData.MemberFiltersEntry](#xctrl-ConferenceInfoRequestDataData-MemberFiltersEntry)
-  - [ConferenceInfoResponse](#xctrl-ConferenceInfoResponse)
-  - [ConferenceInfoResponseConference](#xctrl-ConferenceInfoResponseConference)
-  - [ConferenceInfoResponseData](#xctrl-ConferenceInfoResponseData)
-  - [ConferenceInfoResponseFlags](#xctrl-ConferenceInfoResponseFlags)
-  - [ConferenceInfoResponseMembers](#xctrl-ConferenceInfoResponseMembers)
-  - [ConferenceInfoResponseVariables](#xctrl-ConferenceInfoResponseVariables)
-  - [ConferenceRequest](#xctrl-ConferenceRequest)
-  - [ConferenceResponse](#xctrl-ConferenceResponse)
-  - [ConsultRequest](#xctrl-ConsultRequest)
-  - [Ctrl](#xctrl-Ctrl)
-  - [DTMFRequest](#xctrl-DTMFRequest)
-  - [DTMFResponse](#xctrl-DTMFResponse)
-  - [Destination](#xctrl-Destination)
-  - [Destination.GlobalParamsEntry](#xctrl-Destination-GlobalParamsEntry)
-  - [DetectFaceRequest](#xctrl-DetectFaceRequest)
-  - [DetectRequest](#xctrl-DetectRequest)
-  - [DetectResponse](#xctrl-DetectResponse)
-  - [DetectedData](#xctrl-DetectedData)
-  - [DetectedFaceEvent](#xctrl-DetectedFaceEvent)
-  - [DialRequest](#xctrl-DialRequest)
-  - [DialResponse](#xctrl-DialResponse)
-  - [DigitsRequest](#xctrl-DigitsRequest)
-  - [DigitsResponse](#xctrl-DigitsResponse)
-  - [Echo2Request](#xctrl-Echo2Request)
-  - [EngineData](#xctrl-EngineData)
-  - [FIFORequest](#xctrl-FIFORequest)
-  - [FIFOResponse](#xctrl-FIFOResponse)
-  - [GetChannelDataRequest](#xctrl-GetChannelDataRequest)
-  - [GetStateRequest](#xctrl-GetStateRequest)
-  - [GetVarRequest](#xctrl-GetVarRequest)
-  - [HangupRequest](#xctrl-HangupRequest)
-  - [Header](#xctrl-Header)
-  - [HoldRequest](#xctrl-HoldRequest)
-  - [HttAPIRequest](#xctrl-HttAPIRequest)
-  - [HttAPIRequest.DataEntry](#xctrl-HttAPIRequest-DataEntry)
-  - [HttAPIResponse](#xctrl-HttAPIResponse)
-  - [InterceptRequest](#xctrl-InterceptRequest)
-  - [JStatusIdleCPU](#xctrl-JStatusIdleCPU)
-  - [JStatusRequest](#xctrl-JStatusRequest)
-  - [JStatusRequest.JStatusData](#xctrl-JStatusRequest-JStatusData)
-  - [JStatusResponse](#xctrl-JStatusResponse)
-  - [JStatusResponseData](#xctrl-JStatusResponseData)
-  - [JStatusSessions](#xctrl-JStatusSessions)
-  - [JStatusSessionsCount](#xctrl-JStatusSessionsCount)
-  - [JStatusSessionsRate](#xctrl-JStatusSessionsRate)
-  - [JStatusStackSize](#xctrl-JStatusStackSize)
-  - [JStatusUptime](#xctrl-JStatusUptime)
-  - [Media](#xctrl-Media)
-  - [MuteRequest](#xctrl-MuteRequest)
-  - [NativeJSRequest](#xctrl-NativeJSRequest)
-  - [NativeJSRequestData](#xctrl-NativeJSRequestData)
-  - [NativeJSResponse](#xctrl-NativeJSResponse)
-  - [NativeRequest](#xctrl-NativeRequest)
-  - [NativeResponse](#xctrl-NativeResponse)
-  - [Node](#xctrl-Node)
-  - [Payload](#xctrl-Payload)
-  - [PlayRequest](#xctrl-PlayRequest)
-  - [RecordEvent](#xctrl-RecordEvent)
-  - [RecordRequest](#xctrl-RecordRequest)
-  - [RecordResponse](#xctrl-RecordResponse)
-  - [Request](#xctrl-Request)
-  - [Response](#xctrl-Response)
-  - [RingBackDetectionRequest](#xctrl-RingBackDetectionRequest)
-  - [SendDTMFRequest](#xctrl-SendDTMFRequest)
-  - [SendINFORequest](#xctrl-SendINFORequest)
-  - [SetVarRequest](#xctrl-SetVarRequest)
-  - [SetVarRequest.DataEntry](#xctrl-SetVarRequest-DataEntry)
-  - [SpeechRequest](#xctrl-SpeechRequest)
-  - [SpeechRequest.ParamsEntry](#xctrl-SpeechRequest-ParamsEntry)
-  - [StashResult](#xctrl-StashResult)
-  - [StateResponse](#xctrl-StateResponse)
-  - [StopDetectRequest](#xctrl-StopDetectRequest)
-  - [StopRequest](#xctrl-StopRequest)
-  - [ThreeWayRequest](#xctrl-ThreeWayRequest)
-  - [TransferRequest](#xctrl-TransferRequest)
-  - [VarResponse](#xctrl-VarResponse)
-  - [VarResponse.DataEntry](#xctrl-VarResponse-DataEntry)
-  - [VideoResizeEvent](#xctrl-VideoResizeEvent)
+- [xctrl.proto](#xctrl.proto)
+  - [AIRequest](#xctrl.AIRequest)
+  - [AIResponse](#xctrl.AIResponse)
+  - [AcceptRequest](#xctrl.AcceptRequest)
+  - [Action](#xctrl.Action)
+  - [Application](#xctrl.Application)
+  - [BridgeRequest](#xctrl.BridgeRequest)
+  - [BroadcastRequest](#xctrl.BroadcastRequest)
+  - [CallParam](#xctrl.CallParam)
+  - [CallcenterRequest](#xctrl.CallcenterRequest)
+  - [CallcenterResponse](#xctrl.CallcenterResponse)
+  - [ChannelBridgeRequest](#xctrl.ChannelBridgeRequest)
+  - [ChannelData](#xctrl.ChannelData)
+  - [ChannelDataResponse](#xctrl.ChannelDataResponse)
+  - [ChannelEvent](#xctrl.ChannelEvent)
+  - [ConferenceInfoRequest](#xctrl.ConferenceInfoRequest)
+  - [ConferenceInfoRequestData](#xctrl.ConferenceInfoRequestData)
+  - [ConferenceInfoRequestDataData](#xctrl.ConferenceInfoRequestDataData)
+  - [ConferenceInfoResponse](#xctrl.ConferenceInfoResponse)
+  - [ConferenceInfoResponseConference](#xctrl.ConferenceInfoResponseConference)
+  - [ConferenceInfoResponseData](#xctrl.ConferenceInfoResponseData)
+  - [ConferenceInfoResponseFlags](#xctrl.ConferenceInfoResponseFlags)
+  - [ConferenceInfoResponseMembers](#xctrl.ConferenceInfoResponseMembers)
+  - [ConferenceInfoResponseVariables](#xctrl.ConferenceInfoResponseVariables)
+  - [ConferenceRequest](#xctrl.ConferenceRequest)
+  - [ConferenceResponse](#xctrl.ConferenceResponse)
+  - [ConsultRequest](#xctrl.ConsultRequest)
+  - [Ctrl](#xctrl.Ctrl)
+  - [DTMFRequest](#xctrl.DTMFRequest)
+  - [DTMFResponse](#xctrl.DTMFResponse)
+  - [Destination](#xctrl.Destination)
+  - [DetectFaceRequest](#xctrl.DetectFaceRequest)
+  - [DetectRequest](#xctrl.DetectRequest)
+  - [DetectResponse](#xctrl.DetectResponse)
+  - [DetectedData](#xctrl.DetectedData)
+  - [DetectedFaceEvent](#xctrl.DetectedFaceEvent)
+  - [DialRequest](#xctrl.DialRequest)
+  - [DialResponse](#xctrl.DialResponse)
+  - [DigitsRequest](#xctrl.DigitsRequest)
+  - [DigitsResponse](#xctrl.DigitsResponse)
+  - [Echo2Request](#xctrl.Echo2Request)
+  - [EngineData](#xctrl.EngineData)
+  - [FIFORequest](#xctrl.FIFORequest)
+  - [FIFOResponse](#xctrl.FIFOResponse)
+  - [GetChannelDataRequest](#xctrl.GetChannelDataRequest)
+  - [GetStateRequest](#xctrl.GetStateRequest)
+  - [GetVarRequest](#xctrl.GetVarRequest)
+  - [HangupRequest](#xctrl.HangupRequest)
+  - [Header](#xctrl.Header)
+  - [HoldRequest](#xctrl.HoldRequest)
+  - [HttAPIRequest](#xctrl.HttAPIRequest)
+  - [HttAPIResponse](#xctrl.HttAPIResponse)
+  - [InterceptRequest](#xctrl.InterceptRequest)
+  - [JStatusIdleCPU](#xctrl.JStatusIdleCPU)
+  - [JStatusRequest](#xctrl.JStatusRequest)
+  - [JStatusRequest.JStatusData](#xctrl.JStatusRequest.JStatusData)
+  - [JStatusResponse](#xctrl.JStatusResponse)
+  - [JStatusResponseData](#xctrl.JStatusResponseData)
+  - [JStatusSessions](#xctrl.JStatusSessions)
+  - [JStatusSessionsCount](#xctrl.JStatusSessionsCount)
+  - [JStatusSessionsRate](#xctrl.JStatusSessionsRate)
+  - [JStatusStackSize](#xctrl.JStatusStackSize)
+  - [JStatusUptime](#xctrl.JStatusUptime)
+  - [LuaRequest](#xctrl.LuaRequest)
+  - [LuaResponse](#xctrl.LuaResponse)
+  - [Media](#xctrl.Media)
+  - [MuteRequest](#xctrl.MuteRequest)
+  - [NativeJSRequest](#xctrl.NativeJSRequest)
+  - [NativeJSRequestData](#xctrl.NativeJSRequestData)
+  - [NativeJSResponse](#xctrl.NativeJSResponse)
+  - [NativeRequest](#xctrl.NativeRequest)
+  - [NativeResponse](#xctrl.NativeResponse)
+  - [Node](#xctrl.Node)
+  - [Payload](#xctrl.Payload)
+  - [PlayRequest](#xctrl.PlayRequest)
+  - [RecordEvent](#xctrl.RecordEvent)
+  - [RecordRequest](#xctrl.RecordRequest)
+  - [RecordResponse](#xctrl.RecordResponse)
+  - [Request](#xctrl.Request)
+  - [Response](#xctrl.Response)
+  - [RingBackDetectionRequest](#xctrl.RingBackDetectionRequest)
+  - [SendDTMFRequest](#xctrl.SendDTMFRequest)
+  - [SendINFORequest](#xctrl.SendINFORequest)
+  - [SetVarRequest](#xctrl.SetVarRequest)
+  - [SpeechRequest](#xctrl.SpeechRequest)
+  - [StashResult](#xctrl.StashResult)
+  - [StateResponse](#xctrl.StateResponse)
+  - [StopDetectRequest](#xctrl.StopDetectRequest)
+  - [StopRequest](#xctrl.StopRequest)
+  - [ThreeWayRequest](#xctrl.ThreeWayRequest)
+  - [TransferRequest](#xctrl.TransferRequest)
+  - [VarResponse](#xctrl.VarResponse)
+  - [VideoResizeEvent](#xctrl.VideoResizeEvent)
 
-  - [HangupRequest.HangupFlag](#xctrl-HangupRequest-HangupFlag)
-  - [MediaType](#xctrl-MediaType)
-  - [RecordRequest.RecordAction](#xctrl-RecordRequest-RecordAction)
+  - [HangupRequest.HangupFlag](#xctrl.HangupRequest.HangupFlag)
+  - [MediaType](#xctrl.MediaType)
+  - [RecordRequest.RecordAction](#xctrl.RecordRequest.RecordAction)
 
-  - [XNode](#xctrl-XNode)
+
+  - [XNode](#xctrl.XNode)
+
 
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="core_proto_xctrl_xctrl-proto"></a>
-<a name="user-content-core_proto_xctrl_xctrl-proto"></a>
+<a name="xctrl.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## core/proto/xctrl/xctrl.proto
+## xctrl.proto
 
 
 
-<a name="xctrl-AIRequest"></a>
-<a name="user-content-xctrl-AIRequest"></a>
+<a name="xctrl.AIRequest"/>
 
 ### AIRequest
 
@@ -139,21 +132,14 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [map<string,string>](#map<string,string>) |  |  |
+| data | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-
-<a name="xctrl-AIResponse"></a>
-<a name="user-content-xctrl-AIResponse"></a>
+<a name="xctrl.AIResponse"/>
 
 ### AIResponse
 
@@ -171,8 +157,7 @@
 
 
 
-<a name="xctrl-AcceptRequest"></a>
-<a name="user-content-xctrl-AcceptRequest"></a>
+<a name="xctrl.AcceptRequest"/>
 
 ### AcceptRequest
 
@@ -189,8 +174,7 @@
 
 
 
-<a name="xctrl-Action"></a>
-<a name="user-content-xctrl-Action"></a>
+<a name="xctrl.Action"/>
 
 ### Action
 
@@ -201,15 +185,14 @@
 | name | [string](#string) |  |  |
 | owner_uid | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
-| param | [CallParam](#xctrl-CallParam) |  |  |
+| param | [CallParam](#xctrl.CallParam) |  |  |
 
 
 
 
 
 
-<a name="xctrl-Application"></a>
-<a name="user-content-xctrl-Application"></a>
+<a name="xctrl.Application"/>
 
 ### Application
 
@@ -225,8 +208,7 @@
 
 
 
-<a name="xctrl-BridgeRequest"></a>
-<a name="user-content-xctrl-BridgeRequest"></a>
+<a name="xctrl.BridgeRequest"/>
 
 ### BridgeRequest
 
@@ -239,15 +221,14 @@
 | ringback | [string](#string) |  |  |
 | flow_control | [string](#string) |  | NONE | CALLER | CALLEE | ANY |
 | continue_on_fail | [string](#string) |  | true | false | comma separated freeswitch causes e.g. USER_BUSY,NO_ANSWER |
-| destination | [Destination](#xctrl-Destination) |  |  |
+| destination | [Destination](#xctrl.Destination) |  |  |
 
 
 
 
 
 
-<a name="xctrl-BroadcastRequest"></a>
-<a name="user-content-xctrl-BroadcastRequest"></a>
+<a name="xctrl.BroadcastRequest"/>
 
 ### BroadcastRequest
 
@@ -257,7 +238,7 @@
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| media | [Media](#xctrl-Media) |  |  |
+| media | [Media](#xctrl.Media) |  |  |
 | option | [string](#string) |  | BOTH, ALEG, BLEG, AHOLDB, BHOLDA |
 
 
@@ -265,8 +246,7 @@
 
 
 
-<a name="xctrl-CallParam"></a>
-<a name="user-content-xctrl-CallParam"></a>
+<a name="xctrl.CallParam"/>
 
 ### CallParam
 
@@ -281,21 +261,14 @@
 | dial_string | [string](#string) |  |  |
 | timeout | [uint32](#uint32) |  |  |
 | max_duration | [uint32](#uint32) |  |  |
-| params | [map<string,string>](#map<string,string>) | repeated |  |
+| params | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-
-<a name="xctrl-CallcenterRequest"></a>
-<a name="user-content-xctrl-CallcenterRequest"></a>
+<a name="xctrl.CallcenterRequest"/>
 
 ### CallcenterRequest
 
@@ -311,8 +284,7 @@
 
 
 
-<a name="xctrl-CallcenterResponse"></a>
-<a name="user-content-xctrl-CallcenterResponse"></a>
+<a name="xctrl.CallcenterResponse"/>
 
 ### CallcenterResponse
 
@@ -330,8 +302,7 @@
 
 
 
-<a name="xctrl-ChannelBridgeRequest"></a>
-<a name="user-content-xctrl-ChannelBridgeRequest"></a>
+<a name="xctrl.ChannelBridgeRequest"/>
 
 ### ChannelBridgeRequest
 
@@ -350,8 +321,7 @@
 
 
 
-<a name="xctrl-ChannelData"></a>
-<a name="user-content-xctrl-ChannelData"></a>
+<a name="xctrl.ChannelData"/>
 
 ### ChannelData
 
@@ -370,8 +340,7 @@
 
 
 
-<a name="xctrl-ChannelDataResponse"></a>
-<a name="user-content-xctrl-ChannelDataResponse"></a>
+<a name="xctrl.ChannelDataResponse"/>
 
 ### ChannelDataResponse
 
@@ -384,15 +353,14 @@
 | node_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  | optional |
 | format | [string](#string) |  |  |
-| data | [ChannelData](#xctrl-ChannelData) |  | when format == JSON |
+| data | [ChannelData](#xctrl.ChannelData) |  | when format == JSON |
 
 
 
 
 
 
-<a name="xctrl-ChannelEvent"></a>
-<a name="user-content-xctrl-ChannelEvent"></a>
+<a name="xctrl.ChannelEvent"/>
 
 ### ChannelEvent
 
@@ -413,7 +381,7 @@
 | answer_epoch | [uint32](#uint32) |  |  |
 | hangup_epoch | [uint32](#uint32) |  |  |
 | peers | [string](#string) | repeated | list of uuids |
-| params | [map<string,string>](#map<string,string>) |  |  |
+| params | [map<string, string>](#map<string, string>) |  |  |
 | billsec | [string](#string) |  |  |
 | duration | [string](#string) |  |  |
 | cause | [string](#string) |  |  |
@@ -426,14 +394,7 @@
 
 
 
-
-
-
-
-
-
-<a name="xctrl-ConferenceInfoRequest"></a>
-<a name="user-content-xctrl-ConferenceInfoRequest"></a>
+<a name="xctrl.ConferenceInfoRequest"/>
 
 ### ConferenceInfoRequest
 
@@ -442,15 +403,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
-| data | [ConferenceInfoRequestData](#xctrl-ConferenceInfoRequestData) |  |  |
+| data | [ConferenceInfoRequestData](#xctrl.ConferenceInfoRequestData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoRequestData"></a>
-<a name="user-content-xctrl-ConferenceInfoRequestData"></a>
+<a name="xctrl.ConferenceInfoRequestData"/>
 
 ### ConferenceInfoRequestData
 
@@ -459,15 +419,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | command | [string](#string) |  |  |
-| data | [ConferenceInfoRequestDataData](#xctrl-ConferenceInfoRequestDataData) |  |  |
+| data | [ConferenceInfoRequestDataData](#xctrl.ConferenceInfoRequestDataData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoRequestDataData"></a>
-<a name="user-content-xctrl-ConferenceInfoRequestDataData"></a>
+<a name="xctrl.ConferenceInfoRequestDataData"/>
 
 ### ConferenceInfoRequestDataData
 
@@ -477,22 +436,14 @@
 | ----- | ---- | ----- | ----------- |
 | conferenceName | [string](#string) |  |  |
 | showMembers | [bool](#bool) |  |  |
-| memberFilters | [map<string,string>](#map<string,string>) |  |  |
+| memberFilters | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-
-
-<a name="xctrl-ConferenceInfoResponse"></a>
-<a name="user-content-xctrl-ConferenceInfoResponse"></a>
+<a name="xctrl.ConferenceInfoResponse"/>
 
 ### ConferenceInfoResponse
 
@@ -504,15 +455,14 @@
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | seq | [string](#string) |  | optional |
-| data | [ConferenceInfoResponseData](#xctrl-ConferenceInfoResponseData) |  |  |
+| data | [ConferenceInfoResponseData](#xctrl.ConferenceInfoResponseData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoResponseConference"></a>
-<a name="user-content-xctrl-ConferenceInfoResponseConference"></a>
+<a name="xctrl.ConferenceInfoResponseConference"/>
 
 ### ConferenceInfoResponseConference
 
@@ -545,16 +495,15 @@
 | video_bridge | [bool](#bool) |  |  |
 | video_floor_only | [bool](#bool) |  |  |
 | video_rfc4579 | [bool](#bool) |  |  |
-| variables | [ConferenceInfoResponseVariables](#xctrl-ConferenceInfoResponseVariables) |  |  |
-| members | [ConferenceInfoResponseMembers](#xctrl-ConferenceInfoResponseMembers) | repeated |  |
+| variables | [ConferenceInfoResponseVariables](#xctrl.ConferenceInfoResponseVariables) |  |  |
+| members | [ConferenceInfoResponseMembers](#xctrl.ConferenceInfoResponseMembers) | repeated |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoResponseData"></a>
-<a name="user-content-xctrl-ConferenceInfoResponseData"></a>
+<a name="xctrl.ConferenceInfoResponseData"/>
 
 ### ConferenceInfoResponseData
 
@@ -562,15 +511,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| conference | [ConferenceInfoResponseConference](#xctrl-ConferenceInfoResponseConference) |  |  |
+| conference | [ConferenceInfoResponseConference](#xctrl.ConferenceInfoResponseConference) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoResponseFlags"></a>
-<a name="user-content-xctrl-ConferenceInfoResponseFlags"></a>
+<a name="xctrl.ConferenceInfoResponseFlags"/>
 
 ### ConferenceInfoResponseFlags
 
@@ -595,8 +543,7 @@
 
 
 
-<a name="xctrl-ConferenceInfoResponseMembers"></a>
-<a name="user-content-xctrl-ConferenceInfoResponseMembers"></a>
+<a name="xctrl.ConferenceInfoResponseMembers"/>
 
 ### ConferenceInfoResponseMembers
 
@@ -616,15 +563,14 @@
 | volume_out | [int32](#int32) |  |  |
 | output_volume | [int32](#int32) |  |  |
 | input_volume | [int32](#int32) |  |  |
-| flags | [ConferenceInfoResponseFlags](#xctrl-ConferenceInfoResponseFlags) |  |  |
+| flags | [ConferenceInfoResponseFlags](#xctrl.ConferenceInfoResponseFlags) |  |  |
 
 
 
 
 
 
-<a name="xctrl-ConferenceInfoResponseVariables"></a>
-<a name="user-content-xctrl-ConferenceInfoResponseVariables"></a>
+<a name="xctrl.ConferenceInfoResponseVariables"/>
 
 ### ConferenceInfoResponseVariables
 
@@ -634,8 +580,7 @@
 
 
 
-<a name="xctrl-ConferenceRequest"></a>
-<a name="user-content-xctrl-ConferenceRequest"></a>
+<a name="xctrl.ConferenceRequest"/>
 
 ### ConferenceRequest
 
@@ -653,8 +598,7 @@
 
 
 
-<a name="xctrl-ConferenceResponse"></a>
-<a name="user-content-xctrl-ConferenceResponse"></a>
+<a name="xctrl.ConferenceResponse"/>
 
 ### ConferenceResponse
 
@@ -672,8 +616,7 @@
 
 
 
-<a name="xctrl-ConsultRequest"></a>
-<a name="user-content-xctrl-ConsultRequest"></a>
+<a name="xctrl.ConsultRequest"/>
 
 ### ConsultRequest
 
@@ -683,15 +626,14 @@
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| destination | [Destination](#xctrl-Destination) |  |  |
+| destination | [Destination](#xctrl.Destination) |  |  |
 
 
 
 
 
 
-<a name="xctrl-Ctrl"></a>
-<a name="user-content-xctrl-Ctrl"></a>
+<a name="xctrl.Ctrl"/>
 
 ### Ctrl
 
@@ -711,8 +653,7 @@
 
 
 
-<a name="xctrl-DTMFRequest"></a>
-<a name="user-content-xctrl-DTMFRequest"></a>
+<a name="xctrl.DTMFRequest"/>
 
 ### DTMFRequest
 
@@ -727,10 +668,10 @@
 | timeout | [uint32](#uint32) |  | optiona default = 5000ms |
 | digit_timeout | [uint32](#uint32) |  | optional default = 2000ms |
 | terminators | [string](#string) |  | optional default none, can be 0-9,*,# |
-| media | [Media](#xctrl-Media) |  | play or tts |
+| media | [Media](#xctrl.Media) |  | play or tts |
 | max_tries | [uint32](#uint32) |  | not implemented yet |
 | regex | [string](#string) |  |  |
-| media_invalid | [Media](#xctrl-Media) |  | invalid meida |
+| media_invalid | [Media](#xctrl.Media) |  | invalid  meida |
 | play_last_invalid_prompt | [bool](#bool) |  | default false |
 
 
@@ -738,8 +679,7 @@
 
 
 
-<a name="xctrl-DTMFResponse"></a>
-<a name="user-content-xctrl-DTMFResponse"></a>
+<a name="xctrl.DTMFResponse"/>
 
 ### DTMFResponse
 
@@ -759,8 +699,7 @@
 
 
 
-<a name="xctrl-Destination"></a>
-<a name="user-content-xctrl-Destination"></a>
+<a name="xctrl.Destination"/>
 
 ### Destination
 
@@ -769,8 +708,8 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ringall | [bool](#bool) |  |  |
-| global_params | [map<string,string>](#map<string,string>) | repeated |  |
-| call_params | [CallParam](#xctrl-CallParam) | repeated |  |
+| global_params | [map<string, string>](#map<string, string>) |  |  |
+| call_params | [CallParam](#xctrl.CallParam) | repeated |  |
 | channel_params | [string](#string) | repeated |  |
 
 
@@ -778,14 +717,7 @@
 
 
 
-
-
-
-
-
-
-<a name="xctrl-DetectFaceRequest"></a>
-<a name="user-content-xctrl-DetectFaceRequest"></a>
+<a name="xctrl.DetectFaceRequest"/>
 
 ### DetectFaceRequest
 
@@ -808,8 +740,7 @@
 
 
 
-<a name="xctrl-DetectRequest"></a>
-<a name="user-content-xctrl-DetectRequest"></a>
+<a name="xctrl.DetectRequest"/>
 
 ### DetectRequest
 
@@ -819,17 +750,16 @@
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| media | [Media](#xctrl-Media) |  | oneof play or tts |
-| dtmf | [DTMFRequest](#xctrl-DTMFRequest) |  | detect dtmf too, optional |
-| speech | [SpeechRequest](#xctrl-SpeechRequest) |  | speech params, mandatory |
+| media | [Media](#xctrl.Media) |  | oneof play or tts |
+| dtmf | [DTMFRequest](#xctrl.DTMFRequest) |  | detect dtmf too, optional |
+| speech | [SpeechRequest](#xctrl.SpeechRequest) |  | speech params, mandatory |
 
 
 
 
 
 
-<a name="xctrl-DetectResponse"></a>
-<a name="user-content-xctrl-DetectResponse"></a>
+<a name="xctrl.DetectResponse"/>
 
 ### DetectResponse
 
@@ -841,15 +771,14 @@
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  | optional |
-| data | [DetectedData](#xctrl-DetectedData) |  |  |
+| data | [DetectedData](#xctrl.DetectedData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-DetectedData"></a>
-<a name="user-content-xctrl-DetectedData"></a>
+<a name="xctrl.DetectedData"/>
 
 ### DetectedData
 
@@ -863,9 +792,9 @@
 | confidence | [double](#double) |  |  |
 | is_final | [bool](#bool) |  | final or partial result |
 | error | [string](#string) |  | when error |
-| type | [string](#string) |  | DTMF Speech.Begin Speech.Partial Speech.End ERROR */ |
+| type | [string](#string) |  | DTMF Speech.Begin Speech.Partial Speech.End ERROR |
 | engine | [string](#string) |  | the ASR engine |
-| engine_data | [EngineData](#xctrl-EngineData) |  | string or JSON Struct, detailed object returned from ASR engine |
+| engine_data | [EngineData](#xctrl.EngineData) |  | string or JSON Struct, detailed object returned from ASR engine |
 | offset | [uint32](#uint32) |  |  |
 
 
@@ -873,8 +802,7 @@
 
 
 
-<a name="xctrl-DetectedFaceEvent"></a>
-<a name="user-content-xctrl-DetectedFaceEvent"></a>
+<a name="xctrl.DetectedFaceEvent"/>
 
 ### DetectedFaceEvent
 
@@ -895,8 +823,7 @@
 
 
 
-<a name="xctrl-DialRequest"></a>
-<a name="user-content-xctrl-DialRequest"></a>
+<a name="xctrl.DialRequest"/>
 
 ### DialRequest
 
@@ -905,16 +832,15 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
-| destination | [Destination](#xctrl-Destination) |  |  |
-| apps | [Application](#xctrl-Application) | repeated |  |
+| destination | [Destination](#xctrl.Destination) |  |  |
+| apps | [Application](#xctrl.Application) | repeated |  |
 
 
 
 
 
 
-<a name="xctrl-DialResponse"></a>
-<a name="user-content-xctrl-DialResponse"></a>
+<a name="xctrl.DialResponse"/>
 
 ### DialResponse
 
@@ -933,8 +859,7 @@
 
 
 
-<a name="xctrl-DigitsRequest"></a>
-<a name="user-content-xctrl-DigitsRequest"></a>
+<a name="xctrl.DigitsRequest"/>
 
 ### DigitsRequest
 
@@ -949,10 +874,10 @@
 | timeout | [uint32](#uint32) |  | optiona default = 5000ms |
 | digit_timeout | [uint32](#uint32) |  | optional default = 2000ms |
 | terminators | [string](#string) |  | optional default none, can be 0-9,*,# |
-| media | [Media](#xctrl-Media) |  | play or tts |
+| media | [Media](#xctrl.Media) |  | play or tts |
 | max_tries | [uint32](#uint32) |  | not implemented yet |
 | regex | [string](#string) |  |  |
-| media_invalid | [Media](#xctrl-Media) |  | invalid meida |
+| media_invalid | [Media](#xctrl.Media) |  | invalid  meida |
 | play_last_invalid_prompt | [bool](#bool) |  | default false |
 
 
@@ -960,8 +885,7 @@
 
 
 
-<a name="xctrl-DigitsResponse"></a>
-<a name="user-content-xctrl-DigitsResponse"></a>
+<a name="xctrl.DigitsResponse"/>
 
 ### DigitsResponse
 
@@ -981,8 +905,7 @@
 
 
 
-<a name="xctrl-Echo2Request"></a>
-<a name="user-content-xctrl-Echo2Request"></a>
+<a name="xctrl.Echo2Request"/>
 
 ### Echo2Request
 
@@ -1000,8 +923,7 @@
 
 
 
-<a name="xctrl-EngineData"></a>
-<a name="user-content-xctrl-EngineData"></a>
+<a name="xctrl.EngineData"/>
 
 ### EngineData
 
@@ -1009,16 +931,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| header | [Header](#xctrl-Header) |  |  |
-| payload | [Payload](#xctrl-Payload) |  |  |
+| header | [Header](#xctrl.Header) |  |  |
+| payload | [Payload](#xctrl.Payload) |  |  |
 
 
 
 
 
 
-<a name="xctrl-FIFORequest"></a>
-<a name="user-content-xctrl-FIFORequest"></a>
+<a name="xctrl.FIFORequest"/>
 
 ### FIFORequest
 
@@ -1038,8 +959,7 @@
 
 
 
-<a name="xctrl-FIFOResponse"></a>
-<a name="user-content-xctrl-FIFOResponse"></a>
+<a name="xctrl.FIFOResponse"/>
 
 ### FIFOResponse
 
@@ -1057,8 +977,7 @@
 
 
 
-<a name="xctrl-GetChannelDataRequest"></a>
-<a name="user-content-xctrl-GetChannelDataRequest"></a>
+<a name="xctrl.GetChannelDataRequest"/>
 
 ### GetChannelDataRequest
 
@@ -1075,8 +994,7 @@
 
 
 
-<a name="xctrl-GetStateRequest"></a>
-<a name="user-content-xctrl-GetStateRequest"></a>
+<a name="xctrl.GetStateRequest"/>
 
 ### GetStateRequest
 
@@ -1092,8 +1010,7 @@
 
 
 
-<a name="xctrl-GetVarRequest"></a>
-<a name="user-content-xctrl-GetVarRequest"></a>
+<a name="xctrl.GetVarRequest"/>
 
 ### GetVarRequest
 
@@ -1110,8 +1027,7 @@
 
 
 
-<a name="xctrl-HangupRequest"></a>
-<a name="user-content-xctrl-HangupRequest"></a>
+<a name="xctrl.HangupRequest"/>
 
 ### HangupRequest
 
@@ -1122,15 +1038,14 @@
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
 | cause | [string](#string) |  | NORMAL_CLEARING USER_BUSY CALL_REJECTED ... |
-| flag | [HangupRequest.HangupFlag](#xctrl-HangupRequest-HangupFlag) |  |  |
+| flag | [HangupRequest.HangupFlag](#xctrl.HangupRequest.HangupFlag) |  |  |
 
 
 
 
 
 
-<a name="xctrl-Header"></a>
-<a name="user-content-xctrl-Header"></a>
+<a name="xctrl.Header"/>
 
 ### Header
 
@@ -1150,8 +1065,7 @@
 
 
 
-<a name="xctrl-HoldRequest"></a>
-<a name="user-content-xctrl-HoldRequest"></a>
+<a name="xctrl.HoldRequest"/>
 
 ### HoldRequest
 
@@ -1169,8 +1083,7 @@
 
 
 
-<a name="xctrl-HttAPIRequest"></a>
-<a name="user-content-xctrl-HttAPIRequest"></a>
+<a name="xctrl.HttAPIRequest"/>
 
 ### HttAPIRequest
 
@@ -1180,21 +1093,14 @@
 | ----- | ---- | ----- | ----------- |
 | uuid | [string](#string) |  |  |
 | url | [string](#string) |  |  |
-| data | [map<string,string>](#map<string,string>) |  |  |
+| data | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-
-<a name="xctrl-HttAPIResponse"></a>
-<a name="user-content-xctrl-HttAPIResponse"></a>
+<a name="xctrl.HttAPIResponse"/>
 
 ### HttAPIResponse
 
@@ -1212,8 +1118,7 @@
 
 
 
-<a name="xctrl-InterceptRequest"></a>
-<a name="user-content-xctrl-InterceptRequest"></a>
+<a name="xctrl.InterceptRequest"/>
 
 ### InterceptRequest
 
@@ -1230,8 +1135,7 @@
 
 
 
-<a name="xctrl-JStatusIdleCPU"></a>
-<a name="user-content-xctrl-JStatusIdleCPU"></a>
+<a name="xctrl.JStatusIdleCPU"/>
 
 ### JStatusIdleCPU
 
@@ -1247,8 +1151,7 @@
 
 
 
-<a name="xctrl-JStatusRequest"></a>
-<a name="user-content-xctrl-JStatusRequest"></a>
+<a name="xctrl.JStatusRequest"/>
 
 ### JStatusRequest
 
@@ -1257,15 +1160,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
-| data | [JStatusRequest.JStatusData](#xctrl-JStatusRequest-JStatusData) |  |  |
+| data | [JStatusRequest.JStatusData](#xctrl.JStatusRequest.JStatusData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-JStatusRequest-JStatusData"></a>
-<a name="user-content-xctrl-JStatusRequest-JStatusData"></a>
+<a name="xctrl.JStatusRequest.JStatusData"/>
 
 ### JStatusRequest.JStatusData
 
@@ -1281,8 +1183,7 @@
 
 
 
-<a name="xctrl-JStatusResponse"></a>
-<a name="user-content-xctrl-JStatusResponse"></a>
+<a name="xctrl.JStatusResponse"/>
 
 ### JStatusResponse
 
@@ -1294,15 +1195,14 @@
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | seq | [string](#string) |  |  |
-| data | [JStatusResponseData](#xctrl-JStatusResponseData) |  |  |
+| data | [JStatusResponseData](#xctrl.JStatusResponseData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-JStatusResponseData"></a>
-<a name="user-content-xctrl-JStatusResponseData"></a>
+<a name="xctrl.JStatusResponseData"/>
 
 ### JStatusResponseData
 
@@ -1312,18 +1212,17 @@
 | ----- | ---- | ----- | ----------- |
 | systemStatus | [string](#string) |  |  |
 | version | [string](#string) |  |  |
-| uptime | [JStatusUptime](#xctrl-JStatusUptime) |  |  |
-| sessions | [JStatusSessions](#xctrl-JStatusSessions) |  |  |
-| idleCPU | [JStatusIdleCPU](#xctrl-JStatusIdleCPU) |  |  |
-| stackSizeKB | [JStatusStackSize](#xctrl-JStatusStackSize) |  |  |
+| uptime | [JStatusUptime](#xctrl.JStatusUptime) |  |  |
+| sessions | [JStatusSessions](#xctrl.JStatusSessions) |  |  |
+| idleCPU | [JStatusIdleCPU](#xctrl.JStatusIdleCPU) |  |  |
+| stackSizeKB | [JStatusStackSize](#xctrl.JStatusStackSize) |  |  |
 
 
 
 
 
 
-<a name="xctrl-JStatusSessions"></a>
-<a name="user-content-xctrl-JStatusSessions"></a>
+<a name="xctrl.JStatusSessions"/>
 
 ### JStatusSessions
 
@@ -1331,16 +1230,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| count | [JStatusSessionsCount](#xctrl-JStatusSessionsCount) |  |  |
-| rate | [JStatusSessionsRate](#xctrl-JStatusSessionsRate) |  |  |
+| count | [JStatusSessionsCount](#xctrl.JStatusSessionsCount) |  |  |
+| rate | [JStatusSessionsRate](#xctrl.JStatusSessionsRate) |  |  |
 
 
 
 
 
 
-<a name="xctrl-JStatusSessionsCount"></a>
-<a name="user-content-xctrl-JStatusSessionsCount"></a>
+<a name="xctrl.JStatusSessionsCount"/>
 
 ### JStatusSessionsCount
 
@@ -1359,8 +1257,7 @@
 
 
 
-<a name="xctrl-JStatusSessionsRate"></a>
-<a name="user-content-xctrl-JStatusSessionsRate"></a>
+<a name="xctrl.JStatusSessionsRate"/>
 
 ### JStatusSessionsRate
 
@@ -1378,8 +1275,7 @@
 
 
 
-<a name="xctrl-JStatusStackSize"></a>
-<a name="user-content-xctrl-JStatusStackSize"></a>
+<a name="xctrl.JStatusStackSize"/>
 
 ### JStatusStackSize
 
@@ -1395,8 +1291,7 @@
 
 
 
-<a name="xctrl-JStatusUptime"></a>
-<a name="user-content-xctrl-JStatusUptime"></a>
+<a name="xctrl.JStatusUptime"/>
 
 ### JStatusUptime
 
@@ -1417,8 +1312,41 @@
 
 
 
-<a name="xctrl-Media"></a>
-<a name="user-content-xctrl-Media"></a>
+<a name="xctrl.LuaRequest"/>
+
+### LuaRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| uuid | [string](#string) |  |  |
+| script | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="xctrl.LuaResponse"/>
+
+### LuaResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| code | [int32](#int32) |  |  |
+| message | [string](#string) |  |  |
+| node_uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="xctrl.Media"/>
 
 ### Media
 
@@ -1438,8 +1366,7 @@
 
 
 
-<a name="xctrl-MuteRequest"></a>
-<a name="user-content-xctrl-MuteRequest"></a>
+<a name="xctrl.MuteRequest"/>
 
 ### MuteRequest
 
@@ -1458,8 +1385,7 @@
 
 
 
-<a name="xctrl-NativeJSRequest"></a>
-<a name="user-content-xctrl-NativeJSRequest"></a>
+<a name="xctrl.NativeJSRequest"/>
 
 ### NativeJSRequest
 
@@ -1468,15 +1394,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
-| data | [NativeJSRequestData](#xctrl-NativeJSRequestData) |  |  |
+| data | [NativeJSRequestData](#xctrl.NativeJSRequestData) |  |  |
 
 
 
 
 
 
-<a name="xctrl-NativeJSRequestData"></a>
-<a name="user-content-xctrl-NativeJSRequestData"></a>
+<a name="xctrl.NativeJSRequestData"/>
 
 ### NativeJSRequestData
 
@@ -1492,8 +1417,7 @@
 
 
 
-<a name="xctrl-NativeJSResponse"></a>
-<a name="user-content-xctrl-NativeJSResponse"></a>
+<a name="xctrl.NativeJSResponse"/>
 
 ### NativeJSResponse
 
@@ -1512,8 +1436,7 @@
 
 
 
-<a name="xctrl-NativeRequest"></a>
-<a name="user-content-xctrl-NativeRequest"></a>
+<a name="xctrl.NativeRequest"/>
 
 ### NativeRequest
 
@@ -1531,8 +1454,7 @@
 
 
 
-<a name="xctrl-NativeResponse"></a>
-<a name="user-content-xctrl-NativeResponse"></a>
+<a name="xctrl.NativeResponse"/>
 
 ### NativeResponse
 
@@ -1551,8 +1473,7 @@
 
 
 
-<a name="xctrl-Node"></a>
-<a name="user-content-xctrl-Node"></a>
+<a name="xctrl.Node"/>
 
 ### Node
 
@@ -1581,8 +1502,7 @@
 
 
 
-<a name="xctrl-Payload"></a>
-<a name="user-content-xctrl-Payload"></a>
+<a name="xctrl.Payload"/>
 
 ### Payload
 
@@ -1598,7 +1518,7 @@
 | status | [double](#double) |  |  |
 | gender | [string](#string) |  |  |
 | begin_time | [double](#double) |  |  |
-| stash_result | [StashResult](#xctrl-StashResult) |  |  |
+| stash_result | [StashResult](#xctrl.StashResult) |  |  |
 | audio_extra_info | [string](#string) |  |  |
 | sentence_id | [string](#string) |  |  |
 | gender_score | [double](#double) |  |  |
@@ -1608,8 +1528,7 @@
 
 
 
-<a name="xctrl-PlayRequest"></a>
-<a name="user-content-xctrl-PlayRequest"></a>
+<a name="xctrl.PlayRequest"/>
 
 ### PlayRequest
 
@@ -1619,49 +1538,48 @@
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| media | [Media](#xctrl-Media) |  |  |
+| media | [Media](#xctrl.Media) |  |  |
 
 
 
 
 
 
-<a name="xctrl-RecordEvent"></a>
-<a name="user-content-xctrl-RecordEvent"></a>
+<a name="xctrl.RecordEvent"/>
 
 ### RecordEvent
 enum Method {
 Invalid = 0;
-// 节点注册
+节点注册
 NodeRegister = 1;
-// 节点离线
+节点离线
 NodeUnregister = 2;
-// 节点数据更新
+节点数据更新
 NodeUpdate = 3;
 
-// 通道
+通道
 Channel = 4;
-// FreeSWITCH原生消息
+FreeSWITCH原生消息
 Native = 5;
 
-// old VCC event
+old VCC event
 Vcc = 6;
-// 如果API请求有后续事件
+如果API请求有后续事件
 Result = 7;
-//　异步Dial结果
+　异步Dial结果
 DialResult = 8;
-// NativeAPI结果
+NativeAPI结果
 NativeResult = 9;
 
-// 获取配置信息
+获取配置信息
 FetchXML = 10;
-// 获取Dialplan
+获取Dialplan
 Dialplan = 11;
 
-// 话机消息
+话机消息
 NativeEvent = 12;
 
-// 话单
+话单
 CDR = 13;
 }
 
@@ -1682,8 +1600,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-RecordRequest"></a>
-<a name="user-content-xctrl-RecordRequest"></a>
+<a name="xctrl.RecordRequest"/>
 
 ### RecordRequest
 
@@ -1696,7 +1613,7 @@ CDR = 13;
 | path | [string](#string) |  |  |
 | action | [string](#string) |  | all params are optional |
 | limit | [uint32](#uint32) |  |  |
-| beep | [string](#string) |  | play a beep before record "default" or TGML https://freeswitch.org/confluence/display/FREESWITCH/TGML |
+| beep | [string](#string) |  | play a beep before record"default" or TGML https://freeswitch.org/confluence/display/FREESWITCH/TGML |
 | terminators | [string](#string) |  |  |
 | silence_seconds | [uint32](#uint32) |  |  |
 | thresh | [uint32](#uint32) |  | VAD threshold, 0 is disabled, 1~10000 |
@@ -1707,8 +1624,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-RecordResponse"></a>
-<a name="user-content-xctrl-RecordResponse"></a>
+<a name="xctrl.RecordResponse"/>
 
 ### RecordResponse
 
@@ -1727,8 +1643,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-Request"></a>
-<a name="user-content-xctrl-Request"></a>
+<a name="xctrl.Request"/>
 
 ### Request
 
@@ -1744,8 +1659,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-Response"></a>
-<a name="user-content-xctrl-Response"></a>
+<a name="xctrl.Response"/>
 
 ### Response
 
@@ -1763,8 +1677,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-RingBackDetectionRequest"></a>
-<a name="user-content-xctrl-RingBackDetectionRequest"></a>
+<a name="xctrl.RingBackDetectionRequest"/>
 
 ### RingBackDetectionRequest
 
@@ -1785,8 +1698,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-SendDTMFRequest"></a>
-<a name="user-content-xctrl-SendDTMFRequest"></a>
+<a name="xctrl.SendDTMFRequest"/>
 
 ### SendDTMFRequest
 
@@ -1803,8 +1715,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-SendINFORequest"></a>
-<a name="user-content-xctrl-SendINFORequest"></a>
+<a name="xctrl.SendINFORequest"/>
 
 ### SendINFORequest
 
@@ -1822,8 +1733,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-SetVarRequest"></a>
-<a name="user-content-xctrl-SetVarRequest"></a>
+<a name="xctrl.SetVarRequest"/>
 
 ### SetVarRequest
 
@@ -1833,21 +1743,14 @@ CDR = 13;
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
-| data | [map<string,string>](#map<string,string>) |  |  |
+| data | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-
-<a name="xctrl-SpeechRequest"></a>
-<a name="user-content-xctrl-SpeechRequest"></a>
+<a name="xctrl.SpeechRequest"/>
 
 ### SpeechRequest
 
@@ -1861,7 +1764,7 @@ CDR = 13;
 | speech_timeout | [uint32](#uint32) |  |  |
 | partial_events | [bool](#bool) |  |  |
 | disable_detected_data_event | [bool](#bool) |  |  |
-| params | [map<string,string>](#map<string,string>) |  |  |
+| params | [map<string, string>](#map<string, string>) |  |  |
 | grammar | [string](#string) |  |  |
 | max_speech_timeout | [uint32](#uint32) |  |  |
 
@@ -1870,14 +1773,7 @@ CDR = 13;
 
 
 
-
-
-
-
-
-
-<a name="xctrl-StashResult"></a>
-<a name="user-content-xctrl-StashResult"></a>
+<a name="xctrl.StashResult"/>
 
 ### StashResult
 
@@ -1896,8 +1792,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-StateResponse"></a>
-<a name="user-content-xctrl-StateResponse"></a>
+<a name="xctrl.StateResponse"/>
 
 ### StateResponse
 
@@ -1926,8 +1821,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-StopDetectRequest"></a>
-<a name="user-content-xctrl-StopDetectRequest"></a>
+<a name="xctrl.StopDetectRequest"/>
 
 ### StopDetectRequest
 
@@ -1943,8 +1837,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-StopRequest"></a>
-<a name="user-content-xctrl-StopRequest"></a>
+<a name="xctrl.StopRequest"/>
 
 ### StopRequest
 
@@ -1960,8 +1853,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-ThreeWayRequest"></a>
-<a name="user-content-xctrl-ThreeWayRequest"></a>
+<a name="xctrl.ThreeWayRequest"/>
 
 ### ThreeWayRequest
 
@@ -1979,8 +1871,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-TransferRequest"></a>
-<a name="user-content-xctrl-TransferRequest"></a>
+<a name="xctrl.TransferRequest"/>
 
 ### TransferRequest
 
@@ -1999,8 +1890,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-VarResponse"></a>
-<a name="user-content-xctrl-VarResponse"></a>
+<a name="xctrl.VarResponse"/>
 
 ### VarResponse
 
@@ -2012,20 +1902,14 @@ CDR = 13;
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  | optional |
-| data | [map<string,string>](#map<string,string>) |  |  |
+| data | [map<string, string>](#map<string, string>) |  |  |
 
 
 
 
 
 
-
-
-
-
-
-<a name="xctrl-VideoResizeEvent"></a>
-<a name="user-content-xctrl-VideoResizeEvent"></a>
+<a name="xctrl.VideoResizeEvent"/>
 
 ### VideoResizeEvent
 
@@ -2047,8 +1931,7 @@ CDR = 13;
  <!-- end messages -->
 
 
-<a name="xctrl-HangupRequest-HangupFlag"></a>
-<a name="user-content-xctrl-HangupRequest-HangupFlag"></a>
+<a name="xctrl.HangupRequest.HangupFlag"/>
 
 ### HangupRequest.HangupFlag
 
@@ -2061,8 +1944,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-MediaType"></a>
-<a name="user-content-xctrl-MediaType"></a>
+<a name="xctrl.MediaType"/>
 
 ### MediaType
 
@@ -2075,8 +1957,7 @@ CDR = 13;
 
 
 
-<a name="xctrl-RecordRequest-RecordAction"></a>
-<a name="user-content-xctrl-RecordRequest-RecordAction"></a>
+<a name="xctrl.RecordRequest.RecordAction"/>
 
 ### RecordRequest.RecordAction
 
@@ -2095,55 +1976,56 @@ CDR = 13;
  <!-- end HasExtensions -->
 
 
-<a name="xctrl-XNode"></a>
-<a name="user-content-xctrl-XNode"></a>
+<a name="xctrl.XNode"/>
 
 ### XNode
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Dial | [DialRequest](#xctrl-DialRequest) | [DialResponse](#xctrl-DialResponse) | 外呼 |
-| Answer | [Request](#xctrl-Request) | [Response](#xctrl-Response) | 应答 |
-| Accept | [AcceptRequest](#xctrl-AcceptRequest) | [Response](#xctrl-Response) | 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管 |
-| Play | [PlayRequest](#xctrl-PlayRequest) | [Response](#xctrl-Response) | 播放一个文件或TTS |
-| Stop | [StopRequest](#xctrl-StopRequest) | [Response](#xctrl-Response) | 停止当前正在执行的API |
-| Broadcast | [BroadcastRequest](#xctrl-BroadcastRequest) | [Response](#xctrl-Response) | 广播 |
-| Mute | [MuteRequest](#xctrl-MuteRequest) | [Response](#xctrl-Response) | 设置静音 |
-| Record | [RecordRequest](#xctrl-RecordRequest) | [RecordResponse](#xctrl-RecordResponse) | 录音 |
-| Hangup | [HangupRequest](#xctrl-HangupRequest) | [Response](#xctrl-Response) | 挂断当前UUID |
-| Bridge | [BridgeRequest](#xctrl-BridgeRequest) | [Response](#xctrl-Response) | 在把当前呼叫桥接（发起）另一个呼叫 |
-| ChannelBridge | [ChannelBridgeRequest](#xctrl-ChannelBridgeRequest) | [Response](#xctrl-Response) | 桥接两个呼叫 |
-| UnBridge | [Request](#xctrl-Request) | [Response](#xctrl-Response) | 将桥接的呼叫分开 |
-| UnBridge2 | [Request](#xctrl-Request) | [Response](#xctrl-Response) | 将桥接的呼叫分开 |
-| Hold | [HoldRequest](#xctrl-HoldRequest) | [Response](#xctrl-Response) | 呼叫保持/取消保持 |
-| Transfer | [TransferRequest](#xctrl-TransferRequest) | [Response](#xctrl-Response) | 转移（待定） |
-| ThreeWay | [ThreeWayRequest](#xctrl-ThreeWayRequest) | [Response](#xctrl-Response) | 三方通话 |
-| Echo2 | [Echo2Request](#xctrl-Echo2Request) | [Response](#xctrl-Response) | 回声，说话者可以听到自己的声音 |
-| Intercept | [InterceptRequest](#xctrl-InterceptRequest) | [Response](#xctrl-Response) | 强插 |
-| Consult | [ConsultRequest](#xctrl-ConsultRequest) | [Response](#xctrl-Response) | 协商转移 |
-| SetVar | [SetVarRequest](#xctrl-SetVarRequest) | [Response](#xctrl-Response) | 设置通道变量 |
-| GetVar | [GetVarRequest](#xctrl-GetVarRequest) | [VarResponse](#xctrl-VarResponse) | 获取通道变量 |
-| GetState | [GetStateRequest](#xctrl-GetStateRequest) | [StateResponse](#xctrl-StateResponse) | 获取通道状态 |
-| GetChannelData | [GetChannelDataRequest](#xctrl-GetChannelDataRequest) | [ChannelDataResponse](#xctrl-ChannelDataResponse) | 获取通道数据 |
-| ReadDTMF | [DTMFRequest](#xctrl-DTMFRequest) | [DTMFResponse](#xctrl-DTMFResponse) | 读取DTMF按键 |
-| ReadDigits | [DigitsRequest](#xctrl-DigitsRequest) | [DigitsResponse](#xctrl-DigitsResponse) | 读取DTMF按键 |
-| DetectSpeech | [DetectRequest](#xctrl-DetectRequest) | [DetectResponse](#xctrl-DetectResponse) | 语音识别 |
-| StopDetectSpeech | [StopDetectRequest](#xctrl-StopDetectRequest) | [Response](#xctrl-Response) | 停止语音识别 |
-| RingBackDetection | [RingBackDetectionRequest](#xctrl-RingBackDetectionRequest) | [Response](#xctrl-Response) | 回铃音检测 |
-| DetectFace | [DetectFaceRequest](#xctrl-DetectFaceRequest) | [Response](#xctrl-Response) | 人脸识别 |
-| SendDTMF | [SendDTMFRequest](#xctrl-SendDTMFRequest) | [Response](#xctrl-Response) | 发送DTMF |
-| SendINFO | [SendINFORequest](#xctrl-SendINFORequest) | [Response](#xctrl-Response) | 发送SIP INFO |
-| NativeApp | [NativeRequest](#xctrl-NativeRequest) | [NativeResponse](#xctrl-NativeResponse) | 执行原生APP |
-| NativeAPI | [NativeRequest](#xctrl-NativeRequest) | [NativeResponse](#xctrl-NativeResponse) | 执行原生API |
-| NativeJSAPI | [NativeJSRequest](#xctrl-NativeJSRequest) | [NativeJSResponse](#xctrl-NativeJSResponse) | 执行原生JSAPI |
-| JStatus | [JStatusRequest](#xctrl-JStatusRequest) | [JStatusResponse](#xctrl-JStatusResponse) | 状态 |
-| ConferenceInfo | [ConferenceInfoRequest](#xctrl-ConferenceInfoRequest) | [ConferenceInfoResponse](#xctrl-ConferenceInfoResponse) | 获取会议信息 |
-| FIFO | [FIFORequest](#xctrl-FIFORequest) | [FIFOResponse](#xctrl-FIFOResponse) | 呼叫中心FIFO队列（先入先出） |
-| Callcenter | [CallcenterRequest](#xctrl-CallcenterRequest) | [CallcenterResponse](#xctrl-CallcenterResponse) | 呼叫中心Callcenter |
-| Conference | [ConferenceRequest](#xctrl-ConferenceRequest) | [ConferenceResponse](#xctrl-ConferenceResponse) | 会议Conference |
-| AI | [AIRequest](#xctrl-AIRequest) | [AIResponse](#xctrl-AIResponse) | 会议AI |
-| HttAPI | [HttAPIRequest](#xctrl-HttAPIRequest) | [HttAPIResponse](#xctrl-HttAPIResponse) | HttAPI |
+| Dial | [DialRequest](#xctrl.DialRequest) | [DialResponse](#xctrl.DialRequest) | 外呼 |
+| Answer | [Request](#xctrl.Request) | [Response](#xctrl.Request) | 应答 |
+| Accept | [AcceptRequest](#xctrl.AcceptRequest) | [Response](#xctrl.AcceptRequest) | 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管 |
+| Play | [PlayRequest](#xctrl.PlayRequest) | [Response](#xctrl.PlayRequest) | 播放一个文件或TTS |
+| Stop | [StopRequest](#xctrl.StopRequest) | [Response](#xctrl.StopRequest) | 停止当前正在执行的API |
+| Broadcast | [BroadcastRequest](#xctrl.BroadcastRequest) | [Response](#xctrl.BroadcastRequest) | 广播 |
+| Mute | [MuteRequest](#xctrl.MuteRequest) | [Response](#xctrl.MuteRequest) | 设置静音 |
+| Record | [RecordRequest](#xctrl.RecordRequest) | [RecordResponse](#xctrl.RecordRequest) | 录音 |
+| Hangup | [HangupRequest](#xctrl.HangupRequest) | [Response](#xctrl.HangupRequest) | 挂断当前UUID |
+| Bridge | [BridgeRequest](#xctrl.BridgeRequest) | [Response](#xctrl.BridgeRequest) | 在把当前呼叫桥接（发起）另一个呼叫 |
+| ChannelBridge | [ChannelBridgeRequest](#xctrl.ChannelBridgeRequest) | [Response](#xctrl.ChannelBridgeRequest) | 桥接两个呼叫 |
+| UnBridge | [Request](#xctrl.Request) | [Response](#xctrl.Request) | 将桥接的呼叫分开 |
+| UnBridge2 | [Request](#xctrl.Request) | [Response](#xctrl.Request) | 将桥接的呼叫分开 |
+| Hold | [HoldRequest](#xctrl.HoldRequest) | [Response](#xctrl.HoldRequest) | 呼叫保持/取消保持 |
+| Transfer | [TransferRequest](#xctrl.TransferRequest) | [Response](#xctrl.TransferRequest) | 转移（待定） |
+| ThreeWay | [ThreeWayRequest](#xctrl.ThreeWayRequest) | [Response](#xctrl.ThreeWayRequest) | 三方通话 |
+| Echo2 | [Echo2Request](#xctrl.Echo2Request) | [Response](#xctrl.Echo2Request) | 回声，说话者可以听到自己的声音 |
+| Intercept | [InterceptRequest](#xctrl.InterceptRequest) | [Response](#xctrl.InterceptRequest) | 强插 |
+| Consult | [ConsultRequest](#xctrl.ConsultRequest) | [Response](#xctrl.ConsultRequest) | 协商转移 |
+| SetVar | [SetVarRequest](#xctrl.SetVarRequest) | [Response](#xctrl.SetVarRequest) | 设置通道变量 |
+| GetVar | [GetVarRequest](#xctrl.GetVarRequest) | [VarResponse](#xctrl.GetVarRequest) | 获取通道变量 |
+| GetState | [GetStateRequest](#xctrl.GetStateRequest) | [StateResponse](#xctrl.GetStateRequest) | 获取通道状态 |
+| GetChannelData | [GetChannelDataRequest](#xctrl.GetChannelDataRequest) | [ChannelDataResponse](#xctrl.GetChannelDataRequest) | 获取通道数据 |
+| ReadDTMF | [DTMFRequest](#xctrl.DTMFRequest) | [DTMFResponse](#xctrl.DTMFRequest) | 读取DTMF按键 |
+| ReadDigits | [DigitsRequest](#xctrl.DigitsRequest) | [DigitsResponse](#xctrl.DigitsRequest) | 读取DTMF按键 |
+| DetectSpeech | [DetectRequest](#xctrl.DetectRequest) | [DetectResponse](#xctrl.DetectRequest) | 语音识别 |
+| StopDetectSpeech | [StopDetectRequest](#xctrl.StopDetectRequest) | [Response](#xctrl.StopDetectRequest) | 停止语音识别 |
+| RingBackDetection | [RingBackDetectionRequest](#xctrl.RingBackDetectionRequest) | [Response](#xctrl.RingBackDetectionRequest) | 回铃音检测 |
+| DetectFace | [DetectFaceRequest](#xctrl.DetectFaceRequest) | [Response](#xctrl.DetectFaceRequest) | 人脸识别 |
+| SendDTMF | [SendDTMFRequest](#xctrl.SendDTMFRequest) | [Response](#xctrl.SendDTMFRequest) | 发送DTMF |
+| SendINFO | [SendINFORequest](#xctrl.SendINFORequest) | [Response](#xctrl.SendINFORequest) | 发送SIP INFO |
+| NativeApp | [NativeRequest](#xctrl.NativeRequest) | [NativeResponse](#xctrl.NativeRequest) | 执行原生APP |
+| NativeAPI | [NativeRequest](#xctrl.NativeRequest) | [NativeResponse](#xctrl.NativeRequest) | 执行原生API |
+| NativeJSAPI | [NativeJSRequest](#xctrl.NativeJSRequest) | [NativeJSResponse](#xctrl.NativeJSRequest) | 执行原生JSAPI |
+| JStatus | [JStatusRequest](#xctrl.JStatusRequest) | [JStatusResponse](#xctrl.JStatusRequest) | 状态 |
+| ConferenceInfo | [ConferenceInfoRequest](#xctrl.ConferenceInfoRequest) | [ConferenceInfoResponse](#xctrl.ConferenceInfoRequest) | 获取会议信息 |
+| FIFO | [FIFORequest](#xctrl.FIFORequest) | [FIFOResponse](#xctrl.FIFORequest) | 呼叫中心FIFO队列（先入先出） |
+| Callcenter | [CallcenterRequest](#xctrl.CallcenterRequest) | [CallcenterResponse](#xctrl.CallcenterRequest) | 呼叫中心Callcenter |
+| Conference | [ConferenceRequest](#xctrl.ConferenceRequest) | [ConferenceResponse](#xctrl.ConferenceRequest) | 会议Conference |
+| AI | [AIRequest](#xctrl.AIRequest) | [AIResponse](#xctrl.AIRequest) | 会议AI |
+| HttAPI | [HttAPIRequest](#xctrl.HttAPIRequest) | [HttAPIResponse](#xctrl.HttAPIRequest) | HttAPI |
+| Lua | [LuaRequest](#xctrl.LuaRequest) | [LuaResponse](#xctrl.LuaRequest) | Lua |
+| Register | [Request](#xctrl.Request) | [Response](#xctrl.Request) | Node Register |
 
  <!-- end services -->
 
@@ -2151,21 +2033,21 @@ CDR = 13;
 
 ## Scalar Value Types
 
-| .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
-| ----------- | ----- | --- | ---- | ------ | -- | -- | --- | ---- |
-| <a name="double" /><a name="user-content-double" /> double |  | double | double | float | float64 | double | float | Float |
-| <a name="float" /><a name="user-content-float" /> float |  | float | float | float | float32 | float | float | Float |
-| <a name="int32" /><a name="user-content-int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
-| <a name="int64" /><a name="user-content-int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long | int64 | long | integer/string | Bignum |
-| <a name="uint32" /><a name="user-content-uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long | uint32 | uint | integer | Bignum or Fixnum (as required) |
-| <a name="uint64" /><a name="user-content-uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long | uint64 | ulong | integer/string | Bignum or Fixnum (as required) |
-| <a name="sint32" /><a name="user-content-sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
-| <a name="sint64" /><a name="user-content-sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long | int64 | long | integer/string | Bignum |
-| <a name="fixed32" /><a name="user-content-fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int | uint32 | uint | integer | Bignum or Fixnum (as required) |
-| <a name="fixed64" /><a name="user-content-fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long | uint64 | ulong | integer/string | Bignum |
-| <a name="sfixed32" /><a name="user-content-sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
-| <a name="sfixed64" /><a name="user-content-sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long | int64 | long | integer/string | Bignum |
-| <a name="bool" /><a name="user-content-bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
-| <a name="string" /><a name="user-content-string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
-| <a name="bytes" /><a name="user-content-bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
+| .proto Type | Notes | C++ Type | Java Type | Python Type |
+| ----------- | ----- | -------- | --------- | ----------- |
+| <a name="double" /> double |  | double | double | float |
+| <a name="float" /> float |  | float | float | float |
+| <a name="int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int |
+| <a name="int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long |
+| <a name="uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long |
+| <a name="uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long |
+| <a name="sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int |
+| <a name="sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long |
+| <a name="fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int |
+| <a name="fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long |
+| <a name="sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int |
+| <a name="sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long |
+| <a name="bool" /> bool |  | bool | boolean | boolean |
+| <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
+| <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
 
