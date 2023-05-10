@@ -60,20 +60,20 @@ func main() {
 
 	if natsAddress == "" {
 		natsAddress = "nats://127.0.0.1:4222"
-
-		log.Infof("connecting to nats: %s", natsAddress)
-		err := ctrl.Init(boy, true, natsAddress)
-		fmt.Println(err)
-		if err != nil {
-			log.Fatal("ctrl init failed: ", err)
-		}
-
-		ctrl.Subscribe("cn.xswitch.node", boy.EventCallback, "node")
-		ctrl.Subscribe("cn.xswitch.node.test", boy.EventCallback, "node")
-		ctrl.Subscribe("cn.xswitch.node."+node_topic, boy.EventCallback, "node")
-		ctrl.Subscribe("cn.xswitch.node."+node_uuid, boy.EventCallback, "")
-
-		PubStart()
-		time.Sleep(time.Second * 30)
 	}
+	log.Infof("connecting to nats: %s", natsAddress)
+	err := ctrl.Init(boy, true, natsAddress)
+	fmt.Println(err)
+	if err != nil {
+		log.Fatal("ctrl init failed: ", err)
+	}
+
+	ctrl.Subscribe("cn.xswitch.node", boy.EventCallback, "node")
+	ctrl.Subscribe("cn.xswitch.node.test", boy.EventCallback, "node")
+	ctrl.Subscribe("cn.xswitch.node."+node_topic, boy.EventCallback, "node")
+	ctrl.Subscribe("cn.xswitch.node."+node_uuid, boy.EventCallback, "")
+
+	PubStart()
+	time.Sleep(time.Second * 30)
+
 }
