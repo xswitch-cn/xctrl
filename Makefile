@@ -13,8 +13,6 @@ proto:
 java:
 	protoc --proto_path=${GOPATH}/src:. --java_out=../ core/proto/xctrl/*.proto
 
-# go get -u github.com/chuanlinzhang/protoc-gen-doc/cmd/protoc-gen-doc
-
 doc-html:
 	protoc --doc_out=core/proto/xctrl/doc --doc_opt=template/default.html,xctrl.html core/proto/xctrl/xctrl.proto
 
