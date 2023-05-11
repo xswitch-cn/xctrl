@@ -126,8 +126,8 @@ func (h *Ctrl) newAService() xctrl.XNodeService {
 }
 
 // 监听节点注册事件
-func (h *Ctrl) bindNodeStatus() error {
-	_, err := h.conn.Subscribe(`cn.xswitch.ctrl`, func(ev nats.Event) error {
+func (h *Ctrl) bindNodeStatus(subject string) error {
+	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleNode(context.Background(), ev)
 	})
 	if err != nil {
@@ -365,7 +365,7 @@ func (h *Ctrl) EnbaleNodeStatus() error {
 	return nil
 }
 
-func initCtrl(handler Handler, trace bool, addrs ...string) (*Ctrl, error) {
+func initCtrl(handler Handler, trace bool,subject string, addrs ...string) (*Ctrl, error) {
 	h := &Ctrl{
 		conn:             nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
 		uuid:             uuid.New().String(),
@@ -382,7 +382,7 @@ func initCtrl(handler Handler, trace bool, addrs ...string) (*Ctrl, error) {
 	}
 
 	// 监听节点状态事件
-	if err := h.bindNodeStatus(); err != nil {
+	if err := h.bindNodeStatus(subject); err != nil {
 		return nil, err
 	}
 

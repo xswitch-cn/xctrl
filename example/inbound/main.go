@@ -18,6 +18,7 @@ var (
 	node_topic = "test.simple-test"
 	domain     = "test.test"
 	node_uuid  = "test.simple-test.simple"
+	subject = "cn.xswitch.ctrl"
 )
 
 func PubStart() {
@@ -47,8 +48,7 @@ func PubStart() {
 	}
 
 	req_str, _ := json.MarshalIndent(event_req, "", "  ")
-	controller := "cn.xswitch.ctrl"
-	ctrl.Publish(controller, req_str)
+	ctrl.Publish(subject, req_str)
 }
 
 func main() {
@@ -72,6 +72,7 @@ func main() {
 	ctrl.Subscribe("cn.xswitch.node.test", boy.EventCallback, "node")
 	ctrl.Subscribe("cn.xswitch.node."+node_topic, boy.EventCallback, "node")
 	ctrl.Subscribe("cn.xswitch.node."+node_uuid, boy.EventCallback, "")
+
 
 	PubStart()
 	time.Sleep(time.Second * 30)

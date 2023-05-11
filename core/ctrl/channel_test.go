@@ -14,13 +14,14 @@ import (
 )
 
 func TestPlayWithTimeout(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	url := os.Getenv("NATS_ADDRESS")
 
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 
-	err := Init(nil, true, url)
+	err := Init(nil, true, subject,url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -82,13 +83,14 @@ func TestPlayWithTimeout(t *testing.T) {
 }
 
 func TestFIFO(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -139,13 +141,14 @@ func TestFIFO(t *testing.T) {
 }
 
 func TestChannel_Callcenter(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -192,13 +195,14 @@ func TestChannel_Callcenter(t *testing.T) {
 }
 
 func TestChannel_Conference(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -247,13 +251,14 @@ func TestChannel_Conference(t *testing.T) {
 }
 
 func TestChannel_AI(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -301,13 +306,14 @@ func TestChannel_AI(t *testing.T) {
 }
 
 func TestChannel_HttAPI(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -355,13 +361,14 @@ func TestChannel_HttAPI(t *testing.T) {
 }
 
 func TestConferenceInfo(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -414,13 +421,14 @@ func TestConferenceInfo(t *testing.T) {
 }
 
 func TestLua(t *testing.T) {
+	subject := "cn.xswitch.ctrl"
 	//获取nats地址
 	url := os.Getenv("NATS_ADDRESS")
 	if url == "" {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, url)
+	err := Init(nil, true,subject, url)
 	if err != nil {
 		t.Error(err)
 	}
