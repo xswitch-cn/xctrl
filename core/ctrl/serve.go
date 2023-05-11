@@ -365,7 +365,7 @@ func (h *Ctrl) EnbaleNodeStatus() error {
 	return nil
 }
 
-func initCtrl(handler Handler, trace bool,subject string, addrs ...string) (*Ctrl, error) {
+func initCtrl(handler Handler, trace bool, subject string, addrs ...string) (*Ctrl, error) {
 	h := &Ctrl{
 		conn:             nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
 		uuid:             uuid.New().String(),

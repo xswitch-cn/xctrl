@@ -6,22 +6,60 @@
 - 协议参考文档参见：https://git.xswitch.cn/xswitch/xctrl/src/branch/master/core/proto/doc
 - 示例：https://git.xswitch.cn/xswitch/xcc-examples/src/branch/master/go
 
-开发：
 
-```
-go install github.com/chuanlinzhang/protoc-gen-doc/cmd/protoc-gen-doc
-```
+### 使用
 
-这个新版本有Bug，会把Map显示成`repeated`，先不要用。
+1. 克隆该项目到本地：
 
-```
-go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+```shell
+git clone https://git.xswitch.cn/xswitch/xctrl.git
+cd xctrl
 ```
 
-## 初始化
+2. Protocol Buffers编译器（protoc）
 
-更新go mod 和制作protoc-gen-xctrl插件
-* make setup
-  
-生成proto协议
-* make proto
+```shell
+brew install protobuf
+```
+
+3. 安装protoc-gen-doc依赖：
+
+- 推荐方式：
+```shell
+make setup  
+```
+
+- 手动安装: 
+```shell
+go install github.com/chuanlinzhang/protoc-gen-doc/cmd/protoc-gen-doc@v0.0.2
+```
+
+4. 根据需要生成相应语言的代码:
+
+- 生成Go代码
+
+```shell
+make proto
+```
+
+---
+
+- 生成Java代码
+
+```shell
+make java
+```
+---
+
+- 生成HTML文档
+
+```shell
+make doc-html
+```
+---
+
+- 生成Markdown文档
+
+```shell
+make doc-md
+```

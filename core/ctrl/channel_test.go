@@ -21,7 +21,7 @@ func TestPlayWithTimeout(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 
-	err := Init(nil, true, subject,url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -90,7 +90,7 @@ func TestFIFO(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -148,7 +148,7 @@ func TestChannel_Callcenter(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -202,7 +202,7 @@ func TestChannel_Conference(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -258,7 +258,7 @@ func TestChannel_AI(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -313,7 +313,7 @@ func TestChannel_HttAPI(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -368,7 +368,7 @@ func TestConferenceInfo(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}
@@ -428,7 +428,7 @@ func TestLua(t *testing.T) {
 		url = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true,subject, url)
+	err := Init(nil, true, subject, url)
 	if err != nil {
 		t.Error(err)
 	}

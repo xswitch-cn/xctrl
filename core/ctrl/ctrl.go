@@ -154,8 +154,8 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 }
 
 // Init 初始化Ctrl global 是否接收全局事件， addrs nats消息队列连接地址
-func Init(h Handler, trace bool,subject, addrs string) error {
-	c, err := initCtrl(h, trace,subject, strings.Split(addrs, ",")...)
+func Init(h Handler, trace bool, subject, addrs string) error {
+	c, err := initCtrl(h, trace, subject, strings.Split(addrs, ",")...)
 	if err != nil {
 		return err
 	}
