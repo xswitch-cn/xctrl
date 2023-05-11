@@ -180,9 +180,13 @@ type AcceptRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// Controller UUID
 	CtrlUuid string `protobuf:"bytes,1,opt,name=ctrl_uuid,json=ctrlUuid,proto3" json:"ctrl_uuid,omitempty"`
-	Uuid     string `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Takeover bool   `protobuf:"varint,3,opt,name=takeover,proto3" json:"takeover,omitempty"`
+	// optional, Channel UUID
+	Uuid string `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	// optional, default to false.
+	// when true, all subsequest events will be delivered to the new controller if already controlled by other controller, otherwise it will fail
+	Takeover bool `protobuf:"varint,3,opt,name=takeover,proto3" json:"takeover,omitempty"`
 }
 
 func (x *AcceptRequest) Reset() {
@@ -3502,7 +3506,7 @@ type DTMFRequest struct {
 	// not implemented yet
 	MaxTries uint32 `protobuf:"varint,9,opt,name=max_tries,json=maxTries,proto3" json:"max_tries,omitempty"`
 	Regex    string `protobuf:"bytes,10,opt,name=regex,proto3" json:"regex,omitempty"`
-	// invalid  meida
+	// Media to playback when received DTMF doesn't match the regex
 	MediaInvalid *Media `protobuf:"bytes,11,opt,name=media_invalid,json=mediaInvalid,proto3" json:"media_invalid,omitempty"`
 	// default false
 	PlayLastInvalidPrompt bool `protobuf:"varint,12,opt,name=play_last_invalid_prompt,json=playLastInvalidPrompt,proto3" json:"play_last_invalid_prompt,omitempty"`

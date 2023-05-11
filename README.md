@@ -17,3 +17,11 @@ go install github.com/chuanlinzhang/protoc-gen-doc/cmd/protoc-gen-doc
 ```
 go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 ```
+
+## 初始化
+
+更新go mod 和制作protoc-gen-xctrl插件
+* make setup
+  
+生成proto协议
+* make proto
