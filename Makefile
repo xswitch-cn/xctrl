@@ -5,6 +5,12 @@ ifeq ($(VERSION),)
 VERSION := latest
 endif
 
+.PHONY: setup
+setup:
+	go mod tidy
+	cd xctrl/cmd/protoc-gen-xctrl && go install && cd -
+
+
 .PHONY: proto
 proto:
 	# protoc --proto_path=${GOPATH}/src:.  --stack_out=../ core/proto/xctrl/*.proto
