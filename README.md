@@ -9,5 +9,11 @@
 开发：
 
 ```
+go install github.com/chuanlinzhang/protoc-gen-doc/cmd/protoc-gen-doc
+```
+
+这个新版本有Bug，会把Map显示成`repeated`，先不要用。
+
+```
 go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 ```
