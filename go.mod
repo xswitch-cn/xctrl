@@ -3,6 +3,7 @@ module git.xswitch.cn/xswitch/xctrl
 go 1.16
 
 require (
+	github.com/chuanlinzhang/protoc-gen-doc v0.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/go-acme/lego/v3 v3.9.0
