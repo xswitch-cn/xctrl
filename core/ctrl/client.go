@@ -15,6 +15,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 )
 
 const defaultTimeout = 60 * time.Second
@@ -218,7 +219,7 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 	if r.async {
 		err = r.conn.Publish(address, body)
 		if err != nil {
-			fmt.Errorf("err : %v", err)
+			log.Errorf("err : %v", err)
 			return errors.Timeout("nats.jsonrpc.client", fmt.Sprintf("%v", err))
 		}
 
@@ -261,7 +262,7 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 	err = json.Unmarshal(msg.Body, &rsp)
 
 	if err != nil || rsp.getError() != nil {
-		fmt.Println(err, resp, rsp)
+		log.Errorf("nats.jsonrpc.client %v %v %v", err, resp, rsp)
 		return errors.InternalServerError("nats.jsonrpc.client", "%v", err)
 	}
 	return nil
