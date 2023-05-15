@@ -1,12 +1,15 @@
 package xctrl
 
-type XNativeJSData struct {
-	Command string      `json:"command,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
+import "encoding/json"
+
+type XNativeJSRequestData struct {
+	Command string          `json:"command,omitempty"`
+	Data    json.RawMessage `json:"data,omitempty"`
 }
+
 type XNativeJSRequest struct {
-	CtrlUuid string        `json:"ctrl_uuid,omitempty"`
-	Data     XNativeJSData `json:"data,omitempty"`
+	CtrlUuid string                `json:"ctrl_uuid,omitempty"`
+	Data     *XNativeJSRequestData `json:"data,omitempty"`
 }
 
 type XNativeJSResponse struct {
@@ -14,6 +17,6 @@ type XNativeJSResponse struct {
 	Message  string `json:"message,omitempty"`
 	NodeUuid string `json:"node_uuid,omitempty"`
 	// optional
-	Seq  string      `json:"seq,omitempty"`
-	Data interface{} `json:"data,omitempty"`
+	Seq  string           `json:"seq,omitempty"`
+	Data *json.RawMessage `json:"data,omitempty"`
 }

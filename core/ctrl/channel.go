@@ -514,9 +514,9 @@ func (channel *Channel) NativeApp(req *xctrl.NativeRequest) *xctrl.NativeRespons
 }
 
 // NativeJSAPI Native js api
-func (channel *Channel) NativeJSAPI(req *xctrl.NativeJSRequest) *xctrl.NativeJSResponse {
+func (channel *Channel) NativeJSAPI(req *xctrl.XNativeJSRequest) *xctrl.XNativeJSResponse {
 	if channel == nil {
-		return &xctrl.NativeJSResponse{
+		return &xctrl.XNativeJSResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Unable to locate Channel",
 		}
@@ -524,7 +524,7 @@ func (channel *Channel) NativeJSAPI(req *xctrl.NativeJSRequest) *xctrl.NativeJSR
 
 	response, err := Service().NativeJSAPI(context.TODO(), req, channel.NodeAddress())
 	if err != nil {
-		response = new(xctrl.NativeJSResponse)
+		response = new(xctrl.XNativeJSResponse)
 		e := errors.Parse(err.Error())
 		response.Code = e.Code
 		response.Message = e.Detail

@@ -344,20 +344,22 @@ Ctrl中的Context使用了标准的Go Context包，目前没有太大用处，�
 ## queueBufferSize
 在订阅事件的时候会使用这个变量大小进行channel的初始化，1024容量足够事件使用，太小会导致程序阻塞卡顿，影响运行效率。
 
-## proto  扩展
+## protobuf 扩展
 
-为了弥补protobuffer对不固定层次对象的处理不友好，在proto 包中定义了一些以ext结尾的包，用于解决不确定对象的解析。
+在NativeJSAPI中，请求和返回的对象是多种多样的，因此定义一个单一的函数比较困难。我们在`xctrl`包中扩展了`XNativeJSRequest`和`XNativeJSResponse`以代替原来的`NatvieJSRequest`和`NativeJSResponse`。用法如下：
 
-例如xctrlext.NativeJsData Data使用interface{}用于接收任意对象
-
-```
-type NativeJsData struct {
-	Command string      `json:"command,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
+```go
+req := &xctrl.XNativeJSRequest{
+	CtrlUuid: CtrlUUID,
+	Data: &xctrl.XNativeJSRequestData{
+		Command: "sofia.status",
+		Data: *ctrl.ToRawMessage(map[string]string{
+			"profile": profile_name,
+		}),
+	},
 }
+response, err := ctrl.Service().NativeJSAPI(context.Background(), req, ctrl.WithAddress(""))
 ```
-
-
 
 ## 其它
 

@@ -323,10 +323,16 @@ func (g *micro) generateClientSignature(servName string, method *pb.MethodDescri
 		methName += "_"
 	}
 	reqArg := ", in *" + g.typeName(method.GetInputType())
+	if methName == "NativeJSAPI" { // our hack to support Any type of JSON by using json.RawMessage
+		reqArg = ", in *X" + g.typeName(method.GetInputType())
+	}
 	if method.GetClientStreaming() {
 		reqArg = ""
 	}
 	respName := "*" + g.typeName(method.GetOutputType())
+	if methName == "NativeJSAPI" { // our hack to support Any type of JSON by using json.RawMessage
+		respName = "*X" + g.typeName(method.GetOutputType())
+	}
 	if method.GetServerStreaming() || method.GetClientStreaming() {
 		respName = servName + "_" + generator.CamelCase(origMethName) + "Service"
 	}
@@ -350,6 +356,9 @@ func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, m
 	g.P("func (c *", unexport(servAlias), ") ", g.generateClientSignature(servName, method), "{")
 	if !method.GetServerStreaming() && !method.GetClientStreaming() {
 		g.P(`req := c.c.NewRequest(c.name, "`, reqMethod, `", in)`)
+		if reqMethod == "XNode.NativeJSAPI" {
+			outType = "X" + outType
+		}
 		g.P("out := new(", outType, ")")
 		// TODO: Pass descExpr to Invoke.
 		g.P("err := ", `c.c.Call(ctx, req, out, opts...)`)

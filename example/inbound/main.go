@@ -62,7 +62,7 @@ func main() {
 		natsAddress = "nats://127.0.0.1:4222"
 	}
 	log.Infof("connecting to nats: %s", natsAddress)
-	err := ctrl.Init(boy, true, natsAddress)
+	err := ctrl.Init(boy, true, "cn.xswitch.ctrl", natsAddress)
 	fmt.Println(err)
 	if err != nil {
 		log.Fatal("ctrl init failed: ", err)
