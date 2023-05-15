@@ -5,7 +5,6 @@ go 1.16
 require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch/v5 v5.6.0
-	github.com/go-acme/lego/v3 v3.9.0
 	github.com/go-log/log v0.2.0
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/go-sql-driver/mysql v1.5.0
@@ -23,7 +22,7 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.3
-	golang.org/x/crypto v0.1.0
+	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/yaml.v2 v2.4.0 // indirect
