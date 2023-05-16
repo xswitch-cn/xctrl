@@ -1,4 +1,5 @@
 .vscode/
 .idea/
 core/proto/xctrl/doc/xctrl.html
+*.md-e
 

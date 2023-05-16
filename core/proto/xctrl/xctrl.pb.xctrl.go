@@ -109,7 +109,7 @@ type XNodeService interface {
 	// 执行原生API
 	NativeAPI(ctx context.Context, in *NativeRequest, opts ...client.CallOption) (*NativeResponse, error)
 	// 执行原生JSAPI
-	NativeJSAPI(ctx context.Context, in *NativeJSRequest, opts ...client.CallOption) (*NativeJSResponse, error)
+	NativeJSAPI(ctx context.Context, in *XNativeJSRequest, opts ...client.CallOption) (*XNativeJSResponse, error)
 	// 状态
 	JStatus(ctx context.Context, in *JStatusRequest, opts ...client.CallOption) (*JStatusResponse, error)
 	// 获取会议信息
@@ -472,9 +472,9 @@ func (c *xNodeService) NativeAPI(ctx context.Context, in *NativeRequest, opts ..
 	return out, nil
 }
 
-func (c *xNodeService) NativeJSAPI(ctx context.Context, in *NativeJSRequest, opts ...client.CallOption) (*NativeJSResponse, error) {
+func (c *xNodeService) NativeJSAPI(ctx context.Context, in *XNativeJSRequest, opts ...client.CallOption) (*XNativeJSResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.NativeJSAPI", in)
-	out := new(NativeJSResponse)
+	out := new(XNativeJSResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err

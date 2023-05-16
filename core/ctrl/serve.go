@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
@@ -103,24 +102,21 @@ func (h *Ctrl) handleNode(ctx context.Context, data nats.Event) error {
 // newNodeService 创建 XNodeService
 func (h *Ctrl) newNodeService() xctrl.XNodeService {
 	c := newClient(h.conn, false)
-	s := selector.NewSelector(selector.Registry(nil))
-	c.Init(client.Selector(s))
+	c.Init(client.Selector())
 	return xctrl.NewXNodeService(h.serviceName, c)
 }
 
 // newAsyncService 异步调用 XNodeService
 func (h *Ctrl) newAsyncService() xctrl.XNodeService {
 	c := newClient(h.conn, true)
-	s := selector.NewSelector(selector.Registry(nil))
-	c.Init(client.Selector(s))
+	c.Init(client.Selector())
 	return xctrl.NewXNodeService(h.serviceName, c)
 }
 
 // newAService 同步调用 XNodeService，但可以使用context控制timeout
 func (h *Ctrl) newAService() xctrl.XNodeService {
 	c := newClient(h.conn, false)
-	s := selector.NewSelector(selector.Registry(nil))
-	c.Init(client.Selector(s))
+	c.Init(client.Selector())
 	c.SetAService()
 	return xctrl.NewXNodeService(h.serviceName, c)
 }

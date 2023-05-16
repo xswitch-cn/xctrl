@@ -3,15 +3,11 @@ package core
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
@@ -40,12 +36,9 @@ type Service interface {
 // Option set option callback
 type Option func(*xctrl.Options)
 
-func Broker(b broker.Broker) xctrl.Option {
+func Broker() xctrl.Option {
 	return func(o *xctrl.Options) {
-		o.Broker = b
-		// Update Client and Server
-		o.Client.Init(client.Broker(b))
-		o.Server.Init(server.Broker(b))
+		// o.Broker = b
 	}
 }
 
@@ -80,9 +73,9 @@ func Server(s server.Server) xctrl.Option {
 }
 
 // Selector sets the selector for the service client
-func Selector(s selector.Selector) xctrl.Option {
+func Selector() xctrl.Option {
 	return func(o *xctrl.Options) {
-		o.Client.Init(client.Selector(s))
+		// o.Client.Init(client.Selector(s))
 	}
 }
 
@@ -245,12 +238,9 @@ func NewService(name string, version string, brokerAddress string, registryAddre
 		)
 	}
 
-	b := nats.NewBroker(broker.Addrs(strings.Split(brokerAddress, ",")...))
-
 	srv := xctrl.NewService(
 		xctrl.Name(name),
 		xctrl.Version(version),
-		xctrl.Broker(b),
 		xctrl.WrapHandler(LogMiddlewareWrapper),
 		xctrl.RegisterInterval(15*time.Second),
 		xctrl.RegisterTTL(30*time.Second),

@@ -4,11 +4,7 @@ import (
 	"context"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/broker/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 )
 
 type Options struct {
@@ -16,10 +12,7 @@ type Options struct {
 	ContentType string
 
 	// Plugged interfaces
-	Broker broker.Broker
 	Codecs map[string]codec.NewCodec
-	//Registry registry.Registry
-	Selector selector.Selector
 
 	// Connection Pool
 	PoolSize int
@@ -37,8 +30,6 @@ type Options struct {
 }
 
 type CallOptions struct {
-	SelectOptions []selector.SelectOption
-
 	// Address of remote hosts
 	Address []string
 	// Backoff func
@@ -85,58 +76,14 @@ type RequestOptions struct {
 }
 
 // Broker to be used for pub/sub
-func Broker(b broker.Broker) Option {
+func Broker() Option {
 	return func(o *Options) {
-		o.Broker = b
 	}
 }
-
-// Codec to be used to encode/decode requests for a given content type
-func Codec(contentType string, c codec.NewCodec) Option {
-	return func(o *Options) {
-		o.Codecs[contentType] = c
-	}
-}
-
-// Default content type of the client
-func ContentType(ct string) Option {
-	return func(o *Options) {
-		o.ContentType = ct
-	}
-}
-
-// PoolSize sets the connection pool size
-func PoolSize(d int) Option {
-	return func(o *Options) {
-		o.PoolSize = d
-	}
-}
-
-// PoolSize sets the connection pool size
-func PoolTTL(d time.Duration) Option {
-	return func(o *Options) {
-		o.PoolTTL = d
-	}
-}
-
-// Registry to find nodes for a given service
-//func Registry(r registry.Registry) Option {
-//	return func(o *Options) {
-//		o.Registry = r
-//	}
-//}
 
 // Select is used to select a node to route a request to
-func Selector(s selector.Selector) Option {
+func Selector() Option {
 	return func(o *Options) {
-		o.Selector = s
-	}
-}
-
-// Adds a Wrapper to a list of options passed into the client
-func Wrap(w Wrapper) Option {
-	return func(o *Options) {
-		o.Wrappers = append(o.Wrappers, w)
 	}
 }
 
@@ -147,94 +94,10 @@ func WrapCall(cw ...CallWrapper) Option {
 	}
 }
 
-// Backoff is used to set the backoff function used
-// when retrying Calls
-func Backoff(fn BackoffFunc) Option {
-	return func(o *Options) {
-		o.CallOptions.Backoff = fn
-	}
-}
-
-// Number of retries when making the request.
-// Should this be a Call Option?
-func Retries(i int) Option {
-	return func(o *Options) {
-		o.CallOptions.Retries = i
-	}
-}
-
-// Retry sets the retry function to be used when re-trying.
-func Retry(fn RetryFunc) Option {
-	return func(o *Options) {
-		o.CallOptions.Retry = fn
-	}
-}
-
-// The request timeout.
-// Should this be a Call Option?
-func RequestTimeout(d time.Duration) Option {
-	return func(o *Options) {
-		o.CallOptions.RequestTimeout = d
-	}
-}
-
-// Transport dial timeout
-func DialTimeout(d time.Duration) Option {
-	return func(o *Options) {
-		o.CallOptions.DialTimeout = d
-	}
-}
-
-// Call Options
-
-// WithExchange sets the exchange to route a message through
-func WithExchange(e string) PublishOption {
-	return func(o *PublishOptions) {
-		o.Exchange = e
-	}
-}
-
 // WithAddress sets the remote addresses to use rather than using service discovery
 func WithAddress(a ...string) CallOption {
 	return func(o *CallOptions) {
 		o.Address = a
-	}
-}
-
-func WithSelectOption(so ...selector.SelectOption) CallOption {
-	return func(o *CallOptions) {
-		o.SelectOptions = append(o.SelectOptions, so...)
-	}
-}
-
-// WithCallWrapper is a CallOption which adds to the existing CallFunc wrappers
-func WithCallWrapper(cw ...CallWrapper) CallOption {
-	return func(o *CallOptions) {
-		o.CallWrappers = append(o.CallWrappers, cw...)
-	}
-}
-
-// WithBackoff is a CallOption which overrides that which
-// set in Options.CallOptions
-func WithBackoff(fn BackoffFunc) CallOption {
-	return func(o *CallOptions) {
-		o.Backoff = fn
-	}
-}
-
-// WithRetry is a CallOption which overrides that which
-// set in Options.CallOptions
-func WithRetry(fn RetryFunc) CallOption {
-	return func(o *CallOptions) {
-		o.Retry = fn
-	}
-}
-
-// WithRetries is a CallOption which overrides that which
-// set in Options.CallOptions
-func WithRetries(i int) CallOption {
-	return func(o *CallOptions) {
-		o.Retries = i
 	}
 }
 
@@ -268,7 +131,7 @@ func StreamingRequest() RequestOption {
 	}
 }
 
-const DefaultContentType = "application/grpc"
+const DefaultContentType = "application/json"
 
 func NewOptions(options ...Option) Options {
 	opts := Options{
@@ -284,8 +147,6 @@ func NewOptions(options ...Option) Options {
 		},
 		PoolSize: DefaultPoolSize,
 		PoolTTL:  DefaultPoolTTL,
-		Broker:   nats.NewBroker(),
-		Selector: selector.DefaultSelector,
 	}
 
 	for _, o := range options {

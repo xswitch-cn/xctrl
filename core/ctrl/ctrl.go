@@ -10,6 +10,7 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"github.com/google/uuid"
 )
 
@@ -118,7 +119,7 @@ func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, err
 
 	body, err := json.Marshal(req)
 	if err != nil {
-		fmt.Errorf("execute native api error: %v", err)
+		log.Errorf("execute native api error: %v", err)
 		return nil, err
 	}
 	return globalCtrl.conn.Request(topic, body, timeout)
@@ -136,7 +137,7 @@ func XCall(topic string, method string, params interface{}, timeout time.Duratio
 	}
 	body, err := json.Marshal(req)
 	if err != nil {
-		fmt.Errorf("execute native api error: %v", err)
+		log.Errorf("execute native api error: %v", err)
 		return nil, err
 	}
 	return globalCtrl.conn.Request(topic, body, timeout)
@@ -147,7 +148,7 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 	resp.Version = "2.0"
 	body, err := json.MarshalIndent(resp, "", "  ")
 	if err != nil {
-		fmt.Errorf("execute native api error: %v", err)
+		log.Errorf("execute native api error: %v", err)
 		return err
 	}
 	return globalCtrl.conn.Publish(topic, body)
@@ -155,6 +156,7 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 
 // Init 初始化Ctrl global 是否接收全局事件， addrs nats消息队列连接地址
 func Init(h Handler, trace bool, subject, addrs string) error {
+	log.Infof("ctrl starting with subject=%s addrs=%s\n", subject, addrs)
 	c, err := initCtrl(h, trace, subject, strings.Split(addrs, ",")...)
 	if err != nil {
 		return err
@@ -316,7 +318,7 @@ func DoResultCallback(msg *Message) {
 		globalCtrl.cbLock.Lock()
 		delete(globalCtrl.resultCallbacks, id)
 		globalCtrl.cbLock.Unlock()
-		// xlog.Errorf("do callback %s", id)
+		log.Tracef("do callback %s", id)
 		opt.cb(msg, opt.data)
 	}
 }

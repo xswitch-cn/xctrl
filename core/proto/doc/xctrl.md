@@ -77,7 +77,6 @@
   - [Media](#xctrl.Media)
   - [MuteRequest](#xctrl.MuteRequest)
   - [NativeJSRequest](#xctrl.NativeJSRequest)
-  - [NativeJSRequestData](#xctrl.NativeJSRequestData)
   - [NativeJSResponse](#xctrl.NativeJSResponse)
   - [NativeRequest](#xctrl.NativeRequest)
   - [NativeResponse](#xctrl.NativeResponse)
@@ -1456,30 +1455,7 @@
 <a name="xctrl.NativeJSRequest"/>
 
 ### NativeJSRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| ctrl_uuid | [string](#string) |  |  |
-| data | [NativeJSRequestData](#xctrl.NativeJSRequestData) |  |  |
-
-
-
-
-
-
-<a name="user-content-xctrl.NativeJSRequestData"/>
-<a name="xctrl.NativeJSRequestData"/>
-
-### NativeJSRequestData
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| command | [string](#string) |  |  |
-| data | [string](#string) |  | a string or a native JSON struct to google.protobuf.Any or .Struct |
+placeholer type, do not use it, use XNativeJSRequest instead
 
 
 
@@ -1490,16 +1466,7 @@
 <a name="xctrl.NativeJSResponse"/>
 
 ### NativeJSResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| code | [int32](#int32) |  |  |
-| message | [string](#string) |  |  |
-| node_uuid | [string](#string) |  |  |
-| seq | [string](#string) |  |  |
-| data | [string](#string) |  |  |
+placeholer type, do not use it, use XNativeJSResponse instead
 
 
 

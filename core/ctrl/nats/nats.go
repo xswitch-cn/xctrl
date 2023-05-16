@@ -187,7 +187,7 @@ func (n *nConn) Publish(topic string, msg []byte, opts ...PublishOption) error {
 
 func (n *nConn) Request(topic string, data []byte, timeout time.Duration) (*Message, error) {
 	if n.trace {
-		fmt.Printf("Request: %s \n%s\n", topic, string(data))
+		fmt.Printf("NATS Request: %s \n%s\n", topic, string(data))
 	}
 	msg, err := n.conn.Request(topic, data, timeout)
 	var m Message

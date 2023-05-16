@@ -134,23 +134,12 @@ message NativeResponse {
   string result = 5;
 }
 
-message NativeJSRequestData {
-  string command = 1;
-  // a string or a native JSON struct to google.protobuf.Any or .Struct
-  string data = 2;
-}
-
 message NativeJSRequest {
-  string ctrl_uuid = 1;
-  NativeJSRequestData data = 2;
+  // placeholer type, do not use it, use XNativeJSRequest instead
 }
 
 message NativeJSResponse {
-  int32 code = 1;
-  string message = 2;
-  string node_uuid = 3;
-  string seq = 4;
-  string data = 5;
+  // placeholer type, do not use it, use XNativeJSResponse instead
 }
 
 message Request {

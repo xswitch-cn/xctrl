@@ -11,7 +11,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/resolver/vpath"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/api/router"
 	regRouter "git.xswitch.cn/xswitch/xctrl/xctrl/api/router/registry"
-	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
 )
 
 func testHttp(t *testing.T, path, service, ns string) {

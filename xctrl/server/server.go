@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/codec"
-	//"git.xswitch.cn/xswitch/xctrl/xctrl/registry"==[-
 	"github.com/google/uuid"
 )
 

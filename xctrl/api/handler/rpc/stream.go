@@ -13,7 +13,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	raw "git.xswitch.cn/xswitch/xctrl/xctrl/codec/bytes"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/logger"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/selector"
 	"github.com/gobwas/httphead"
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
@@ -110,7 +109,7 @@ func serveWebsocket(ctx context.Context, w http.ResponseWriter, r *http.Request,
 		client.StreamingRequest(),
 	)
 
-	so := selector.WithStrategy(strategy(service.Services))
+	// so := selector.WithStrategy(strategy(service.Services))
 	// create a new stream
 	stream, err := c.Stream(ctx, req, client.WithSelectOption(so))
 	if err != nil {

@@ -4,9 +4,6 @@ import (
 	"errors"
 	"regexp"
 	"strings"
-
-	"git.xswitch.cn/xswitch/xctrl/xctrl/registry"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/server"
 )
 
 type Api interface {
@@ -55,7 +52,7 @@ type Service struct {
 	// The endpoint for this service
 	Endpoint *Endpoint
 	// Versions of this service
-	Services []*registry.Service
+	Services []*interface{}
 }
 
 func strip(s string) string {
@@ -148,40 +145,4 @@ func Validate(e *Endpoint) error {
 	}
 
 	return nil
-}
-
-/*
-Design ideas
-
-// Gateway is an api gateway interface
-type Gateway interface {
-	// Register a http handler
-	Handle(pattern string, http.Handler)
-	// Register a route
-	RegisterRoute(r Route)
-	// Init initialises the command line.
-	// It also parses further options.
-	Init(...Option) error
-	// Run the gateway
-	Run() error
-}
-
-// NewGateway returns a new api gateway
-func NewGateway() Gateway {
-	return newGateway()
-}
-*/
-
-// WithEndpoint returns a server.HandlerOption with endpoint metadata set
-//
-// Usage:
-//
-// 	proto.RegisterHandler(service.Server(), new(Handler), api.WithEndpoint(
-//		&api.Endpoint{
-//			Name: "Greeter.Hello",
-//			Path: []string{"/greeter"},
-//		},
-//	))
-func WithEndpoint(e *Endpoint) server.HandlerOption {
-	return server.EndpointMetadata(e.Name, Encode(e))
 }

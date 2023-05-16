@@ -16,7 +16,6 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrlext"
 	"github.com/sirupsen/logrus"
 )
 
@@ -1482,7 +1481,7 @@ func (boy *TBoy) NativeAPIStatus(ctx context.Context, msg *ctrl.Message, reply s
 }
 
 func (boy *TBoy) NativeJSAPI(ctx context.Context, msg *ctrl.Message, reply string) {
-	var request xctrlext.NativeJSRequest
+	var request xctrl.XNativeJSRequest
 
 	err := json.Unmarshal(*msg.Params, &request)
 
@@ -1495,6 +1494,8 @@ func (boy *TBoy) NativeJSAPI(ctx context.Context, msg *ctrl.Message, reply strin
 	switch request.Data.Command {
 	case "status":
 		boy.NativeJSAPIStatus(ctx, msg, reply)
+	case "sofia.status":
+		log.Errorf("Unsupported Method: %s", msg.Method)
 	default:
 		boy.Error(ctx, msg, reply)
 	}
@@ -1546,11 +1547,11 @@ func (boy *TBoy) NativeJSAPIStatus(ctx context.Context, msg *ctrl.Message, reply
 		},
 	}
 
-	res := xctrlext.NativeJSResponse{
+	res := xctrl.XNativeJSResponse{
 		Code:     200,
 		Message:  "OK",
 		NodeUuid: boy.NodeUUID,
-		Data:     dataMap,
+		Data:     ctrl.ToRawMessage(dataMap),
 	}
 
 	res_bytes, _ := json.MarshalIndent(res, "", "  ")
