@@ -3,10 +3,11 @@ package log
 
 import (
 	"fmt"
+	"io"
+	basicLog "log"
 	"os"
-
-	"github.com/go-log/log"
-	golog "github.com/go-log/log/log"
+	"sync"
+	"sync/atomic"
 )
 
 // level is a log level
@@ -21,9 +22,55 @@ const (
 	LevelTrace
 )
 
+// Logger is a generic logging interface
+type Logger interface {
+	// Log inserts a log entry.  Arguments may be handled in the manner
+	// of fmt.Print, but the underlying logger may also decide to handle
+	// them differently.
+	Log(level Level, v ...interface{})
+	// Logf insets a log entry.  Arguments are handled in the manner of
+	// fmt.Printf.
+	Logf(level Level, format string, v ...interface{})
+}
+type LoggerStruct struct {
+	mu        sync.Mutex  // ensures atomic writes; protects the following fields
+	prefix    string      // prefix on each line to identify the logger (but see Lmsgprefix)
+	flag      int         // properties
+	out       io.Writer   // destination for output
+	buf       []byte      // for accumulating text to write
+	isDiscard atomic.Bool // whether out == io.Discard
+}
+
+type LogLogger struct {
+	log *LoggerStruct
+}
+
+func (logger *LogLogger) Log(level Level, v ...interface{}) {
+	basicLog.Println(v...)
+}
+
+func (logger *LogLogger) Logf(level Level, format string, v ...interface{}) {
+	//goLog.New()
+	basicLog.Println(v...)
+}
+
+func New() *LogLogger {
+	return &LogLogger{
+		log: NewLog(os.Stderr, "", basicLog.LstdFlags|basicLog.Lshortfile),
+	}
+}
+
+func NewLog(out io.Writer, prefix string, flag int) *LoggerStruct {
+	l := &LoggerStruct{out: out, prefix: prefix, flag: flag}
+	if out == io.Discard {
+		l.isDiscard.Store(true)
+	}
+	return l
+}
+
 var (
 	// the local logger
-	logger log.Logger = golog.New()
+	logger Logger = New()
 
 	// default log level is info
 	level = LevelInfo
@@ -50,20 +97,20 @@ func init() {
 }
 
 // Log makes use of github.com/go-log/log.Log
-func Log(v ...interface{}) {
+func Log(l Level, v ...interface{}) {
 	if len(prefix) > 0 {
-		logger.Log(append([]interface{}{prefix, " "}, v...)...)
+		logger.Log(l, append([]interface{}{prefix, " "}, v...)...)
 		return
 	}
-	logger.Log(v...)
+	logger.Log(l, v...)
 }
 
 // Logf makes use of github.com/go-log/log.Logf
-func Logf(format string, v ...interface{}) {
+func Logf(l Level, format string, v ...interface{}) {
 	if len(prefix) > 0 {
 		format = prefix + " " + format
 	}
-	logger.Logf(format, v...)
+	logger.Logf(l, format, v...)
 }
 
 // WithLevel logs with the level specified
@@ -71,7 +118,7 @@ func WithLevel(l Level, v ...interface{}) {
 	if l > level {
 		return
 	}
-	Log(v...)
+	Log(l, v...)
 }
 
 // WithLevel logs with the level specified
@@ -79,7 +126,7 @@ func WithLevelf(l Level, format string, v ...interface{}) {
 	if l > level {
 		return
 	}
-	Logf(format, v...)
+	Logf(l, format, v...)
 }
 
 // Trace provides trace level logging
@@ -145,12 +192,12 @@ func Fatalf(format string, v ...interface{}) {
 }
 
 // SetLogger sets the local logger
-func SetLogger(l log.Logger) {
+func SetLogger(l Logger) {
 	logger = l
 }
 
 // GetLogger returns the local logger
-func GetLogger() log.Logger {
+func GetLogger() Logger {
 	return logger
 }
 
