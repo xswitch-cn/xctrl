@@ -1483,9 +1483,10 @@ placeholer type, do not use it, use XNativeJSResponse instead
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  |  |
 | cmd | [string](#string) |  |  |
 | args | [string](#string) |  |  |
-| uuid | [string](#string) |  |  |
+| sync | [bool](#bool) |  |  |
 
 
 
