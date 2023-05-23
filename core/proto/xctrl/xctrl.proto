@@ -121,9 +121,10 @@ message AcceptRequest {
 
 message NativeRequest {
   string ctrl_uuid = 1;
-  string cmd = 2;
-  string args = 3;
-  string uuid = 4;
+  string uuid = 2;
+  string cmd = 3;
+  string args = 4;
+  bool sync = 5;
 }
 
 message NativeResponse {
