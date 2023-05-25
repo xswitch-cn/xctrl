@@ -19,9 +19,9 @@ java:
 	protoc --proto_path=${GOPATH}/src:. --java_out=../ proto/xctrl/*.proto
 
 doc-html:
-	protoc --doc_out=core/proto/xctrl/doc --doc_opt=template/default.html,xctrl.html core/proto/xctrl/xctrl.proto
+	protoc --doc_out=proto/xctrl/doc --doc_opt=template/default.html,xctrl.html proto/xctrl/xctrl.proto
 
 doc-md:
-	protoc --doc_out=core/proto/doc --doc_opt=template/default.md,base.md core/proto/base/base.proto
-	protoc --doc_out=core/proto/doc --doc_opt=template/default.md,xctrl.md core/proto/xctrl/xctrl.proto
-	sed -i -e 's/#map<string, string>/#map-string-string/' core/proto/doc/xctrl.md
+	protoc --doc_out=proto/doc --doc_opt=template/default.md,base.md proto/base/base.proto
+	protoc --doc_out=proto/doc --doc_opt=template/default.md,xctrl.md proto/xctrl/xctrl.proto
+	sed -i -e 's/#map<string, string>/#map-string-string/' proto/doc/xctrl.md
