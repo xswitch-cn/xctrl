@@ -1,11 +1,11 @@
-package ds_builder
+package fsds
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestDsBuilder(t *testing.T) {
+func TestFSDS(t *testing.T) {
 	var params = &CallParams{
 		Endpoint:  "sofia",
 		Profile:   "public",
@@ -18,6 +18,6 @@ func TestDsBuilder(t *testing.T) {
 			"b": "2",
 		},
 	}
-	callString := DsBuilder(params)
+	callString := FSDS(params)
 	fmt.Println(callString)
 }

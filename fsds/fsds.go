@@ -1,8 +1,9 @@
-package ds_builder
+package fsds
 
 import (
-	log "git.xswitch.cn/xswitch/xctrl/xctrl/logger"
 	"strings"
+
+	log "git.xswitch.cn/xswitch/xctrl/xctrl/logger"
 )
 
 type CallParams struct {
@@ -15,7 +16,7 @@ type CallParams struct {
 	Params    map[string]string
 }
 
-func DsBuilder(params *CallParams) string {
+func FSDS(params *CallParams) string {
 	var sb strings.Builder
 
 	// Append the call parameters
