@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"

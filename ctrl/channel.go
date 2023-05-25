@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"github.com/google/uuid"

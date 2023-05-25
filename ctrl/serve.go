@@ -12,8 +12,8 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )

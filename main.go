@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl"
+	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
