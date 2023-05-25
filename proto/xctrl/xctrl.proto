@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "core/proto/xctrl";
+option go_package = "proto/xctrl";
 
 package xctrl;
 

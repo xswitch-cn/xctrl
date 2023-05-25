@@ -53,7 +53,7 @@ import (
 	"os"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/cmd/protoc-gen-xctrl/generator"
-	_ "git.xswitch.cn/xswitch/xctrl/xctrl/cmd/protoc-gen-xctrl/plugin/micro"
+	_ "git.xswitch.cn/xswitch/xctrl/xctrl/cmd/protoc-gen-xctrl/plugin/xctrl"
 	"github.com/golang/protobuf/proto"
 )
 

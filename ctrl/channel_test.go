@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"os"
 	"testing"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"github.com/google/uuid"
+
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 func TestPlayWithTimeout(t *testing.T) {
