@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/ctrl"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 type TBoyACD struct {

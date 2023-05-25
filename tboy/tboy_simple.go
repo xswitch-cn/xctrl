@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/ctrl"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 )
 
 type TBoySimple struct {
