@@ -14,6 +14,7 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/core/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
 )
 
@@ -119,6 +120,14 @@ func (h *Ctrl) newAService() xctrl.XNodeService {
 	c.Init(client.Selector())
 	c.SetAService()
 	return xctrl.NewXNodeService(h.serviceName, c)
+}
+
+// NewCManService 创建 CManService
+func (h *Ctrl) NewCManService(addr string) cman.CManService {
+	c := newClient(h.conn, false)
+	c.Init(client.Selector())
+	h.cmanService = cman.NewCManService(h.serviceName, c)
+	return h.cmanService
 }
 
 // 监听节点注册事件

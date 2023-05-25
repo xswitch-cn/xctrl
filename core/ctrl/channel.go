@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -54,8 +55,11 @@ func WithAddress(nodeUUID string) client.CallOption {
 	if nodeUUID == "" {
 		return client.WithAddress("cn.xswitch.node")
 	}
+	if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
+		nodeUUID = "cn.xswitch.node." + nodeUUID
+	}
 
-	return client.WithAddress("cn.xswitch.node." + nodeUUID)
+	return client.WithAddress(nodeUUID)
 }
 
 func (channel *Channel) Save() *Channel {

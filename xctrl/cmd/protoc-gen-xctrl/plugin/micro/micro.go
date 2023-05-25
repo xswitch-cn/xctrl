@@ -342,6 +342,9 @@ func (g *micro) generateClientSignature(servName string, method *pb.MethodDescri
 
 func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, method *pb.MethodDescriptorProto, descExpr string) {
 	reqMethod := fmt.Sprintf("%s.%s", servName, method.GetName())
+	if servName == "CMan" {
+		reqMethod = method.GetName()
+	}
 	methName := generator.CamelCase(method.GetName())
 	inType := g.typeName(method.GetInputType())
 	outType := g.typeName(method.GetOutputType())

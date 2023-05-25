@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
+	"git.xswitch.cn/xswitch/xctrl/core/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"github.com/google/uuid"
@@ -22,6 +23,7 @@ type Ctrl struct {
 	service          xctrl.XNodeService // 同步调用
 	asyncService     xctrl.XNodeService // 异步调用
 	aService         xctrl.XNodeService // 异步调用2
+	cmanService      cman.CManService   // CManService
 	handler          Handler
 	enableNodeStatus bool
 
@@ -83,6 +85,14 @@ func AService() xctrl.XNodeService {
 		return nil
 	}
 	return globalCtrl.aService
+}
+
+// CManService 同步调用
+func CManService() cman.CManService {
+	if globalCtrl == nil || globalCtrl.cmanService == nil {
+		return nil
+	}
+	return globalCtrl.cmanService
 }
 
 // Publish 发送消息
@@ -163,6 +173,14 @@ func Init(h Handler, trace bool, subject, addrs string) error {
 	}
 	globalCtrl = c
 	return err
+}
+
+func InitCManService(addr string) error {
+	if globalCtrl != nil {
+		globalCtrl.NewCManService(addr)
+		return nil
+	}
+	return fmt.Errorf("ctrl uninitialized")
 }
 
 // ExecAPI 执行原生 API

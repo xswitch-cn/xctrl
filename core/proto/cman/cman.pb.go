@@ -883,6 +883,146 @@ func (x *ConferenceInfoResponseFlags) GetEndConference() bool {
 	return false
 }
 
+type GetConferenceListRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetConferenceListRequest) Reset() {
+	*x = GetConferenceListRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_proto_cman_cman_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetConferenceListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConferenceListRequest) ProtoMessage() {}
+
+func (x *GetConferenceListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_core_proto_cman_cman_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConferenceListRequest.ProtoReflect.Descriptor instead.
+func (*GetConferenceListRequest) Descriptor() ([]byte, []int) {
+	return file_core_proto_cman_cman_proto_rawDescGZIP(), []int{9}
+}
+
+type ConferenceObject struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name   string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Domain string `protobuf:"bytes,2,opt,name=domain,proto3" json:"domain,omitempty"`
+}
+
+func (x *ConferenceObject) Reset() {
+	*x = ConferenceObject{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_proto_cman_cman_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConferenceObject) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConferenceObject) ProtoMessage() {}
+
+func (x *ConferenceObject) ProtoReflect() protoreflect.Message {
+	mi := &file_core_proto_cman_cman_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConferenceObject.ProtoReflect.Descriptor instead.
+func (*ConferenceObject) Descriptor() ([]byte, []int) {
+	return file_core_proto_cman_cman_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ConferenceObject) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ConferenceObject) GetDomain() string {
+	if x != nil {
+		return x.Domain
+	}
+	return ""
+}
+
+type GetConferenceListResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Conferences []*ConferenceObject `protobuf:"bytes,1,rep,name=conferences,proto3" json:"conferences,omitempty"`
+}
+
+func (x *GetConferenceListResponse) Reset() {
+	*x = GetConferenceListResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_proto_cman_cman_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetConferenceListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConferenceListResponse) ProtoMessage() {}
+
+func (x *GetConferenceListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_core_proto_cman_cman_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConferenceListResponse.ProtoReflect.Descriptor instead.
+func (*GetConferenceListResponse) Descriptor() ([]byte, []int) {
+	return file_core_proto_cman_cman_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetConferenceListResponse) GetConferences() []*ConferenceObject {
+	if x != nil {
+		return x.Conferences
+	}
+	return nil
+}
+
 var File_core_proto_cman_cman_proto protoreflect.FileDescriptor
 
 var file_core_proto_cman_cman_proto_rawDesc = []byte{
@@ -1049,14 +1189,31 @@ var file_core_proto_cman_cman_proto_rawDesc = []byte{
 	0x0b, 0x69, 0x73, 0x4d, 0x6f, 0x64, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x12, 0x25, 0x0a, 0x0e,
 	0x65, 0x6e, 0x64, 0x5f, 0x63, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x0b,
 	0x20, 0x01, 0x28, 0x08, 0x52, 0x0d, 0x65, 0x6e, 0x64, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65,
-	0x6e, 0x63, 0x65, 0x32, 0x55, 0x0a, 0x04, 0x43, 0x4d, 0x61, 0x6e, 0x12, 0x4d, 0x0a, 0x0e, 0x43,
-	0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x1b, 0x2e,
-	0x63, 0x6d, 0x61, 0x6e, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x49,
-	0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x63, 0x6d, 0x61,
-	0x6e, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x63, 0x6f,
-	0x72, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6d, 0x61, 0x6e, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x63, 0x65, 0x22, 0x1a, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72,
+	0x65, 0x6e, 0x63, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
+	0x3e, 0x0a, 0x10, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x4f, 0x62, 0x6a,
+	0x65, 0x63, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69,
+	0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x22,
+	0x55, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65,
+	0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a, 0x0b,
+	0x63, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x16, 0x2e, 0x63, 0x6d, 0x61, 0x6e, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65,
+	0x6e, 0x63, 0x65, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x65,
+	0x72, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x32, 0xad, 0x01, 0x0a, 0x04, 0x63, 0x4d, 0x61, 0x6e, 0x12,
+	0x56, 0x0a, 0x11, 0x67, 0x65, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65,
+	0x4c, 0x69, 0x73, 0x74, 0x12, 0x1e, 0x2e, 0x63, 0x6d, 0x61, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x43,
+	0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x63, 0x6d, 0x61, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x43,
+	0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4d, 0x0a, 0x0e, 0x63, 0x6f, 0x6e, 0x66, 0x65,
+	0x72, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x1b, 0x2e, 0x63, 0x6d, 0x61, 0x6e,
+	0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x63, 0x6d, 0x61, 0x6e, 0x2e, 0x43, 0x6f,
+	0x6e, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x63, 0x6f, 0x72, 0x65, 0x2f, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6d, 0x61, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -1071,7 +1228,7 @@ func file_core_proto_cman_cman_proto_rawDescGZIP() []byte {
 	return file_core_proto_cman_cman_proto_rawDescData
 }
 
-var file_core_proto_cman_cman_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_core_proto_cman_cman_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_core_proto_cman_cman_proto_goTypes = []interface{}{
 	(*ConferenceInfoRequestDataData)(nil),    // 0: cman.ConferenceInfoRequestDataData
 	(*ConferenceInfoRequestData)(nil),        // 1: cman.ConferenceInfoRequestData
@@ -1082,24 +1239,30 @@ var file_core_proto_cman_cman_proto_goTypes = []interface{}{
 	(*ConferenceInfoResponseVariables)(nil),  // 6: cman.ConferenceInfoResponseVariables
 	(*ConferenceInfoResponseMembers)(nil),    // 7: cman.ConferenceInfoResponseMembers
 	(*ConferenceInfoResponseFlags)(nil),      // 8: cman.ConferenceInfoResponseFlags
-	nil,                                      // 9: cman.ConferenceInfoRequestDataData.MemberFiltersEntry
+	(*GetConferenceListRequest)(nil),         // 9: cman.GetConferenceListRequest
+	(*ConferenceObject)(nil),                 // 10: cman.ConferenceObject
+	(*GetConferenceListResponse)(nil),        // 11: cman.GetConferenceListResponse
+	nil,                                      // 12: cman.ConferenceInfoRequestDataData.MemberFiltersEntry
 }
 var file_core_proto_cman_cman_proto_depIdxs = []int32{
-	9, // 0: cman.ConferenceInfoRequestDataData.memberFilters:type_name -> cman.ConferenceInfoRequestDataData.MemberFiltersEntry
-	0, // 1: cman.ConferenceInfoRequestData.data:type_name -> cman.ConferenceInfoRequestDataData
-	1, // 2: cman.ConferenceInfoRequest.data:type_name -> cman.ConferenceInfoRequestData
-	4, // 3: cman.ConferenceInfoResponse.data:type_name -> cman.ConferenceInfoResponseData
-	5, // 4: cman.ConferenceInfoResponseData.conference:type_name -> cman.ConferenceInfoResponseConference
-	6, // 5: cman.ConferenceInfoResponseConference.variables:type_name -> cman.ConferenceInfoResponseVariables
-	7, // 6: cman.ConferenceInfoResponseConference.members:type_name -> cman.ConferenceInfoResponseMembers
-	8, // 7: cman.ConferenceInfoResponseMembers.flags:type_name -> cman.ConferenceInfoResponseFlags
-	2, // 8: cman.CMan.ConferenceInfo:input_type -> cman.ConferenceInfoRequest
-	3, // 9: cman.CMan.ConferenceInfo:output_type -> cman.ConferenceInfoResponse
-	9, // [9:10] is the sub-list for method output_type
-	8, // [8:9] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	12, // 0: cman.ConferenceInfoRequestDataData.memberFilters:type_name -> cman.ConferenceInfoRequestDataData.MemberFiltersEntry
+	0,  // 1: cman.ConferenceInfoRequestData.data:type_name -> cman.ConferenceInfoRequestDataData
+	1,  // 2: cman.ConferenceInfoRequest.data:type_name -> cman.ConferenceInfoRequestData
+	4,  // 3: cman.ConferenceInfoResponse.data:type_name -> cman.ConferenceInfoResponseData
+	5,  // 4: cman.ConferenceInfoResponseData.conference:type_name -> cman.ConferenceInfoResponseConference
+	6,  // 5: cman.ConferenceInfoResponseConference.variables:type_name -> cman.ConferenceInfoResponseVariables
+	7,  // 6: cman.ConferenceInfoResponseConference.members:type_name -> cman.ConferenceInfoResponseMembers
+	8,  // 7: cman.ConferenceInfoResponseMembers.flags:type_name -> cman.ConferenceInfoResponseFlags
+	10, // 8: cman.GetConferenceListResponse.conferences:type_name -> cman.ConferenceObject
+	9,  // 9: cman.cMan.getConferenceList:input_type -> cman.GetConferenceListRequest
+	2,  // 10: cman.cMan.conferenceInfo:input_type -> cman.ConferenceInfoRequest
+	11, // 11: cman.cMan.getConferenceList:output_type -> cman.GetConferenceListResponse
+	3,  // 12: cman.cMan.conferenceInfo:output_type -> cman.ConferenceInfoResponse
+	11, // [11:13] is the sub-list for method output_type
+	9,  // [9:11] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_core_proto_cman_cman_proto_init() }
@@ -1216,6 +1379,42 @@ func file_core_proto_cman_cman_proto_init() {
 				return nil
 			}
 		}
+		file_core_proto_cman_cman_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetConferenceListRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_proto_cman_cman_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConferenceObject); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_proto_cman_cman_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetConferenceListResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1223,7 +1422,7 @@ func file_core_proto_cman_cman_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_core_proto_cman_cman_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

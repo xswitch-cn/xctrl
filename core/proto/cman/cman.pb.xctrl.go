@@ -42,6 +42,8 @@ func NewCManEndpoints() []*api.Endpoint {
 // Client API for CMan service
 
 type CManService interface {
+	// 获取会议列表
+	GetConferenceList(ctx context.Context, in *GetConferenceListRequest, opts ...client.CallOption) (*GetConferenceListResponse, error)
 	// 获取会议信息
 	ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error)
 }
@@ -58,8 +60,18 @@ func NewCManService(name string, c client.Client) CManService {
 	}
 }
 
+func (c *cManService) GetConferenceList(ctx context.Context, in *GetConferenceListRequest, opts ...client.CallOption) (*GetConferenceListResponse, error) {
+	req := c.c.NewRequest(c.name, "getConferenceList", in)
+	out := new(GetConferenceListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *cManService) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error) {
-	req := c.c.NewRequest(c.name, "CMan.ConferenceInfo", in)
+	req := c.c.NewRequest(c.name, "conferenceInfo", in)
 	out := new(ConferenceInfoResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -71,12 +83,15 @@ func (c *cManService) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequ
 // Server API for CMan service
 
 type CManHandler interface {
+	// 获取会议列表
+	GetConferenceList(context.Context, *GetConferenceListRequest, *GetConferenceListResponse) error
 	// 获取会议信息
 	ConferenceInfo(context.Context, *ConferenceInfoRequest, *ConferenceInfoResponse) error
 }
 
 func RegisterCManHandler(s server.Server, hdlr CManHandler, opts ...server.HandlerOption) error {
 	type cMan interface {
+		GetConferenceList(ctx context.Context, in *GetConferenceListRequest, out *GetConferenceListResponse) error
 		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
 	}
 	type CMan struct {
@@ -88,6 +103,10 @@ func RegisterCManHandler(s server.Server, hdlr CManHandler, opts ...server.Handl
 
 type cManHandler struct {
 	CManHandler
+}
+
+func (h *cManHandler) GetConferenceList(ctx context.Context, in *GetConferenceListRequest, out *GetConferenceListResponse) error {
+	return h.CManHandler.GetConferenceList(ctx, in, out)
 }
 
 func (h *cManHandler) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error {

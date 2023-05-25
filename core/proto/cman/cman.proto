@@ -10,9 +10,11 @@ package cman;
     cn.xswitch.ctrl.cman
 */
 
-service CMan {
+service cMan {
+  // 获取会议列表
+  rpc getConferenceList(GetConferenceListRequest) returns (GetConferenceListResponse) {}
   // 获取会议信息
-  rpc ConferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
+  rpc conferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
 }
 
 message ConferenceInfoRequestDataData {
@@ -105,4 +107,16 @@ message ConferenceInfoResponseFlags {
   bool has_floor = 9;
   bool is_moderator = 10;
   bool end_conference = 11;
+}
+
+message GetConferenceListRequest {
+}
+
+message ConferenceObject {
+    string name = 1;
+    string domain = 2;
+}
+
+message GetConferenceListResponse {
+    repeated ConferenceObject conferences = 1;
 }
