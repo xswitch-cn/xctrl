@@ -6,6 +6,7 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/core/proto/cman"
+	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 )
@@ -31,6 +32,16 @@ func main() {
 	ctrl.Init(new(Handler), true, "cn.xswitch.ctrl", "nats://localhost:4222")
 	ctrl.InitCManService("cn.xswitch.ctrl.cman")
 
-	ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{}, ctrl.WithAddress("cn.xswitch.ctrl.cman"), client.WithRequestTimeout(1*time.Second))
+	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
+		Cmd: "status",
+	}, ctrl.WithAddress("cn.xswitch.node"), client.WithRequestTimeout(1*time.Second))
 
+	if err != nil {
+		panic(err)
+	}
+
+	log.Infof("response: %v", response.Data)
+
+	ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
+		ctrl.WithAddress("cn.xswitch.ctrl.cman"), client.WithRequestTimeout(1*time.Second))
 }
