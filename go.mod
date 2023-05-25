@@ -5,7 +5,6 @@ go 1.16
 require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch/v5 v5.6.0
-	github.com/go-log/log v0.2.0
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gobwas/httphead v0.1.0

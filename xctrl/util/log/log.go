@@ -7,7 +7,6 @@ import (
 	basicLog "log"
 	"os"
 	"sync"
-	"sync/atomic"
 )
 
 // level is a log level
@@ -33,12 +32,12 @@ type Logger interface {
 	Logf(level Level, format string, v ...interface{})
 }
 type LoggerStruct struct {
-	mu        sync.Mutex  // ensures atomic writes; protects the following fields
-	prefix    string      // prefix on each line to identify the logger (but see Lmsgprefix)
-	flag      int         // properties
-	out       io.Writer   // destination for output
-	buf       []byte      // for accumulating text to write
-	isDiscard atomic.Bool // whether out == io.Discard
+	mu        sync.Mutex // ensures atomic writes; protects the following fields
+	prefix    string     // prefix on each line to identify the logger (but see Lmsgprefix)
+	flag      int        // properties
+	out       io.Writer  // destination for output
+	buf       []byte     // for accumulating text to write
+	isDiscard bool       //  todo use atomic.Bool? whether out == io.Discard
 }
 
 type LogLogger struct {
@@ -63,7 +62,8 @@ func New() *LogLogger {
 func NewLog(out io.Writer, prefix string, flag int) *LoggerStruct {
 	l := &LoggerStruct{out: out, prefix: prefix, flag: flag}
 	if out == io.Discard {
-		l.isDiscard.Store(true)
+		// l.isDiscard.Store(true)
+		l.isDiscard = true
 	}
 	return l
 }
