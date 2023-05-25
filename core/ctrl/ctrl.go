@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/cman"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/proto/cman"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"github.com/google/uuid"
 )

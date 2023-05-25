@@ -14,7 +14,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"github.com/google/uuid"
 
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 // Channel call channel

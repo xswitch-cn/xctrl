@@ -12,11 +12,11 @@ setup:
 
 .PHONY: proto
 proto:
-	protoc --proto_path=. --go_out=. core/proto/xctrl/*.proto --xctrl_out=. core/proto/xctrl/*.proto
-	protoc --proto_path=. --go_out=. core/proto/cman/*.proto --xctrl_out=. core/proto/cman/*.proto
+	protoc --proto_path=. --go_out=. proto/xctrl/*.proto --xctrl_out=. proto/xctrl/*.proto
+	protoc --proto_path=. --go_out=. proto/cman/*.proto --xctrl_out=. proto/cman/*.proto
 
 java:
-	protoc --proto_path=${GOPATH}/src:. --java_out=../ core/proto/xctrl/*.proto
+	protoc --proto_path=${GOPATH}/src:. --java_out=../ proto/xctrl/*.proto
 
 doc-html:
 	protoc --doc_out=core/proto/xctrl/doc --doc_opt=template/default.html,xctrl.html core/proto/xctrl/xctrl.proto

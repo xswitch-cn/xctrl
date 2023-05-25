@@ -3,7 +3,7 @@ package ctrl
 import (
 	"sync"
 
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 var nodes nodeList

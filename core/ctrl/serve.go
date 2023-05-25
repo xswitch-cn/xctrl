@@ -14,8 +14,8 @@ import (
 
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/core/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/cman"
-	"git.xswitch.cn/xswitch/xctrl/core/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/proto/cman"
+	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 // NodeRegister 节点注册
