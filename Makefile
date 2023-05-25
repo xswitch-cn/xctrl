@@ -10,12 +10,11 @@ setup:
 	go mod tidy
 	cd xctrl/cmd/protoc-gen-xctrl && go install && cd -
 
-
 .PHONY: proto
 proto:
-	# protoc --proto_path=${GOPATH}/src:.  --stack_out=../ core/proto/xctrl/*.proto
-	# protoc --proto_path=. --go_out=. core/proto/xctrl/*.proto --stack_out=../ core/proto/xctrl/*.proto
 	protoc --proto_path=. --go_out=. core/proto/xctrl/*.proto --xctrl_out=. core/proto/xctrl/*.proto
+	protoc --proto_path=. --go_out=. core/proto/cman/*.proto --xctrl_out=. core/proto/cman/*.proto
+
 java:
 	protoc --proto_path=${GOPATH}/src:. --java_out=../ core/proto/xctrl/*.proto
 

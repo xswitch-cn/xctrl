@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+option go_package = "core/proto/cman";
+
+package cman;
+
+/*
+    subject:
+
+    cn.xswitch.ctrl.cman
+*/
+
+service CMan {
+  // 获取会议信息
+  rpc ConferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
+}
+
+message ConferenceInfoRequestDataData {
+  string conferenceName = 1;
+  bool showMembers = 2;
+  map<string, string> memberFilters = 3;
+}
+
+message ConferenceInfoRequestData {
+  string command = 1;
+  ConferenceInfoRequestDataData data = 2;
+}
+
+message ConferenceInfoRequest {
+  string ctrl_uuid = 1;
+  ConferenceInfoRequestData data = 2;
+}
+
+message ConferenceInfoResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  // optional
+  string seq = 4;
+  ConferenceInfoResponseData data = 5;
+}
+
+message ConferenceInfoResponseData {
+  ConferenceInfoResponseConference conference = 1;
+}
+
+message ConferenceInfoResponseConference {
+  string conference_name = 1;
+  int32 member_count = 2;
+  int32 ghost_count = 3;
+  int32 rate = 4;
+  int32 run_time = 5;
+  string conference_uuid = 6;
+  int32 canvas_count = 7;
+  int32 max_bw_in = 8;
+  int32 force_bw_in = 9;
+  int32 video_floor_packets = 10;
+  bool locked = 11;
+  bool destruct = 12;
+  bool wait_mod = 13;
+  bool audio_always = 14;
+  bool running = 15;
+  bool answered = 16;
+  bool enforce_min = 17;
+  bool bridge_to = 18;
+  bool dynamic = 19;
+  bool exit_sound = 20;
+  bool enter_sound = 21;
+  bool recording = 22;
+  bool video_bridge = 23;
+  bool video_floor_only = 24;
+  bool video_rfc4579 = 25;
+  ConferenceInfoResponseVariables variables = 26;
+  repeated ConferenceInfoResponseMembers members = 27;
+}
+
+message ConferenceInfoResponseVariables {
+}
+
+message ConferenceInfoResponseMembers {
+  string type = 1;
+  int32 id = 2;
+  string uuid = 3;
+  string caller_id_name = 4;
+  string caller_id_number = 5;
+  int32 join_time = 6;
+  int32 last_talking = 7;
+  int32 energy = 8;
+  int32 volume_in = 9;
+  int32 volume_out = 10;
+  int32 output_volume = 11;
+  int32 input_volume = 12;
+  ConferenceInfoResponseFlags flags = 13;
+}
+
+message ConferenceInfoResponseFlags {
+  bool can_hear = 1;
+  bool can_see = 2;
+  bool can_speak = 3;
+  bool hold = 4;
+  bool mute_detect = 5;
+  bool talking = 6;
+  bool has_video = 7;
+  bool video_bridge = 8;
+  bool has_floor = 9;
+  bool is_moderator = 10;
+  bool end_conference = 11;
+}
