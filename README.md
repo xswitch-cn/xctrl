@@ -428,3 +428,10 @@ make doc-html
 ```shell
 make doc-md
 ```
+
+## 测试
+
+```
+go run main.go
+make test
+```
