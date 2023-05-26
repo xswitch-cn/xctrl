@@ -43,9 +43,6 @@ type CallOptions struct {
 	// Request/Response timeout
 	RequestTimeout time.Duration
 
-	// Stream timeout
-	StreamTimeout time.Duration
-
 	// Middleware for low level call func
 	CallWrappers []CallWrapper
 
@@ -68,8 +65,6 @@ type MessageOptions struct {
 
 type RequestOptions struct {
 	ContentType string
-	Stream      bool
-
 	// Other options for implementations of the interface
 	// can be stored in a context
 	Context context.Context
@@ -122,12 +117,6 @@ func WithDialTimeout(d time.Duration) CallOption {
 func WithContentType(ct string) RequestOption {
 	return func(o *RequestOptions) {
 		o.ContentType = ct
-	}
-}
-
-func StreamingRequest() RequestOption {
-	return func(o *RequestOptions) {
-		o.Stream = true
 	}
 }
 

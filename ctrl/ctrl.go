@@ -11,6 +11,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"github.com/google/uuid"
 )
@@ -183,28 +184,6 @@ func InitCManService(addr string) error {
 	return fmt.Errorf("ctrl uninitialized")
 }
 
-// ExecAPI 执行原生 API
-func ExecAPI(hostname string, cmd string, args ...string) (string, error) {
-	node := Node(hostname)
-	if node == nil {
-		return "", fmt.Errorf("节点未注册: %s", hostname)
-	}
-	resp, err := Service().NativeAPI(context.Background(),
-		&xctrl.NativeRequest{
-			Cmd:  cmd,
-			Args: strings.Join(args, " "),
-		}, WithAddress(node.Uuid))
-	if err != nil {
-		fmt.Errorf("execute native api error: %v", err)
-		return "", err
-	}
-	if (resp.GetCode() / 100) != 2 {
-		fmt.Errorf("[%d] %s", resp.GetCode(), resp.GetMessage())
-		return "", fmt.Errorf(resp.GetMessage())
-	}
-	return resp.GetData(), nil
-}
-
 // EnableEvent 开启事件监听
 // cn.xswitch.event.cdr
 // cn.xswitch.event.custom.sofia>
@@ -352,4 +331,29 @@ func TranslateMethod(method string) string {
 		return "XNode.NativeJSAPI"
 	}
 	return method
+}
+
+func WithAddressDefault() client.CallOption {
+	return client.WithAddress("cn.xswitch.node")
+}
+
+// Node Address 标准化Node地址
+func NodeAddress(nodeUUID string) string {
+	if nodeUUID == "" {
+		return "cn.xswitch.node"
+	}
+	if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
+		return "cn.xswitch.node." + nodeUUID
+	}
+	return nodeUUID
+}
+
+// WithAddress 创建Node地址
+func WithAddress(nodeUUID string) client.CallOption {
+	return client.WithAddress(NodeAddress(nodeUUID))
+}
+
+// NATS Request Timeout
+func WithRequestTimeout(d time.Duration) client.CallOption {
+	return client.WithRequestTimeout(d)
 }

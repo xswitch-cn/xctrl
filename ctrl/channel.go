@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 	"sync"
 	"time"
 
@@ -34,32 +33,6 @@ func NewChannel(channel_uuid string) *Channel {
 	channel.CtrlUuid = fmt.Sprintf("channel.%s", channel_uuid)
 	channel.Uuid = channel.CtrlUuid
 	return channel.Save()
-}
-
-// WithAddress 创建NODE地址
-func WithAddressNot() client.CallOption {
-	return client.WithAddress("cn.xswitch.node")
-}
-
-// WithAddress 创建NODE地址
-func NodeAddress(nodeUUID string) string {
-	if nodeUUID == "" {
-		return "cn.xswitch.node"
-	}
-
-	return fmt.Sprintf("cn.xswitch.node.%s", nodeUUID)
-}
-
-// WithAddress 创建NODE地址
-func WithAddress(nodeUUID string) client.CallOption {
-	if nodeUUID == "" {
-		return client.WithAddress("cn.xswitch.node")
-	}
-	if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
-		nodeUUID = "cn.xswitch.node." + nodeUUID
-	}
-
-	return client.WithAddress(nodeUUID)
 }
 
 func (channel *Channel) Save() *Channel {
