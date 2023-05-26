@@ -42,7 +42,11 @@ func main() {
 
 	log.Infof("response: %v", response.Data)
 
-	res, _ := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
+	res, err := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
 		ctrl.WithAddress("cn.xswitch.cman.control"), client.WithRequestTimeout(1*time.Second))
-	log.Info("conferences", res.Conferences)
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("conferences", res.Conferences)
+	}
 }
