@@ -32,11 +32,6 @@ func (f *fromServiceWrapper) Call(ctx context.Context, req client.Request, rsp i
 	return f.Client.Call(ctx, req, rsp, opts...)
 }
 
-func (f *fromServiceWrapper) Stream(ctx context.Context, req client.Request, opts ...client.CallOption) (client.Stream, error) {
-	ctx = f.setHeaders(ctx)
-	return f.Client.Stream(ctx, req, opts...)
-}
-
 func (f *fromServiceWrapper) Publish(ctx context.Context, p client.Message, opts ...client.PublishOption) error {
 	ctx = f.setHeaders(ctx)
 	return f.Client.Publish(ctx, p, opts...)

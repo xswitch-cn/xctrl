@@ -102,10 +102,6 @@ func (r *rpcRequest) Codec() codec.Writer {
 	return r.codec
 }
 
-func (r *rpcRequest) Stream() bool {
-	return r.opts.Stream
-}
-
 type ctrlClient struct {
 	conn     nats.Conn
 	opts     client.Options
@@ -266,10 +262,6 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 		return errors.InternalServerError("nats.jsonrpc.client", "%v", err)
 	}
 	return nil
-}
-
-func (r *ctrlClient) Stream(ctx context.Context, request client.Request, opts ...client.CallOption) (client.Stream, error) {
-	return nil, errServer
 }
 
 func (r *ctrlClient) Publish(ctx context.Context, msg client.Message, opts ...client.PublishOption) error {

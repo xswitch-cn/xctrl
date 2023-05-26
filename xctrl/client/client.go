@@ -18,7 +18,6 @@ type Client interface {
 	NewMessage(topic string, msg interface{}, opts ...MessageOption) Message
 	NewRequest(service, endpoint string, req interface{}, reqOpts ...RequestOption) Request
 	Call(ctx context.Context, req Request, rsp interface{}, opts ...CallOption) error
-	Stream(ctx context.Context, req Request, opts ...CallOption) (Stream, error)
 	Publish(ctx context.Context, msg Message, opts ...PublishOption) error
 	String() string
 }
@@ -49,8 +48,6 @@ type Request interface {
 	Body() interface{}
 	// Write to the encoded request writer. This is nil before a call is made
 	Codec() codec.Writer
-	// indicates whether the request will be a streaming one rather than unary
-	Stream() bool
 }
 
 // Response is the response received from a service
@@ -63,28 +60,10 @@ type Response interface {
 	Read() ([]byte, error)
 }
 
-// Stream is the inteface for a bidirectional synchronous stream
-type Stream interface {
-	// Context for the stream
-	Context() context.Context
-	// The request made
-	Request() Request
-	// The response read
-	Response() Response
-	// Send will encode and send a request
-	Send(interface{}) error
-	// Recv will decode and read a response
-	Recv(interface{}) error
-	// Error returns the stream error
-	Error() error
-	// Close closes the stream
-	Close() error
-}
-
 // Option used by the Client
 type Option func(*Options)
 
-// CallOption used by Call or Stream
+// CallOption used by Call
 type CallOption func(*CallOptions)
 
 // PublishOption used by Publish

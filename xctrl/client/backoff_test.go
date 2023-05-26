@@ -90,7 +90,3 @@ func (r *testRequest) Body() interface{} {
 func (r *testRequest) Codec() codec.Writer {
 	return r.codec
 }
-
-func (r *testRequest) Stream() bool {
-	return r.opts.Stream
-}
