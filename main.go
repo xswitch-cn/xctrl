@@ -14,13 +14,13 @@ import (
 type Handler struct {
 }
 
-func (h *Handler) Request(context.Context, string, string, *ctrl.Request) {
+func (h *Handler) Request(ctx context.Context, subject string, reply string, req *ctrl.Request) {
 }
-func (h *Handler) App(context.Context, string, string, *ctrl.Message) {
+func (h *Handler) App(ctx context.Context, subject string, reply string, msg *ctrl.Message) {
 }
-func (h *Handler) Event(context.Context, string, *ctrl.Request) {
+func (h *Handler) Event(ctx context.Context, subject string, req *ctrl.Request) {
 }
-func (h *Handler) Result(context.Context, string, *ctrl.Result) {
+func (h *Handler) Result(ctx context.Context, subject string, result *ctrl.Result) {
 }
 
 // simple example

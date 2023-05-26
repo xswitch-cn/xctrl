@@ -25,3 +25,7 @@ doc-md:
 	protoc --doc_out=proto/doc --doc_opt=template/default.md,base.md proto/base/base.proto
 	protoc --doc_out=proto/doc --doc_opt=template/default.md,xctrl.md proto/xctrl/xctrl.proto
 	sed -i -e 's/#map<string, string>/#map-string-string/' proto/doc/xctrl.md
+
+.PHONY: test
+test:
+	go test ./... -cover
