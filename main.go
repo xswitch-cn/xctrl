@@ -42,6 +42,7 @@ func main() {
 
 	log.Infof("response: %v", response.Data)
 
-	ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
-		ctrl.WithAddress("cn.xswitch.ctrl.cman"), client.WithRequestTimeout(1*time.Second))
+	res, _ := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
+		ctrl.WithAddress("cn.xswitch.cman.control"), client.WithRequestTimeout(1*time.Second))
+	log.Info("conferences", res.Conferences)
 }
