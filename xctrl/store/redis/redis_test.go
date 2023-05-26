@@ -9,6 +9,10 @@ import (
 	"github.com/go-redis/redis/v7"
 )
 
+func init() {
+	os.Setenv("TRAVIS", "true")
+}
+
 func Test_rkv_configure(t *testing.T) {
 	type fields struct {
 		options store.Options

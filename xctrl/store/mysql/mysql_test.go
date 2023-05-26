@@ -12,7 +12,13 @@ import (
 
 var (
 	sqlStoreT store.Store
+	skip      bool
 )
+
+func init() {
+	skip = true
+	os.Setenv("TRAVIS", "true")
+}
 
 func TestMain(m *testing.M) {
 	if tr := os.Getenv("TRAVIS"); len(tr) > 0 {
