@@ -53,15 +53,8 @@ func NewDebugService(name string, c client.Client) DebugService {
 }
 
 func (c *debugService) Log(ctx context.Context, in *LogRequest, opts ...client.CallOption) (Debug_LogService, error) {
-	req := c.c.NewRequest(c.name, "Debug.Log", &LogRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
-	if err != nil {
-		return nil, err
-	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &debugServiceLog{stream}, nil
+	// req := c.c.NewRequest(c.name, "Debug.Log", &LogRequest{})
+	return &debugServiceLog{}, nil
 }
 
 type Debug_LogService interface {
@@ -73,31 +66,27 @@ type Debug_LogService interface {
 }
 
 type debugServiceLog struct {
-	stream client.Stream
+	// stream client.Stream
 }
 
 func (x *debugServiceLog) Close() error {
-	return x.stream.Close()
+	return nil
 }
 
 func (x *debugServiceLog) Context() context.Context {
-	return x.stream.Context()
+	return context.Background()
 }
 
 func (x *debugServiceLog) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
+	return nil
 }
 
 func (x *debugServiceLog) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
+	return nil
 }
 
 func (x *debugServiceLog) Recv() (*Record, error) {
 	m := new(Record)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
 	return m, nil
 }
 

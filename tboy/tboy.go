@@ -1576,7 +1576,7 @@ func (boy *TBoy) App(ctx context.Context, topic string, reply string, msg *ctrl.
 	log.Infof("%s %s", topic, msg.Method)
 
 	if msg.Method == "" && msg.Result != nil {
-		log.Info("Got a response: %s", msg.ID)
+		log.Infof("Got a response: %s", msg.ID)
 		return
 	}
 

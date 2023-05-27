@@ -12,7 +12,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 )
 
-func TestStatus(t *testing.T) {
+func TestNativeAPI(t *testing.T) {
 	ctrl.Subscribe("cn.xswitch.node."+testNodeUUID, func(c context.Context, e nats.Event) error {
 		msg := e.Message()
 		req := &ctrl.Request{}
@@ -26,11 +26,11 @@ func TestStatus(t *testing.T) {
 			t.Error(err)
 		}
 		t.Log(nativeRequest.Cmd)
-		if nativeRequest.Cmd == "status" {
+		if nativeRequest.Cmd == "ping" {
 			reply := &xctrl.NativeResponse{
 				Code:    200,
 				Message: "OK",
-				Data:    "OK",
+				Data:    "pong",
 			}
 			result := &ctrl.Result{
 				Version: "2.0",
@@ -43,7 +43,7 @@ func TestStatus(t *testing.T) {
 	}, "")
 
 	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
-		Cmd: "status",
+		Cmd: "ping",
 	}, client.WithAddress("cn.xswitch.node."+testNodeUUID), client.WithRequestTimeout(100*time.Millisecond))
 
 	if err != nil {
@@ -51,4 +51,8 @@ func TestStatus(t *testing.T) {
 	}
 
 	t.Log(response)
+
+	if response.Data != "pong" {
+		t.Error("response data is not pong")
+	}
 }
