@@ -1,9 +1,8 @@
-package api
+package test
 
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"testing"
 	"time"
 
@@ -12,31 +11,6 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 )
-
-const (
-	testNodeUUID = "test.test-test"
-)
-
-type Handler struct {
-}
-
-func (h *Handler) Request(ctx context.Context, subject string, reply string, req *ctrl.Request) {
-}
-func (h *Handler) App(ctx context.Context, subject string, reply string, msg *ctrl.Message) {
-}
-func (h *Handler) Event(ctx context.Context, subject string, req *ctrl.Request) {
-}
-func (h *Handler) Result(ctx context.Context, subject string, result *ctrl.Result) {
-}
-
-func init() {
-	natsURL := os.Getenv("NATS_ADDRESS")
-
-	if natsURL == "" {
-		natsURL = "nats://localhost:4222"
-	}
-	ctrl.Init(new(Handler), true, "cn.xswitch.ctrl."+testNodeUUID, natsURL)
-}
 
 func TestEncoding(t *testing.T) {
 	ctrl.Subscribe("cn.xswitch.node."+testNodeUUID, func(c context.Context, e nats.Event) error {

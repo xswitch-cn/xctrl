@@ -122,7 +122,7 @@ type Option func(*Options)
 
 var (
 	DefaultAddress          = ":0"
-	DefaultName             = "go.micro.server"
+	DefaultName             = "go.xctrl.server"
 	DefaultVersion          = time.Now().Format("2006.01.02.15.04")
 	DefaultId               = uuid.New().String()
 	DefaultRegisterCheck    = func(context.Context) error { return nil }

@@ -2,7 +2,6 @@ package xctrl
 
 import (
 	"context"
-	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/xctrl/debug/profile"
@@ -90,21 +89,6 @@ func Server(s server.Server) Option {
 	}
 }
 
-// Registry sets the registry for the service
-// and the underlying components
-//func Registry(r registry.Registry) Option {
-//	return func(o *Options) {
-//		o.Registry = r
-//		// Update Client and Server
-//		o.Client.Init(client.Registry(r))
-//		o.Server.Init(server.Registry(r))
-//		// Update Selector
-//		o.Client.Options().Selector.Init(selector.Registry(r))
-//		// Update Broker
-//		o.Broker.Init(broker.Registry(r))
-//	}
-//}
-
 // Selector sets the selector for the service client
 func Selector() Option {
 	return func(o *Options) {
@@ -139,20 +123,6 @@ func Version(v string) Option {
 func Metadata(md map[string]string) Option {
 	return func(o *Options) {
 		o.Server.Init(server.Metadata(md))
-	}
-}
-
-// RegisterTTL specifies the TTL to use when registering the service
-func RegisterTTL(t time.Duration) Option {
-	return func(o *Options) {
-		o.Server.Init(server.RegisterTTL(t))
-	}
-}
-
-// RegisterInterval specifies the interval on which to re-register
-func RegisterInterval(t time.Duration) Option {
-	return func(o *Options) {
-		o.Server.Init(server.RegisterInterval(t))
 	}
 }
 
