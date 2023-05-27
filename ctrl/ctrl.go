@@ -57,6 +57,22 @@ type Handler interface {
 	Result(context.Context, string, *Result)
 }
 
+type LogLevel int
+
+const (
+	LLFatal LogLevel = iota
+	LLError
+	LLWarn
+	LLInfo
+	LLDebug
+	LLTrace
+)
+
+type Logger interface {
+	Log(level int, v ...interface{})
+	Logf(level int, format string, v ...interface{})
+}
+
 var globalCtrl *Ctrl
 
 // UUID get ctrl uuid
@@ -356,4 +372,12 @@ func WithAddress(nodeUUID string) client.CallOption {
 // NATS Request Timeout
 func WithRequestTimeout(d time.Duration) client.CallOption {
 	return client.WithRequestTimeout(d)
+}
+
+func SetLogLevel(level LogLevel) {
+	log.SetLevel(log.Level(level))
+}
+
+func SetLogger(l Logger) {
+	log.SetLogger(l)
 }

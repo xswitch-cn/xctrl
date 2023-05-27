@@ -15,8 +15,8 @@ type Level int
 const (
 	LevelFatal Level = iota
 	LevelError
-	LevelInfo
 	LevelWarn
+	LevelInfo
 	LevelDebug
 	LevelTrace
 )
@@ -26,11 +26,12 @@ type Logger interface {
 	// Log inserts a log entry.  Arguments may be handled in the manner
 	// of fmt.Print, but the underlying logger may also decide to handle
 	// them differently.
-	Log(level Level, v ...interface{})
+	Log(level int, v ...interface{})
 	// Logf insets a log entry.  Arguments are handled in the manner of
 	// fmt.Printf.
-	Logf(level Level, format string, v ...interface{})
+	Logf(level int, format string, v ...interface{})
 }
+
 type LoggerStruct struct {
 	mu        sync.Mutex // ensures atomic writes; protects the following fields
 	prefix    string     // prefix on each line to identify the logger (but see Lmsgprefix)
@@ -44,11 +45,11 @@ type LogLogger struct {
 	log *LoggerStruct
 }
 
-func (logger *LogLogger) Log(level Level, v ...interface{}) {
+func (logger *LogLogger) Log(level int, v ...interface{}) {
 	basicLog.Println(v...)
 }
 
-func (logger *LogLogger) Logf(level Level, format string, v ...interface{}) {
+func (logger *LogLogger) Logf(level int, format string, v ...interface{}) {
 	//goLog.New()
 	basicLog.Println(v...)
 }
@@ -80,15 +81,15 @@ var (
 )
 
 func init() {
-	switch os.Getenv("MICRO_LOG_LEVEL") {
+	switch os.Getenv("XCTRL_LOG_LEVEL") {
 	case "trace":
 		level = LevelTrace
 	case "debug":
 		level = LevelDebug
-	case "warn":
-		level = LevelWarn
 	case "info":
 		level = LevelInfo
+	case "warn":
+		level = LevelWarn
 	case "error":
 		level = LevelError
 	case "fatal":
@@ -96,21 +97,20 @@ func init() {
 	}
 }
 
-// Log makes use of github.com/go-log/log.Log
+// Log inspired from github.com/go-log/log.Log
 func Log(l Level, v ...interface{}) {
 	if len(prefix) > 0 {
-		logger.Log(l, append([]interface{}{prefix, " "}, v...)...)
+		logger.Log(int(l), append([]interface{}{prefix, " "}, v...)...)
 		return
 	}
-	logger.Log(l, v...)
+	logger.Log(int(l), v...)
 }
 
-// Logf makes use of github.com/go-log/log.Logf
 func Logf(l Level, format string, v ...interface{}) {
 	if len(prefix) > 0 {
 		format = prefix + " " + format
 	}
-	logger.Logf(l, format, v...)
+	logger.Logf(int(l), format, v...)
 }
 
 // WithLevel logs with the level specified

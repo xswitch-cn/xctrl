@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	nats "github.com/nats-io/nats.go"
 )
 
@@ -180,14 +181,14 @@ func (n *nConn) Options() Options {
 
 func (n *nConn) Publish(topic string, msg []byte, opts ...PublishOption) error {
 	if n.trace {
-		fmt.Printf("Publish: %s \n%s\n", topic, string(msg))
+		log.Tracef("NATS Publish: %s \n%s\n", topic, string(msg))
 	}
 	return n.conn.Publish(topic, msg)
 }
 
 func (n *nConn) Request(topic string, data []byte, timeout time.Duration) (*Message, error) {
 	if n.trace {
-		fmt.Printf("NATS Request: %s \n%s\n", topic, string(data))
+		log.Tracef("NATS Request: topic=%s\n%s\n", topic, string(data))
 	}
 	msg, err := n.conn.Request(topic, data, timeout)
 	var m Message
@@ -198,14 +199,14 @@ func (n *nConn) Request(topic string, data []byte, timeout time.Duration) (*Mess
 	m.Header = make(map[string]string)
 	m.Header["topic"] = msg.Subject
 	if n.trace {
-		fmt.Printf("Response: \n%s\n", string(m.Body))
+		log.Tracef("NATS Response: \n%s\n", string(m.Body))
 	}
 	return &m, nil
 }
 
 func (n *nConn) RequestWithContext(ctx context.Context, topic string, data []byte) (*Message, error) {
 	if n.trace {
-		fmt.Printf("Request: %s \n%s", topic, string(data))
+		log.Tracef("Request: %s \n%s", topic, string(data))
 	}
 	msg, err := n.conn.RequestWithContext(ctx, topic, data)
 	var m Message
@@ -216,7 +217,7 @@ func (n *nConn) RequestWithContext(ctx context.Context, topic string, data []byt
 	m.Header = make(map[string]string)
 	m.Header["topic"] = msg.Subject
 	if n.trace {
-		fmt.Printf("Response: \n%s", string(m.Body))
+		log.Tracef("NATS Response: \n%s", string(m.Body))
 	}
 	return &m, nil
 }

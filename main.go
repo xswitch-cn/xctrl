@@ -4,31 +4,40 @@ import (
 	"context"
 	"time"
 
+	"log"
+
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 )
 
-type Handler struct {
+type Logger struct {
+	ctrl.Logger
 }
 
-func (h *Handler) Request(ctx context.Context, subject string, reply string, req *ctrl.Request) {
+func (t *Logger) Log(level int, v ...interface{}) {
+	// if ctrl.LogLevel(level) == ctrl.LLTrace {
+	// }
+	log.Println(v...)
 }
-func (h *Handler) App(ctx context.Context, subject string, reply string, msg *ctrl.Message) {
-}
-func (h *Handler) Event(ctx context.Context, subject string, req *ctrl.Request) {
-}
-func (h *Handler) Result(ctx context.Context, subject string, result *ctrl.Result) {
+
+func (t *Logger) Logf(level int, format string, v ...interface{}) {
+	// if ctrl.LogLevel(level) == ctrl.LLTrace {
+	// }
+	log.Printf(format, v...)
 }
 
 // simple example
 func main() {
-	log.SetLevel(log.LevelDebug)
-	// log.SetLogger(...)
-	log.Info("Hello, world!")
-
-	ctrl.Init(new(Handler), true, "cn.xswitch.ctrl", "nats://localhost:4222")
+	logLevel := ctrl.LLDebug
+	// logLevel = ctrl.LLTrace // uncomment this line to enable trace log
+	isTrace := logLevel == ctrl.LLTrace // should enable trace log in ctrl?
+	ctrl.SetLogLevel(logLevel)          // set ctrl log level
+	ctrl.SetLogger(new(Logger))         // tell ctrl to use our logger
+	log.Print("Hello, world!")          // the world starts from here
+	// init ctrl, connect to NATS and subscribe a subject
+	ctrl.Init(new(ctrl.EmptyHandler), isTrace, "cn.xswitch.ctrl", "nats://localhost:4222")
+	// init cman service before we can talk to cman
 	ctrl.InitCManService("cn.xswitch.ctrl.cman")
 
 	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
@@ -39,13 +48,13 @@ func main() {
 		panic(err)
 	}
 
-	log.Infof("response: %v", response.Data)
+	log.Printf("response: %v", response.Data)
 
 	res, err := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
 		ctrl.WithAddress("cn.xswitch.cman.control"), ctrl.WithRequestTimeout(1*time.Second))
 	if err != nil {
-		log.Error(err)
+		log.Println(err)
 	} else {
-		log.Info("conferences", res.Conferences)
+		log.Printf("conferences %v", res.Conferences)
 	}
 }
