@@ -303,8 +303,12 @@ message ThreeWayRequest {
   string ctrl_uuid = 1;
   string uuid = 2;
   string target_uuid = 3;
-  /* LISTEN ABC AC BC TOA TOB STOP */
+  /* LISTEN ABC ABC3 AC BC TOA TOB STOP */
   string direction = 4;
+  // combine with direciton(ABC) in conf mode, value is conference
+  string mode = 5;
+  // used when direciton is `ABC` in with `conference` mode or `ABC3`
+  string conf_profile = 6;
 }
 
 message Echo2Request {
