@@ -124,7 +124,7 @@ func (h *Ctrl) newAService() xctrl.XNodeService {
 
 // NewCManService 创建 CManService
 func (h *Ctrl) NewCManService(addr string) cman.CManService {
-	c := newClient(h.conn, false)
+	c := newClient(h.conn, false, client.ServiceAddr(addr))
 	c.Init(client.Selector())
 	h.cmanService = cman.NewCManService(h.serviceName, c)
 	return h.cmanService

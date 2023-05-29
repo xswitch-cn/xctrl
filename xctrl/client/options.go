@@ -27,6 +27,9 @@ type Options struct {
 	// Other options for implementations of the interface
 	// can be stored in a context
 	Context context.Context
+
+	// the Service Address
+	ServiceAddr string
 }
 
 type CallOptions struct {
@@ -79,6 +82,13 @@ func Broker() Option {
 // Select is used to select a node to route a request to
 func Selector() Option {
 	return func(o *Options) {
+	}
+}
+
+// Select is used to select a node to route a request to
+func ServiceAddr(addr string) Option {
+	return func(o *Options) {
+		o.ServiceAddr = addr
 	}
 }
 

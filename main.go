@@ -38,7 +38,7 @@ func main() {
 	// init ctrl, connect to NATS and subscribe a subject
 	ctrl.Init(new(ctrl.EmptyHandler), isTrace, "cn.xswitch.ctrl", "nats://localhost:4222")
 	// init cman service before we can talk to cman
-	ctrl.InitCManService("cn.xswitch.ctrl.cman")
+	ctrl.InitCManService("cn.xswitch.cman.control")
 
 	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
 		Cmd: "status",
@@ -51,7 +51,7 @@ func main() {
 	log.Printf("response: %v", response.Data)
 
 	res, err := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
-		ctrl.WithAddress("cn.xswitch.cman.control"), ctrl.WithRequestTimeout(1*time.Second))
+		ctrl.WithRequestTimeout(1*time.Second))
 	if err != nil {
 		log.Println(err)
 	} else {
