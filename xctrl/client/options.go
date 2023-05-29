@@ -85,7 +85,7 @@ func Selector() Option {
 	}
 }
 
-// Select is used to select a node to route a request to
+// ServiceAddr the default service address
 func ServiceAddr(addr string) Option {
 	return func(o *Options) {
 		o.ServiceAddr = addr
