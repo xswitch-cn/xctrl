@@ -1922,7 +1922,9 @@ CDR = 13;
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
 | target_uuid | [string](#string) |  |  |
-| direction | [string](#string) |  | LISTEN ABC AC BC TOA TOB STOP |
+| direction | [string](#string) |  | LISTEN ABC ABC3 AC BC TOA TOB STOP |
+| mode | [string](#string) |  | combile with diretion `ABC`, value is `conference` |
+| conf_profile | [string](#string) |  | used in `ABC` with mode `conference` or `ABC3` |
 
 
 
