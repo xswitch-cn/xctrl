@@ -16,26 +16,18 @@ func TestNode(t *testing.T) {
 	}
 	nodes.Store(hostname, node)
 	list := GetNodeList()
-	list2 := GetNodeList2()
 	if len(list) != 1 {
 		t.Errorf("GetNodeList() = %v, want %v", len(list), 1)
 	}
-	if len(list2) != 1 {
-		t.Errorf("GetNodeList2() = %v, want %v", len(list2), 1)
-	}
-	node1 := list2[hostname]
+	node1 := list[hostname]
 	if node.Name != node1.Name {
 		t.Errorf("GetNodeList2() = %v, want %v", node.Name, node.Name)
 	}
 
 	time.Sleep(100 * time.Millisecond)
 	list = GetNodeList()
-	list2 = GetNodeList2()
-	if len(list) != 1 { // ?
-		// t.Errorf("GetNodeList() = %v, want %v", len(list), 1)
-	}
-	if len(list2) != 1 {
-		t.Errorf("GetNodeList2() = %v, want %v", len(list2), 1)
+	if len(list) != 1 {
+		t.Errorf("GetNodeList() = %v, want %v", len(list), 1)
 	}
 
 }
