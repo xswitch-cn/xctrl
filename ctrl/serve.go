@@ -11,12 +11,25 @@ import (
 	"github.com/google/uuid"
 
 	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 
 	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
+
+// register 注册node节点
+func (h *Ctrl) register(n *xctrl.Node) {
+	// 节点注册
+	nodes.Store(n.Name, n)
+}
+
+// deRegister 取消节点注册
+func (h *Ctrl) deRegister(n *xctrl.Node) {
+	// 节点离线
+	nodes.Delete(n.Name)
+}
 
 // NodeRegister 节点注册
 func (h *Ctrl) nodeRegister(ctx context.Context, frame *json.RawMessage) error {
@@ -26,14 +39,14 @@ func (h *Ctrl) nodeRegister(ctx context.Context, frame *json.RawMessage) error {
 		fmt.Errorf("jsonrpc parse error:%s", err)
 	}
 
-	// xlog.Tracef("Node Register: %s, %s, %s, %s, %d",
-	// 	n.GetName(),
-	// 	n.GetVersion(),
-	// 	n.GetUuid(),
-	// 	n.GetAddress(),
-	// 	n.GetRack())
+	log.Tracef("Node Register: %s, %s, %s, %s, %d",
+		n.GetName(),
+		n.GetVersion(),
+		n.GetUuid(),
+		n.GetAddress(),
+		n.GetRack())
 
-	//h.register(n)
+	h.register(n)
 	return nil
 }
 
@@ -46,14 +59,14 @@ func (h *Ctrl) nodeUnregister(ctx context.Context, frame *json.RawMessage) error
 		return nil
 	}
 
-	// xlog.Tracef("Node Unregister: %s, %s, %s, %s, %d",
-	// 	n.GetName(),
-	// 	n.GetVersion(),
-	// 	n.GetUuid(),
-	// 	n.GetAddress(),
-	// 	n.GetRack())
+	log.Tracef("Node Unregister: %s, %s, %s, %s, %d",
+		n.GetName(),
+		n.GetVersion(),
+		n.GetUuid(),
+		n.GetAddress(),
+		n.GetRack())
 
-	//h.deRegister(n)
+	h.deRegister(n)
 	return nil
 }
 
@@ -65,13 +78,13 @@ func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 		fmt.Errorf("jsonrpc parse error:%v", err)
 		return nil
 	}
-	// xlog.Debugf("Node Status: %s, %s, %s, %s, %d",
-	// 	n.GetName(),
-	// 	n.GetVersion(),
-	// 	n.GetUuid(),
-	// 	n.GetAddress(),
-	// 	n.GetRack())
-	//h.register(n)
+	log.Tracef("Node Status: %s, %s, %s, %s, %d",
+		n.GetName(),
+		n.GetVersion(),
+		n.GetUuid(),
+		n.GetAddress(),
+		n.GetRack())
+	h.register(n)
 	return nil
 }
 
