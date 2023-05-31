@@ -24,15 +24,18 @@
   - [ChannelData](#xctrl.ChannelData)
   - [ChannelDataResponse](#xctrl.ChannelDataResponse)
   - [ChannelEvent](#xctrl.ChannelEvent)
+  - [ConferenceInfo](#xctrl.ConferenceInfo)
   - [ConferenceInfoRequest](#xctrl.ConferenceInfoRequest)
   - [ConferenceInfoRequestData](#xctrl.ConferenceInfoRequestData)
   - [ConferenceInfoRequestDataData](#xctrl.ConferenceInfoRequestDataData)
   - [ConferenceInfoResponse](#xctrl.ConferenceInfoResponse)
-  - [ConferenceInfoResponseConference](#xctrl.ConferenceInfoResponseConference)
-  - [ConferenceInfoResponseData](#xctrl.ConferenceInfoResponseData)
   - [ConferenceInfoResponseFlags](#xctrl.ConferenceInfoResponseFlags)
   - [ConferenceInfoResponseMembers](#xctrl.ConferenceInfoResponseMembers)
   - [ConferenceInfoResponseVariables](#xctrl.ConferenceInfoResponseVariables)
+  - [ConferenceListRequest](#xctrl.ConferenceListRequest)
+  - [ConferenceListRequestData](#xctrl.ConferenceListRequestData)
+  - [ConferenceListRequestDataData](#xctrl.ConferenceListRequestDataData)
+  - [ConferenceListResponse](#xctrl.ConferenceListResponse)
   - [ConferenceRequest](#xctrl.ConferenceRequest)
   - [ConferenceResponse](#xctrl.ConferenceResponse)
   - [ConsultRequest](#xctrl.ConsultRequest)
@@ -408,6 +411,49 @@
 
 
 
+<a name="user-content-xctrl.ConferenceInfo"/>
+<a name="xctrl.ConferenceInfo"/>
+
+### ConferenceInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| conference_name | [string](#string) |  |  |
+| member_count | [int32](#int32) |  |  |
+| ghost_count | [int32](#int32) |  |  |
+| rate | [int32](#int32) |  |  |
+| run_time | [int32](#int32) |  |  |
+| conference_uuid | [string](#string) |  |  |
+| canvas_count | [int32](#int32) |  |  |
+| max_bw_in | [int32](#int32) |  |  |
+| force_bw_in | [int32](#int32) |  |  |
+| video_floor_packets | [int32](#int32) |  |  |
+| locked | [bool](#bool) |  |  |
+| destruct | [bool](#bool) |  |  |
+| wait_mod | [bool](#bool) |  |  |
+| audio_always | [bool](#bool) |  |  |
+| running | [bool](#bool) |  |  |
+| answered | [bool](#bool) |  |  |
+| enforce_min | [bool](#bool) |  |  |
+| bridge_to | [bool](#bool) |  |  |
+| dynamic | [bool](#bool) |  |  |
+| exit_sound | [bool](#bool) |  |  |
+| enter_sound | [bool](#bool) |  |  |
+| recording | [bool](#bool) |  |  |
+| video_bridge | [bool](#bool) |  |  |
+| video_floor_only | [bool](#bool) |  |  |
+| video_rfc4579 | [bool](#bool) |  |  |
+| domain | [string](#string) |  |  |
+| variables | [ConferenceInfoResponseVariables](#xctrl.ConferenceInfoResponseVariables) |  |  |
+| members | [ConferenceInfoResponseMembers](#xctrl.ConferenceInfoResponseMembers) | repeated |  |
+
+
+
+
+
+
 <a name="user-content-xctrl.ConferenceInfoRequest"/>
 <a name="xctrl.ConferenceInfoRequest"/>
 
@@ -472,66 +518,7 @@
 | code | [int32](#int32) |  |  |
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
-| seq | [string](#string) |  | optional |
-| data | [ConferenceInfoResponseData](#xctrl.ConferenceInfoResponseData) |  |  |
-
-
-
-
-
-
-<a name="user-content-xctrl.ConferenceInfoResponseConference"/>
-<a name="xctrl.ConferenceInfoResponseConference"/>
-
-### ConferenceInfoResponseConference
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| conference_name | [string](#string) |  |  |
-| member_count | [int32](#int32) |  |  |
-| ghost_count | [int32](#int32) |  |  |
-| rate | [int32](#int32) |  |  |
-| run_time | [int32](#int32) |  |  |
-| conference_uuid | [string](#string) |  |  |
-| canvas_count | [int32](#int32) |  |  |
-| max_bw_in | [int32](#int32) |  |  |
-| force_bw_in | [int32](#int32) |  |  |
-| video_floor_packets | [int32](#int32) |  |  |
-| locked | [bool](#bool) |  |  |
-| destruct | [bool](#bool) |  |  |
-| wait_mod | [bool](#bool) |  |  |
-| audio_always | [bool](#bool) |  |  |
-| running | [bool](#bool) |  |  |
-| answered | [bool](#bool) |  |  |
-| enforce_min | [bool](#bool) |  |  |
-| bridge_to | [bool](#bool) |  |  |
-| dynamic | [bool](#bool) |  |  |
-| exit_sound | [bool](#bool) |  |  |
-| enter_sound | [bool](#bool) |  |  |
-| recording | [bool](#bool) |  |  |
-| video_bridge | [bool](#bool) |  |  |
-| video_floor_only | [bool](#bool) |  |  |
-| video_rfc4579 | [bool](#bool) |  |  |
-| variables | [ConferenceInfoResponseVariables](#xctrl.ConferenceInfoResponseVariables) |  |  |
-| members | [ConferenceInfoResponseMembers](#xctrl.ConferenceInfoResponseMembers) | repeated |  |
-
-
-
-
-
-
-<a name="user-content-xctrl.ConferenceInfoResponseData"/>
-<a name="xctrl.ConferenceInfoResponseData"/>
-
-### ConferenceInfoResponseData
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| conference | [ConferenceInfoResponseConference](#xctrl.ConferenceInfoResponseConference) |  |  |
+| data | [ConferenceInfo](#xctrl.ConferenceInfo) |  |  |
 
 
 
@@ -597,6 +584,75 @@
 
 ### ConferenceInfoResponseVariables
 
+
+
+
+
+
+
+<a name="user-content-xctrl.ConferenceListRequest"/>
+<a name="xctrl.ConferenceListRequest"/>
+
+### ConferenceListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ctrl_uuid | [string](#string) |  |  |
+| data | [ConferenceListRequestData](#xctrl.ConferenceListRequestData) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.ConferenceListRequestData"/>
+<a name="xctrl.ConferenceListRequestData"/>
+
+### ConferenceListRequestData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| command | [string](#string) |  |  |
+| data | [ConferenceListRequestDataData](#xctrl.ConferenceListRequestDataData) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.ConferenceListRequestDataData"/>
+<a name="xctrl.ConferenceListRequestDataData"/>
+
+### ConferenceListRequestDataData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| domain | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.ConferenceListResponse"/>
+<a name="xctrl.ConferenceListResponse"/>
+
+### ConferenceListResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| code | [int32](#int32) |  |  |
+| message | [string](#string) |  |  |
+| node_uuid | [string](#string) |  |  |
+| data | [ConferenceInfo](#xctrl.ConferenceInfo) | repeated |  |
 
 
 
@@ -1923,8 +1979,8 @@ CDR = 13;
 | uuid | [string](#string) |  |  |
 | target_uuid | [string](#string) |  |  |
 | direction | [string](#string) |  | LISTEN ABC ABC3 AC BC TOA TOB STOP |
-| mode | [string](#string) |  | combile with diretion `ABC`, value is `conference` |
-| conf_profile | [string](#string) |  | used in `ABC` with mode `conference` or `ABC3` |
+| mode | [string](#string) |  | combine with direciton(ABC) in conf mode, value is conference |
+| conf_profile | [string](#string) |  | used when direciton is `ABC` in with `conference` mode or `ABC3` |
 
 
 
@@ -2086,6 +2142,7 @@ CDR = 13;
 | NativeJSAPI | [NativeJSRequest](#xctrl.NativeJSRequest) | [NativeJSResponse](#xctrl.NativeJSRequest) | 执行原生JSAPI |
 | JStatus | [JStatusRequest](#xctrl.JStatusRequest) | [JStatusResponse](#xctrl.JStatusRequest) | 状态 |
 | ConferenceInfo | [ConferenceInfoRequest](#xctrl.ConferenceInfoRequest) | [ConferenceInfoResponse](#xctrl.ConferenceInfoRequest) | 获取会议信息 |
+| ConferenceList | [ConferenceListRequest](#xctrl.ConferenceListRequest) | [ConferenceListResponse](#xctrl.ConferenceListRequest) | 获取全部会议信息 |
 | FIFO | [FIFORequest](#xctrl.FIFORequest) | [FIFOResponse](#xctrl.FIFORequest) | 呼叫中心FIFO队列（先入先出） |
 | Callcenter | [CallcenterRequest](#xctrl.CallcenterRequest) | [CallcenterResponse](#xctrl.CallcenterRequest) | 呼叫中心Callcenter |
 | Conference | [ConferenceRequest](#xctrl.ConferenceRequest) | [ConferenceResponse](#xctrl.ConferenceRequest) | 会议Conference |
