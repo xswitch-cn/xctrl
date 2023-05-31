@@ -346,6 +346,10 @@ func TranslateMethod(method string) string {
 	if method == "XNode.ConferenceInfo" {
 		return "XNode.NativeJSAPI"
 	}
+	//XNode.ConferenceList->XNode.NativeJSAPI
+	if method == "XNode.ConferenceList" {
+		return "XNode.NativeJSAPI"
+	}
 	return method
 }
 

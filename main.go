@@ -50,6 +50,26 @@ func main() {
 
 	log.Printf("response: %v", response.Data)
 
+	cListReq := &xctrl.ConferenceListRequest{
+		CtrlUuid: ctrl.UUID(),
+		Data: &xctrl.ConferenceListRequestData{
+			Command: "conferenceInfo",
+			Data: &xctrl.ConferenceListRequestDataData{
+				Domain: "",
+			},
+		},
+	}
+	rsp, err := ctrl.Service().ConferenceList(context.Background(), cListReq,
+		ctrl.WithAddress("cn.xswitch.node"), ctrl.WithRequestTimeout(1*time.Second))
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Printf("%v", rsp.Data)
+		for _, c := range rsp.Data {
+			log.Printf("conference %s %s", c.ConferenceName, c.Domain)
+		}
+	}
+
 	res, err := ctrl.CManService().GetConferenceList(context.Background(), &cman.GetConferenceListRequest{},
 		ctrl.WithRequestTimeout(1*time.Second))
 	if err != nil {

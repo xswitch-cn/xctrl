@@ -86,7 +86,8 @@ service XNode {
   rpc JStatus(JStatusRequest) returns (JStatusResponse) {}
   // 获取会议信息
   rpc ConferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
-
+  // 获取全部会议信息
+  rpc ConferenceList(ConferenceListRequest) returns (ConferenceListResponse) {}
   //呼叫中心FIFO队列（先入先出）
   rpc FIFO(FIFORequest) returns (FIFOResponse) {}
 
@@ -934,8 +935,9 @@ message ConferenceInfoResponseConference {
   bool video_bridge = 23;
   bool video_floor_only = 24;
   bool video_rfc4579 = 25;
-  ConferenceInfoResponseVariables variables = 26;
-  repeated ConferenceInfoResponseMembers members = 27;
+  string domain = 26;
+  ConferenceInfoResponseVariables variables = 27;
+  repeated ConferenceInfoResponseMembers members = 28;
 }
 
 message ConferenceInfoResponseVariables {
@@ -970,6 +972,28 @@ message ConferenceInfoResponseFlags {
   bool is_moderator = 10;
   bool end_conference = 11;
 }
+
+message ConferenceListRequestDataData {
+  string domain = 1;
+}
+
+message ConferenceListRequestData {
+  string command = 1;
+  ConferenceListRequestDataData data = 2;
+}
+
+message ConferenceListRequest {
+  string ctrl_uuid = 1;
+  ConferenceListRequestData data = 2;
+}
+
+message ConferenceListResponse {
+  int32 code = 1;
+  string message = 2;
+  string node_uuid = 3;
+  repeated ConferenceInfoResponseConference data = 4;
+}
+
 message FIFORequest {
   string uuid = 1;
   string name = 2;

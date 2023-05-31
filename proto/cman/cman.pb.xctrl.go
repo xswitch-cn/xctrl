@@ -51,7 +51,6 @@ type CManService interface {
 type cManService struct {
 	c    client.Client
 	name string
-	addr string
 }
 
 func NewCManService(name string, c client.Client) CManService {
