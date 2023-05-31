@@ -900,16 +900,10 @@ message ConferenceInfoResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;
-  // optional
-  string seq = 4;
-  ConferenceInfoResponseData data = 5;
+  ConferenceInfo data = 5;
 }
 
-message ConferenceInfoResponseData {
-  ConferenceInfoResponseConference conference = 1;
-}
-
-message ConferenceInfoResponseConference {
+message ConferenceInfo {
   string conference_name = 1;
   int32 member_count = 2;
   int32 ghost_count = 3;
@@ -991,7 +985,7 @@ message ConferenceListResponse {
   int32 code = 1;
   string message = 2;
   string node_uuid = 3;
-  repeated ConferenceInfoResponseConference data = 4;
+  repeated ConferenceInfo data = 4;
 }
 
 message FIFORequest {
