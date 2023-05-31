@@ -27,13 +27,13 @@ func TestPlayWithTimeout(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid"
+	nodeUUID := "test.node-uuid"
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
 
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 
 	req := &xctrl.PlayRequest{
 		CtrlUuid: UUID(),
@@ -49,14 +49,17 @@ func TestPlayWithTimeout(t *testing.T) {
 		t.Error(res)
 	}
 
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 
@@ -66,9 +69,15 @@ func TestPlayWithTimeout(t *testing.T) {
 			Result:  ToRawMessage(response),
 		}
 
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		return
+	}
 
 	res = channel.PlayWithTimeout(req, 100*time.Millisecond)
 
@@ -96,17 +105,20 @@ func TestFIFO(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid"
+	nodeUUID := "test.node-uuid"
 
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 
@@ -115,14 +127,20 @@ func TestFIFO(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 
 	req := &xctrl.FIFORequest{
 		Uuid:         UUID(),
@@ -135,7 +153,7 @@ func TestFIFO(t *testing.T) {
 
 	res := channel.FIFO(req)
 
-	if res.Code != 408 {
+	if res.Code != 200 {
 		t.Error(res)
 	}
 
@@ -154,17 +172,20 @@ func TestChannel_Callcenter(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid"
+	nodeUUID := "test.node-uuid"
 
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 
@@ -173,14 +194,20 @@ func TestChannel_Callcenter(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 
 	req := &xctrl.CallcenterRequest{
 		Uuid: UUID(),
@@ -189,7 +216,7 @@ func TestChannel_Callcenter(t *testing.T) {
 
 	res := channel.Callcenter(req)
 
-	if res.Code != 408 {
+	if res.Code != 200 {
 		t.Error(res)
 	}
 
@@ -208,17 +235,20 @@ func TestChannel_Conference(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid-conference"
+	nodeUUID := "test.node-uuid-conference"
 
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 
@@ -227,14 +257,20 @@ func TestChannel_Conference(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 
 	req := &xctrl.ConferenceRequest{
 		Uuid:    UUID(),
@@ -245,7 +281,7 @@ func TestChannel_Conference(t *testing.T) {
 
 	res := channel.Conference(req)
 
-	if res.Code != 408 {
+	if res.Code != 200 {
 		t.Error(res)
 	}
 
@@ -264,16 +300,19 @@ func TestChannel_AI(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid-ai"
+	nodeUUID := "test.node-uuid-ai"
 
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 		rpc := &Response{
@@ -281,14 +320,20 @@ func TestChannel_AI(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 	req := &xctrl.AIRequest{
 		Uuid: UUID(),
 		Url:  "http://localhost:3000",
@@ -300,7 +345,7 @@ func TestChannel_AI(t *testing.T) {
 
 	res := channel.AI(req)
 
-	if res.Code != 408 {
+	if res.Code != 200 {
 		t.Error(res)
 	}
 
@@ -319,16 +364,19 @@ func TestChannel_HttAPI(t *testing.T) {
 		t.Error(err)
 	}
 
-	node_uuid := "test.node-uuid-httapi"
+	nodeUUID := "test.node-uuid-httapi"
 
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 		rpc := &Response{
@@ -336,14 +384,20 @@ func TestChannel_HttAPI(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 	req := &xctrl.HttAPIRequest{
 		Uuid: UUID(),
 		Url:  "http://localhost:3000",
@@ -355,7 +409,7 @@ func TestChannel_HttAPI(t *testing.T) {
 
 	res := channel.HttAPI(req)
 
-	if res.Code != 408 {
+	if res.Code != 200 {
 		t.Error(res)
 	}
 
@@ -373,19 +427,22 @@ func TestConferenceInfo(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	node_uuid := "test.node-uuid.conferenceInfo"
+	nodeUUID := "test.node-uuid.conferenceInfo"
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 		rpc := &Response{
@@ -393,9 +450,15 @@ func TestConferenceInfo(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error()
+	}
 	data := xctrl.ConferenceInfoRequestDataData{
 		ConferenceName: "ConferenceName",
 		ShowMembers:    true,
@@ -433,19 +496,22 @@ func TestLua(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	node_uuid := "test.node-uuid.lua"
+	nodeUUID := "test.node-uuid.lua"
 	channel := &Channel{
 		CtrlUuid: UUID(),
 	}
-	channel.NodeUuid = node_uuid
+	channel.NodeUuid = nodeUUID
 	//订阅主题
-	Subscribe("cn.xswitch.node."+node_uuid, func(c context.Context, e nats.Event) error {
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
-		json.Unmarshal(e.Message().Body, request)
+		err := json.Unmarshal(e.Message().Body, &request)
+		if err != nil {
+			t.Error(err)
+		}
 		response := &xctrl.Response{
 			Code:     200,
 			Message:  "OK",
-			NodeUuid: node_uuid,
+			NodeUuid: nodeUUID,
 			Uuid:     "test-uuid",
 		}
 		rpc := &Response{
@@ -453,9 +519,15 @@ func TestLua(t *testing.T) {
 			ID:      request.ID,
 			Result:  ToRawMessage(response),
 		}
-		PublishJSON(e.Reply(), rpc)
+		err = PublishJSON(e.Reply(), rpc)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
-	}, node_uuid)
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	req := &xctrl.LuaRequest{
 		Uuid:   uuid.New().String(),

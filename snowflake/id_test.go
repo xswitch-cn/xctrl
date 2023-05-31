@@ -1,18 +1,36 @@
 package snowflake
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestNew(t *testing.T) {
 	err := Init()
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(NewString())
-	t.Log("New:", New())
-	t.Log("NewInt64", NewInt64())
-	t.Log("NewBase64", NewBase64())
-	t.Log("NewBase58", NewBase58())
-	t.Log("NewBase36()", NewBase36())
-	t.Log("NewBase32()", NewBase32())
-	t.Error("OK")
+	cases := []struct {
+		function interface{}
+		name     string
+		wanted   string
+	}{
+		{New(), "New", "snowflake.ID"},
+		{NewString(), "NewString", "string"},
+		{NewInt64(), "NewInt64", "int64"},
+		{NewBase64(), "NewBase64", "string"},
+		{NewBase58(), "NewBase58", "string"},
+		{NewBase36(), "NewBase36", "string"},
+		{NewBase32(), "NewBase32", "string"},
+	}
+
+	for _, singleCase := range cases {
+		if singleCase.wanted != typeof(singleCase.function) {
+			t.Error("function:" + singleCase.name + "error")
+		}
+	}
+}
+
+func typeof(v interface{}) string {
+	return reflect.TypeOf(v).String()
 }
