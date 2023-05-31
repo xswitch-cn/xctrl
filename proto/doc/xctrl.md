@@ -1306,7 +1306,6 @@
 | code | [int32](#int32) |  |  |
 | message | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
-| seq | [string](#string) |  |  |
 | data | [JStatusResponseData](#xctrl.JStatusResponseData) |  |  |
 
 

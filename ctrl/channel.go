@@ -19,8 +19,8 @@ import (
 // Channel call channel
 type Channel struct {
 	xctrl.ChannelEvent
-	lock     sync.RWMutex
 	CtrlUuid string
+	lock     sync.RWMutex
 	subs     []nats.Subscriber
 }
 
