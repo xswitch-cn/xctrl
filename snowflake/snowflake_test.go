@@ -16,9 +16,9 @@ func TestNewNode(t *testing.T) {
 		t.Fatalf("error creating NewNode, %s", err)
 	}
 
-	_, err = NewNode(5000)
+	_, err = NewNode(65536)
 	if err == nil {
-		t.Fatalf("no error creating NewNode, %s", err)
+		t.Fatalf("no error creating NewNode")
 	}
 
 }
@@ -47,7 +47,10 @@ func TestRace(t *testing.T) {
 	go func() {
 		for i := 0; i < 1000000000; i++ {
 
-			NewNode(1)
+			_, err := NewNode(1)
+			if err != nil {
+				t.Error(err)
+			}
 		}
 	}()
 
@@ -327,13 +330,13 @@ func TestMarshalJSON(t *testing.T) {
 	id := ID(13587)
 	expected := "\"13587\""
 
-	bytes, err := id.MarshalJSON()
+	bytesCase, err := id.MarshalJSON()
 	if err != nil {
 		t.Fatalf("Unexpected error during MarshalJSON")
 	}
 
-	if string(bytes) != expected {
-		t.Fatalf("Got %s, expected %s", string(bytes), expected)
+	if string(bytesCase) != expected {
+		t.Fatalf("Got %s, expected %s", string(bytesCase), expected)
 	}
 }
 
@@ -382,7 +385,10 @@ func BenchmarkParseBase32(b *testing.B) {
 
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		ParseBase32([]byte(b32i))
+		_, err := ParseBase32([]byte(b32i))
+		if err != nil {
+			b.Error(err)
+		}
 	}
 }
 func BenchmarkBase32(b *testing.B) {
@@ -407,7 +413,10 @@ func BenchmarkParseBase58(b *testing.B) {
 
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		ParseBase58([]byte(b58))
+		_, err := ParseBase58([]byte(b58))
+		if err != nil {
+			b.Error(err)
+		}
 	}
 }
 func BenchmarkBase58(b *testing.B) {
@@ -452,14 +461,14 @@ func BenchmarkUnmarshal(b *testing.B) {
 	// Generate the ID to unmarshal
 	node, _ := NewNode(1)
 	id := node.Generate()
-	bytes, _ := id.MarshalJSON()
+	bytesCase, _ := id.MarshalJSON()
 
 	var id2 ID
 
 	b.ReportAllocs()
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		_ = id2.UnmarshalJSON(bytes)
+		_ = id2.UnmarshalJSON(bytesCase)
 	}
 }
 
