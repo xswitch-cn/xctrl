@@ -11,11 +11,11 @@ import (
 func TestBackoff(t *testing.T) {
 	results := []time.Duration{
 		0 * time.Second,
+		10 * time.Millisecond,
 		100 * time.Millisecond,
-		600 * time.Millisecond,
-		1900 * time.Millisecond,
-		4300 * time.Millisecond,
-		7900 * time.Millisecond,
+		1000 * time.Millisecond,
+		10000 * time.Millisecond,
+		100000 * time.Millisecond,
 	}
 
 	r := &testRequest{
@@ -23,7 +23,7 @@ func TestBackoff(t *testing.T) {
 		method:  "test",
 	}
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i <= 5; i++ {
 		d, err := exponentialBackoff(context.TODO(), r, i)
 		if err != nil {
 			t.Fatal(err)
