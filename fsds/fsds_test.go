@@ -48,3 +48,71 @@ func TestFile(t *testing.T) {
 		t.Errorf("file.String() = %v, want %v", file.String(), file_string)
 	}
 }
+
+func TestPNGFile(t *testing.T) {
+	Cases := []PNGFile{
+		{
+			File: &File{
+				Path:   "tmp",
+				Name:   "test.jpg",
+				Params: nil,
+			},
+			MS:    "20000",
+			DText: "请输入会议号",
+		},
+		{
+			File: &File{
+				Path:   "/tmp",
+				Name:   "/test.jpg",
+				Params: nil,
+			},
+			MS:    "20000",
+			DText: "请输入会议号",
+		},
+		{
+			File: &File{
+				Path: "tmp/",
+				Name: "/test.jpg",
+				Params: map[string]string{
+					"png_ms": "20000",
+				},
+			},
+			DText: "请输入会议号",
+		},
+		{
+			File: &File{
+				Path: "tmp/",
+				Name: "",
+				Params: map[string]string{
+					"png_ms": "20000",
+				},
+			},
+			DText: "请输入会议号",
+		},
+	}
+	wanted := []PNGFileCase{
+		{
+			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+		},
+		{
+			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+		},
+		{
+			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+		},
+		{
+			"", true,
+		},
+	}
+	for index, signalCase := range Cases {
+		stringGot, err := signalCase.String()
+		if !(err == nil) != wanted[index].gotError || stringGot != wanted[index].gotString {
+			t.Error("index:", index, "error")
+		}
+	}
+}
+
+type PNGFileCase struct {
+	gotString string
+	gotError  bool
+}

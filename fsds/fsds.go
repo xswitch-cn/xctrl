@@ -1,6 +1,8 @@
 package fsds
 
 import (
+	"errors"
+	"path"
 	"strings"
 
 	log "git.xswitch.cn/xswitch/xctrl/xctrl/logger"
@@ -55,6 +57,7 @@ func FSDS(params *CallParams) string {
 type User struct {
 	Domain string
 	Number string
+	IP     string
 }
 
 func (u *User) String() string {
@@ -73,8 +76,8 @@ type File struct {
 
 type PNGFile struct {
 	*File
-	MS    string
-	DText string
+	MS    string //图片显示时长
+	DText string //文字
 }
 
 func (f *File) String() string {
@@ -83,17 +86,13 @@ func (f *File) String() string {
 	// Append the file parameters
 	if len(f.Params) > 0 {
 		sb.WriteString("{")
+		comma := ""
 		for key, value := range f.Params {
+			sb.WriteString(comma)
 			sb.WriteString(key)
 			sb.WriteString("=")
 			sb.WriteString(value)
-			sb.WriteString(",")
-		}
-		// Remove the trailing comma
-		str := sb.String()
-		if len(str) > 0 {
-			sb.Reset()
-			sb.WriteString(str[:len(str)-1])
+			comma = ","
 		}
 		sb.WriteString("}")
 	}
@@ -102,4 +101,41 @@ func (f *File) String() string {
 	sb.WriteString(f.Path)
 
 	return sb.String()
+}
+
+func (f PNGFile) String() (string, error) {
+	if f.File.Name == "" {
+		return "", errors.New("the name parameter is not set")
+	}
+	var sb strings.Builder
+	// Append the file parameters
+	sb.WriteString("{")
+	comma := ""
+	if len(f.Params) > 0 {
+		for key, value := range f.Params {
+			sb.WriteString(comma)
+			sb.WriteString(key)
+			sb.WriteString("=")
+			sb.WriteString(value)
+			comma = ","
+		}
+	}
+	if f.MS != "" {
+		sb.WriteString(comma)
+		if comma == "" {
+			comma = ","
+		}
+		sb.WriteString("png_ms")
+		sb.WriteString("=")
+		sb.WriteString(f.MS)
+	}
+	if f.DText != "" {
+		sb.WriteString(comma)
+		sb.WriteString("dtext")
+		sb.WriteString("=")
+		sb.WriteString(f.DText)
+	}
+	sb.WriteString("}")
+	sb.WriteString(path.Join("/", f.Path, f.Name))
+	return sb.String(), nil
 }
