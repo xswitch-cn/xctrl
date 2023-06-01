@@ -43,10 +43,6 @@ func newOptions(options ...client.Option) client.Options {
 		opts.Context = context.Background()
 	}
 
-	if len(opts.CallOptions.Address) == 0 {
-		opts.CallOptions.Address = append(opts.CallOptions.Address, opts.ServiceAddr)
-	}
-
 	return opts
 }
 
