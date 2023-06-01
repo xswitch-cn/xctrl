@@ -27,6 +27,7 @@ type Ctrl struct {
 	cmanService      cman.CManService   // CManService
 	handler          Handler
 	enableNodeStatus bool
+	forkDTMFEvent    bool // fork and push Event.DTMF into Channel Event Thread Too
 
 	hubLock    sync.RWMutex
 	channelHub map[string]*Channel
@@ -242,6 +243,14 @@ func EnableNodeStatus() error {
 func EnableResult(topic string) error {
 	if globalCtrl != nil {
 		return globalCtrl.EnableResult(topic)
+	}
+	return fmt.Errorf("ctrl uninitialized")
+}
+
+// ForkDTMFEventToChannelEvent 将DTMF事件放到ChannelEvent事件相同的线程处理
+func ForkDTMFEventToChannelEventThread() error {
+	if globalCtrl != nil {
+		return globalCtrl.ForkDTMFEventToChannelEventThread()
 	}
 	return fmt.Errorf("ctrl uninitialized")
 }

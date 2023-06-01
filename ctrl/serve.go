@@ -245,6 +245,11 @@ func (h *Ctrl) handleApp(ctx context.Context, data nats.Event) error {
 			}
 		}()
 
+		if h.forkDTMFEvent && message.Method == "Event.DTMF" {
+			// fork this event and deliver to the Event Channel Thread
+			h.handleChannel(ctx, data, &message)
+		}
+
 		if h.handler != nil {
 			h.handler.App(ctx, data.Topic(), data.Reply(), &message)
 		}
@@ -316,11 +321,15 @@ func (h *Ctrl) EnableApp(topic string) error {
 	_, err := h.conn.Subscribe(topic, func(ev nats.Event) error {
 		return h.handleApp(context.Background(), ev)
 	}, nats.Queue(`cn.xswitch.app`))
+	if err != nil {
+		log.Errorf("topic subscribe error: %s", err.Error())
+		return err
+	}
 	_, err = h.conn.Subscribe(fmt.Sprintf(`%s.%s`, topic, h.uuid), func(ev nats.Event) error {
 		return h.handleApp(context.Background(), ev)
 	}, nats.Queue(`cn.xswitch.app`))
 	if err != nil {
-		fmt.Errorf("topic subscribe error: %s", err.Error())
+		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
 	return nil
@@ -332,7 +341,7 @@ func (h *Ctrl) EnableResult(topic string) error {
 		return h.handleResult(context.Background(), ev)
 	}, nats.Queue(`cn.xswitch.result`))
 	if err != nil {
-		fmt.Errorf("topic subscribe error: %s", err.Error())
+		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
 	return nil
@@ -345,7 +354,7 @@ func (h *Ctrl) EnableRequest(topic string) error {
 		return h.handleRequest(context.Background(), ev)
 	}, nats.Queue(`cn.xswitch.request`))
 	if err != nil {
-		fmt.Errorf("topic subscribe error: %s", err.Error())
+		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
 	return nil
@@ -363,7 +372,7 @@ func (h *Ctrl) EnableEvent(topic string, queue string) error {
 		return h.handleEvent(context.Background(), ev)
 	}, nats.Queue(queue))
 	if err != nil {
-		fmt.Errorf("topic subscribe error: %s", err.Error())
+		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
 
@@ -380,6 +389,12 @@ func (h *Ctrl) EnbaleNodeStatus() error {
 	// 例如
 	// cn.xswitch.node.status
 	h.enableNodeStatus = true
+	return nil
+}
+
+// ForkDTMFEventToChannelEventThread
+func (h *Ctrl) ForkDTMFEventToChannelEventThread() error {
+	h.forkDTMFEvent = true
 	return nil
 }
 
