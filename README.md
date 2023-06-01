@@ -2,18 +2,29 @@
 
 小樱桃在用的Go语言SDK。
 
-- 协议参考文档参见：https://git.xswitch.cn/xswitch/xctrl/src/branch/master/proto/doc
-- 示例：https://git.xswitch.cn/xswitch/xcc-examples/src/branch/master/go
+- 协议参考文档参见：<https://git.xswitch.cn/xswitch/xctrl/src/branch/master/proto/doc>
+- 示例：<https://git.xswitch.cn/xswitch/xcc-examples/src/branch/master/go>
+- XCC API文档：<https://docs.xswitch.cn/xcc-api/>
 
-目录结构
+目录结构：
 
-- ctrl 节点管理
-- proto 协议
+- ctrl：节点管理
+- proto：Google Protocol Buffer协议描述
 - tboy 是一个冒牌的的FreeSWITCH，用于测试
+- xctrl：xctrl Go语言SDK生成器，参考自Go Micro框架
+
+需要注意，xctrl并不使用Protocol Buffer以及gRPC，而是使用了Protocol Buffer的协议描述，方便生成跨语言的客户端户。xctrl与XSwitch之间使用JSON数据格式，并使用JSON-RPC封装。
+
+## SDK使用
+
+SDK依赖`google.golang.org/protobuf/`包，本SDK有两种使用方式：
+
+- 直接使用`ctrl`和`xctrl`包，集成了协议结构体（`proto/xctrl/xctrl.pb.go`）及NATS消息收发（`proto/xctrl/xctrl.pb.xctrl.go`）。
+- 仅使用生成的Go结构体，如仅使用`xctrl.pb.go`，而不使用`xctrl.pb.xctrl.go`，可以直接将这两个文件复制到你的项目中。
 
 ## ctrl
 
-`ctrl`是FreeSWITCH控制器，用于控制FreeSWITCH。它提供了一些函数方便与FreeSWITCH交互。
+`ctrl`是XSwitch控制器，用于控制XSwitch。它提供了一些函数方便与XSwitch交互。
 
 ### ctrl.Init
 
