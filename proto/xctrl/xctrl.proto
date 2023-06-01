@@ -446,6 +446,13 @@ message ChannelEvent {
   string domain = 21;
 }
 
+message DTMFEvent {
+  string node_uuid = 1;
+  string uuid = 2;
+  string dtmf = 3;
+  uint32 duration = 4;
+}
+
 message CallParam {
   string uuid = 1;
   string cid_name = 2;
