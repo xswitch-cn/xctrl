@@ -27,9 +27,6 @@ type Options struct {
 	// Other options for implementations of the interface
 	// can be stored in a context
 	Context context.Context
-
-	// the Service Address
-	ServiceAddr string
 }
 
 type CallOptions struct {
@@ -87,8 +84,10 @@ func Selector() Option {
 
 // ServiceAddr the default service address
 func ServiceAddr(addr string) Option {
-	return func(o *Options) {
-		o.ServiceAddr = addr
+	return func(opts *Options) {
+		if len(opts.CallOptions.Address) == 0 {
+			opts.CallOptions.Address = append(opts.CallOptions.Address, addr)
+		}
 	}
 }
 
