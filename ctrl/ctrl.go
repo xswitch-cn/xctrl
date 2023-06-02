@@ -139,6 +139,15 @@ func Transfer(ctrlID string, channel *xctrl.ChannelEvent) error {
 	return globalCtrl.conn.Publish("cn.xswitch.ctrl."+ctrlID, request.Marshal())
 }
 
+func CtrlStartUp(req *xctrl.CtrlStartUpRequest) error {
+	request := Request{
+		Version: "2.0",
+		Method:  "XNode.CtrlStartUp",
+		Params:  ToRawMessage(req),
+	}
+	return globalCtrl.conn.Publish("cn.xswitch.node", request.Marshal())
+}
+
 // Call 发起 request 请求
 func Call(topic string, req *Request, timeout time.Duration) (*nats.Message, error) {
 	req.Version = "2.0"
