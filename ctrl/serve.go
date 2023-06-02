@@ -49,7 +49,7 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 		node.GetUuid(),
 		node.GetAddress(),
 		node.GetRack())
-
+	isMethodForNode := true
 	switch event.Method {
 	case "Event.NodeRegister":
 		h.register(node)
@@ -58,9 +58,36 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 	case "Event.NodeUpdate":
 		h.register(node)
 	default:
+		isMethodForNode = false
 		log.Warnf("Received unsupported event: %s\n", event.Method)
 	}
+	if isMethodForNode {
+		node := new(xctrl.Node)
+		err = json.Unmarshal(*event.Params, node)
+		if err != nil {
+			log.Error(err)
+		} else {
+			h.nodeCallback(node, event.Method)
+		}
+	}
+	return nil
+}
 
+// nodeUpdate 节点状态更新
+func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
+	n := &xctrl.Node{}
+	err := json.Unmarshal(*frame, n)
+	if err != nil {
+		fmt.Errorf("jsonrpc parse error:%v", err)
+		return nil
+	}
+	log.Tracef("Node Status: %s, %s, %s, %s, %d",
+		n.GetName(),
+		n.GetVersion(),
+		n.GetUuid(),
+		n.GetAddress(),
+		n.GetRack())
+	h.register(n)
 	return nil
 }
 
@@ -345,4 +372,13 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 		return nil, fmt.Errorf("topic %s subscribe error: %+v", topic, err.Error())
 	}
 	return sub, err
+}
+
+type NodeHashFun func(node *xctrl.Node, method string)
+
+//RegisterHashNodeFun 注册hash节点事件
+//virtualNodesNums hash虚拟节点个数
+//nodeCallbackFunc 节点事件方法
+func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
+	h.nodeCallback = nodeCallbackFunc
 }

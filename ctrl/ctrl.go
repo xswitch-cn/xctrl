@@ -35,6 +35,7 @@ type Ctrl struct {
 	seq             uint64
 	cbLock          sync.RWMutex
 	resultCallbacks map[string]*AsyncCallOption
+	nodeCallback    NodeHashFun
 }
 
 type AsyncCallOption struct {
@@ -408,4 +409,10 @@ func SetLogLevel(level LogLevel) {
 
 func SetLogger(l Logger) {
 	log.SetLogger(l)
+}
+
+func RegisterHashNodeFun(nodeCallbackFunc NodeHashFun) {
+	if globalCtrl != nil {
+		globalCtrl.registerHashNodeFun(nodeCallbackFunc)
+	}
 }
