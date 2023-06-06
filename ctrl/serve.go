@@ -377,7 +377,6 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 type NodeHashFun func(node *xctrl.Node, method string)
 
 //RegisterHashNodeFun 注册hash节点事件
-//virtualNodesNums hash虚拟节点个数
 //nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
