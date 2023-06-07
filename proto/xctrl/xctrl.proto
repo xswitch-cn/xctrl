@@ -1067,3 +1067,7 @@ message LuaResponse {
   string node_uuid = 3;
   string uuid = 4;
 }
+
+message CtrlStartUpRequest {
+  string ctrl_uuid = 1;
+}
