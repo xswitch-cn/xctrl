@@ -46,6 +46,22 @@ type CManService interface {
 	GetConferenceList(ctx context.Context, in *GetConferenceListRequest, opts ...client.CallOption) (*GetConferenceListResponse, error)
 	// 获取会议信息
 	ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error)
+	// bootstrap 客户端侧冷启动时发送，刷新当前会议状态和成员列表
+	Bootstrap(ctx context.Context, in *BootstrapRequest, opts ...client.CallOption) (*BootstrapResponse, error)
+	// getNodeForConference 小会参会者入会前询问小会所在节点
+	GetNodeForConference(ctx context.Context, in *GetNodeForConferenceRequest, opts ...client.CallOption) (*GetNodeForConferenceResponse, error)
+	// confControl 通用的会控接口
+	ConfControl(ctx context.Context, in *ConfControlRequest, opts ...client.CallOption) (*ConfControlResponse, error)
+	// 推送主会场。主会场推送给全体参会人员
+	PushMain(ctx context.Context, in *PushMainRequest, opts ...client.CallOption) (*PushMainResponse, error)
+	// 推送合屏。指定一部分参会者合成一屏推送给全体参会人员，当前版本API，这些参会者必须在同一个节点上。
+	PushSubCanvas(ctx context.Context, in *PushSubCanvasRequest, opts ...client.CallOption) (*PushSubCanvasResponse, error)
+	// 主会场单看。指定一部分参会者合成一屏单独推送给主会场，当前版本API，这些参会者必须在同一个节点上；除了主会场外的其他参会人员看主会场。
+	PushMainSubCanvas(ctx context.Context, in *PushMainSubCanvasRequest, opts ...client.CallOption) (*PushMainSubCanvasResponse, error)
+	// 推送整体。指定一部分参会者跟主会场一起推送给所有人，当前版本API，这些参会者必须在同一个节点上。
+	PushWhole(ctx context.Context, in *PushWholeRequest, opts ...client.CallOption) (*PushWholeResponse, error)
+	// 轮播指定的参会者，当前版本API，这些参会者必须在同一个节点上。
+	LoopSome(ctx context.Context, in *LoopSomeRequest, opts ...client.CallOption) (*LoopSomeResponse, error)
 }
 
 type cManService struct {
@@ -80,6 +96,86 @@ func (c *cManService) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequ
 	return out, nil
 }
 
+func (c *cManService) Bootstrap(ctx context.Context, in *BootstrapRequest, opts ...client.CallOption) (*BootstrapResponse, error) {
+	req := c.c.NewRequest(c.name, "bootstrap", in)
+	out := new(BootstrapResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) GetNodeForConference(ctx context.Context, in *GetNodeForConferenceRequest, opts ...client.CallOption) (*GetNodeForConferenceResponse, error) {
+	req := c.c.NewRequest(c.name, "getNodeForConference", in)
+	out := new(GetNodeForConferenceResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) ConfControl(ctx context.Context, in *ConfControlRequest, opts ...client.CallOption) (*ConfControlResponse, error) {
+	req := c.c.NewRequest(c.name, "confControl", in)
+	out := new(ConfControlResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) PushMain(ctx context.Context, in *PushMainRequest, opts ...client.CallOption) (*PushMainResponse, error) {
+	req := c.c.NewRequest(c.name, "pushMain", in)
+	out := new(PushMainResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) PushSubCanvas(ctx context.Context, in *PushSubCanvasRequest, opts ...client.CallOption) (*PushSubCanvasResponse, error) {
+	req := c.c.NewRequest(c.name, "pushSubCanvas", in)
+	out := new(PushSubCanvasResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) PushMainSubCanvas(ctx context.Context, in *PushMainSubCanvasRequest, opts ...client.CallOption) (*PushMainSubCanvasResponse, error) {
+	req := c.c.NewRequest(c.name, "pushMainSubCanvas", in)
+	out := new(PushMainSubCanvasResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) PushWhole(ctx context.Context, in *PushWholeRequest, opts ...client.CallOption) (*PushWholeResponse, error) {
+	req := c.c.NewRequest(c.name, "pushWhole", in)
+	out := new(PushWholeResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cManService) LoopSome(ctx context.Context, in *LoopSomeRequest, opts ...client.CallOption) (*LoopSomeResponse, error) {
+	req := c.c.NewRequest(c.name, "loopSome", in)
+	out := new(LoopSomeResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for CMan service
 
 type CManHandler interface {
@@ -87,12 +183,36 @@ type CManHandler interface {
 	GetConferenceList(context.Context, *GetConferenceListRequest, *GetConferenceListResponse) error
 	// 获取会议信息
 	ConferenceInfo(context.Context, *ConferenceInfoRequest, *ConferenceInfoResponse) error
+	// bootstrap 客户端侧冷启动时发送，刷新当前会议状态和成员列表
+	Bootstrap(context.Context, *BootstrapRequest, *BootstrapResponse) error
+	// getNodeForConference 小会参会者入会前询问小会所在节点
+	GetNodeForConference(context.Context, *GetNodeForConferenceRequest, *GetNodeForConferenceResponse) error
+	// confControl 通用的会控接口
+	ConfControl(context.Context, *ConfControlRequest, *ConfControlResponse) error
+	// 推送主会场。主会场推送给全体参会人员
+	PushMain(context.Context, *PushMainRequest, *PushMainResponse) error
+	// 推送合屏。指定一部分参会者合成一屏推送给全体参会人员，当前版本API，这些参会者必须在同一个节点上。
+	PushSubCanvas(context.Context, *PushSubCanvasRequest, *PushSubCanvasResponse) error
+	// 主会场单看。指定一部分参会者合成一屏单独推送给主会场，当前版本API，这些参会者必须在同一个节点上；除了主会场外的其他参会人员看主会场。
+	PushMainSubCanvas(context.Context, *PushMainSubCanvasRequest, *PushMainSubCanvasResponse) error
+	// 推送整体。指定一部分参会者跟主会场一起推送给所有人，当前版本API，这些参会者必须在同一个节点上。
+	PushWhole(context.Context, *PushWholeRequest, *PushWholeResponse) error
+	// 轮播指定的参会者，当前版本API，这些参会者必须在同一个节点上。
+	LoopSome(context.Context, *LoopSomeRequest, *LoopSomeResponse) error
 }
 
 func RegisterCManHandler(s server.Server, hdlr CManHandler, opts ...server.HandlerOption) error {
 	type cMan interface {
 		GetConferenceList(ctx context.Context, in *GetConferenceListRequest, out *GetConferenceListResponse) error
 		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
+		Bootstrap(ctx context.Context, in *BootstrapRequest, out *BootstrapResponse) error
+		GetNodeForConference(ctx context.Context, in *GetNodeForConferenceRequest, out *GetNodeForConferenceResponse) error
+		ConfControl(ctx context.Context, in *ConfControlRequest, out *ConfControlResponse) error
+		PushMain(ctx context.Context, in *PushMainRequest, out *PushMainResponse) error
+		PushSubCanvas(ctx context.Context, in *PushSubCanvasRequest, out *PushSubCanvasResponse) error
+		PushMainSubCanvas(ctx context.Context, in *PushMainSubCanvasRequest, out *PushMainSubCanvasResponse) error
+		PushWhole(ctx context.Context, in *PushWholeRequest, out *PushWholeResponse) error
+		LoopSome(ctx context.Context, in *LoopSomeRequest, out *LoopSomeResponse) error
 	}
 	type CMan struct {
 		cMan
@@ -111,4 +231,36 @@ func (h *cManHandler) GetConferenceList(ctx context.Context, in *GetConferenceLi
 
 func (h *cManHandler) ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error {
 	return h.CManHandler.ConferenceInfo(ctx, in, out)
+}
+
+func (h *cManHandler) Bootstrap(ctx context.Context, in *BootstrapRequest, out *BootstrapResponse) error {
+	return h.CManHandler.Bootstrap(ctx, in, out)
+}
+
+func (h *cManHandler) GetNodeForConference(ctx context.Context, in *GetNodeForConferenceRequest, out *GetNodeForConferenceResponse) error {
+	return h.CManHandler.GetNodeForConference(ctx, in, out)
+}
+
+func (h *cManHandler) ConfControl(ctx context.Context, in *ConfControlRequest, out *ConfControlResponse) error {
+	return h.CManHandler.ConfControl(ctx, in, out)
+}
+
+func (h *cManHandler) PushMain(ctx context.Context, in *PushMainRequest, out *PushMainResponse) error {
+	return h.CManHandler.PushMain(ctx, in, out)
+}
+
+func (h *cManHandler) PushSubCanvas(ctx context.Context, in *PushSubCanvasRequest, out *PushSubCanvasResponse) error {
+	return h.CManHandler.PushSubCanvas(ctx, in, out)
+}
+
+func (h *cManHandler) PushMainSubCanvas(ctx context.Context, in *PushMainSubCanvasRequest, out *PushMainSubCanvasResponse) error {
+	return h.CManHandler.PushMainSubCanvas(ctx, in, out)
+}
+
+func (h *cManHandler) PushWhole(ctx context.Context, in *PushWholeRequest, out *PushWholeResponse) error {
+	return h.CManHandler.PushWhole(ctx, in, out)
+}
+
+func (h *cManHandler) LoopSome(ctx context.Context, in *LoopSomeRequest, out *LoopSomeResponse) error {
+	return h.CManHandler.LoopSome(ctx, in, out)
 }

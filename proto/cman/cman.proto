@@ -15,6 +15,22 @@ service cMan {
   rpc getConferenceList(GetConferenceListRequest) returns (GetConferenceListResponse) {}
   // 获取会议信息
   rpc conferenceInfo(ConferenceInfoRequest) returns (ConferenceInfoResponse) {}
+  // bootstrap 客户端侧冷启动时发送，刷新当前会议状态和成员列表
+  rpc bootstrap(BootstrapRequest) returns (BootstrapResponse) {}
+  // getNodeForConference 小会参会者入会前询问小会所在节点
+  rpc getNodeForConference(getNodeForConferenceRequest) returns (getNodeForConferenceResponse) {}
+  // confControl 通用的会控接口
+  rpc confControl(confControlRequest) returns (confControlResponse) {}
+  // 推送主会场。主会场推送给全体参会人员
+  rpc pushMain(pushMainRequest) returns (pushMainResponse) {}
+  // 推送合屏。指定一部分参会者合成一屏推送给全体参会人员，当前版本API，这些参会者必须在同一个节点上。
+  rpc pushSubCanvas(pushSubCanvasRequest) returns (pushSubCanvasResponse) {}
+  // 主会场单看。指定一部分参会者合成一屏单独推送给主会场，当前版本API，这些参会者必须在同一个节点上；除了主会场外的其他参会人员看主会场。
+  rpc pushMainSubCanvas(pushMainSubCanvasRequest) returns (pushMainSubCanvasResponse) {}
+  // 推送整体。指定一部分参会者跟主会场一起推送给所有人，当前版本API，这些参会者必须在同一个节点上。
+  rpc pushWhole(pushWholeRequest) returns (pushWholeResponse) {}
+  // 轮播指定的参会者，当前版本API，这些参会者必须在同一个节点上。
+  rpc loopSome(loopSomeRequest) returns (loopSomeResponse) {}
 }
 
 message ConferenceInfoRequestDataData {
@@ -119,4 +135,143 @@ message ConferenceObject {
 
 message GetConferenceListResponse {
     repeated ConferenceObject conferences = 1;
+}
+
+message BootstrapRequest{
+    string event_channel = 1;
+    BootstrapRequestParamsData data = 2;
+    string sessid = 3;
+}
+
+message BootstrapRequestParamsData{
+    BootstrapRequestParamsDataLiveArray live_array = 1;
+}
+
+message BootstrapRequestParamsDataLiveArray{
+    string command = 1;
+    string context = 2;
+    string name = 3;
+    BootstrapRequestParamsDataLiveArrayObj obj = 4;
+}
+
+message BootstrapRequestParamsDataLiveArrayObj{
+}
+
+message BootstrapResponse{
+  string event_channel = 1;
+  string sessid = 2;
+  BootstrapResponseParamsData data = 3;
+}
+
+message BootstrapResponseParamsData{
+  string action = 1;
+  string name = 2;
+  bytes data = 3;
+  int32 wire_serno = 4;
+  BootstrapResponseParamsDataConfInfo conf_info = 5;
+}
+
+message BootstrapResponseParamsDataConfInfo{
+  int32  size = 1;
+  BootstrapResponseParamsDataConfInfoGroupMembers group_members = 2;
+}
+
+message BootstrapResponseParamsDataConfInfoGroupMembers{
+  int32 no_group = 1;
+}
+
+message getNodeForConferenceRequest{
+  string name = 1;
+}
+
+message getNodeForConferenceResponse{
+  string node_UUID = 1;
+}
+
+message confControlRequest{
+  string command = 1;
+  string conference_name = 2;
+  string node_UUID = 3;
+  string member_ID = 4;
+  string value = 5;
+}
+
+message confControlResponse{
+}
+
+message pushMainRequest{
+  string command = 1;
+  string conference_name = 2;
+  string node_UUID = 3;
+  int32 stream = 4;
+}
+
+message pushMainResponse{
+}
+
+message pushSubCanvasRequest{
+  string command = 1;
+  string conference_name = 2;
+  string node_UUID = 3;
+  string layout = 4;
+  repeated pushSubCanvasRequestMembers members = 5;
+}
+
+message pushSubCanvasRequestMembers{
+  string member_id = 1;
+  string position = 2;
+  string node_UUID = 3;
+}
+
+message pushSubCanvasResponse{
+}
+
+message pushMainSubCanvasRequest{
+  string command = 1;
+  string conference_name = 2;
+  string node_UUID = 3;
+  string layout = 4;
+  repeated pushMainSubCanvasRequestMembers members = 5;
+}
+
+message pushMainSubCanvasRequestMembers{
+  string member_id = 1;
+  string position = 2;
+  string node_UUID = 3;
+}
+
+message pushMainSubCanvasResponse{
+}
+
+message pushWholeRequest{
+  string command = 1;
+  string conference_name = 2;
+  string node_UUID = 3;
+  string layout = 4;
+  repeated pushWholeRequestMembers members = 5;
+}
+
+message pushWholeRequestMembers{
+  string member_id = 1;
+  string position = 2;
+  string node_UUID = 3;
+}
+
+message pushWholeResponse{
+}
+
+message loopSomeRequest{
+  string command = 1;
+  string conference_name = 2;
+  string interval = 3;
+  string layout = 4;
+  repeated loopSomeRequestMembers members = 5;
+}
+
+message loopSomeRequestMembers{
+  string member_id = 1;
+  string node_UUID = 2;
+}
+
+message loopSomeResponse{
 }
