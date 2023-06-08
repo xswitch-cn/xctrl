@@ -80,6 +80,22 @@ type PNGFile struct {
 	DText string //文字
 }
 
+func quote(str string) string {
+	q := false
+	if strings.Contains(str, "'") {
+		str = strings.Replace(str, "'", "\\'", -1)
+		q = true
+	}
+	if strings.Contains(str, ",") {
+		// str = strings.Replace(str, ",", "\\,", -1)
+		q = true
+	}
+	if q {
+		str = "'" + str + "'"
+	}
+	return str
+}
+
 func (f *File) String() string {
 	var sb strings.Builder
 
@@ -91,7 +107,7 @@ func (f *File) String() string {
 			sb.WriteString(comma)
 			sb.WriteString(key)
 			sb.WriteString("=")
-			sb.WriteString(value)
+			sb.WriteString(quote(value))
 			comma = ","
 		}
 		sb.WriteString("}")
@@ -116,7 +132,7 @@ func (f PNGFile) String() (string, error) {
 			sb.WriteString(comma)
 			sb.WriteString(key)
 			sb.WriteString("=")
-			sb.WriteString(value)
+			sb.WriteString(quote(value))
 			comma = ","
 		}
 	}
@@ -133,7 +149,7 @@ func (f PNGFile) String() (string, error) {
 		sb.WriteString(comma)
 		sb.WriteString("dtext")
 		sb.WriteString("=")
-		sb.WriteString(f.DText)
+		sb.WriteString(quote(f.DText))
 	}
 	sb.WriteString("}")
 	sb.WriteString(path.Join("/", f.Path, f.Name))
