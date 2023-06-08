@@ -52,7 +52,7 @@ message ConferenceInfoRequest {
 message ConferenceInfoResponse {
   int32 code = 1;
   string message = 2;
-  string node_uuid = 3;
+  string nodeUUID = 3;
   // optional
   string seq = 4;
   ConferenceInfoResponseData data = 5;
@@ -128,9 +128,33 @@ message ConferenceInfoResponseFlags {
 message GetConferenceListRequest {
 }
 
+message ConferenceObjectNodesGroupMembers{
+}
+message ConferenceObjectNodesNodeMembers{
+}
+message ConferenceObjectNodes{
+  string nodeUUID = 1;
+  int32 confMemberCount = 2;
+  int32 size = 3;
+  repeated ConferenceObjectNodesGroupMembers groupMembers = 4;
+  string confCreatedTime = 5;
+  string confUUID = 6;
+  string localIP = 7;
+  repeated ConferenceObjectNodesNodeMembers nodeMembers = 8;
+  string moderatorMemberID = 9;
+  string destNumber = 10;
+  string action = 11;
+  string state = 12;
+  string lastUpdated = 13;
+}
+
 message ConferenceObject {
   string name = 1;
   string domain = 2;
+  repeated ConferenceObjectNodes nodes = 3;
+  int32 size = 4;
+  string memberCount = 5;
+  string state = 6;
 }
 
 message GetConferenceListResponse {
@@ -201,7 +225,7 @@ message confControlResponse{
 
 message pushMainRequest{
   string command = 1;
-  string conferenceName = 2;
+  string conference_name = 2;
   string nodeUUID = 3;
   int32 stream = 4;
 }
@@ -211,14 +235,14 @@ message pushMainResponse{
 
 message pushSubCanvasRequest{
   string command = 1;
-  string conferenceName = 2;
+  string conference_name = 2;
   string nodeUUID = 3;
   string layout = 4;
   repeated pushSubCanvasRequestMembers members = 5;
 }
 
 message pushSubCanvasRequestMembers{
-  string memberId = 1;
+  string memberID = 1;
   string position = 2;
   string nodeUUID = 3;
 }
@@ -228,14 +252,14 @@ message pushSubCanvasResponse{
 
 message pushMainSubCanvasRequest{
   string command = 1;
-  string conferenceName = 2;
+  string conference_name = 2;
   string nodeUUID = 3;
   string layout = 4;
   repeated pushMainSubCanvasRequestMembers members = 5;
 }
 
 message pushMainSubCanvasRequestMembers{
-  string memberId = 1;
+  string memberID = 1;
   string position = 2;
   string nodeUUID = 3;
 }
@@ -245,14 +269,14 @@ message pushMainSubCanvasResponse{
 
 message pushWholeRequest{
   string command = 1;
-  string conferenceName = 2;
+  string conference_name = 2;
   string nodeUUID = 3;
   string layout = 4;
   repeated pushWholeRequestMembers members = 5;
 }
 
 message pushWholeRequestMembers{
-  string memberId = 1;
+  string memberID = 1;
   string position = 2;
   string nodeUUID = 3;
 }
@@ -262,14 +286,14 @@ message pushWholeResponse{
 
 message loopSomeRequest{
   string command = 1;
-  string conferenceName = 2;
+  string conference_name = 2;
   string interval = 3;
   string layout = 4;
   repeated loopSomeRequestMembers members = 5;
 }
 
 message loopSomeRequestMembers{
-  string memberId = 1;
+  string memberID = 1;
   string nodeUUID = 2;
 }
 
