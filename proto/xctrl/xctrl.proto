@@ -18,7 +18,7 @@ service XNode {
   rpc Dial(DialRequest) returns (DialResponse) {}
   // 应答
   rpc Answer(Request) returns (Response) {}
-  // 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管
+  // 接管呼叫，被接管的呼叫将会在10s后挂断
   rpc Accept(AcceptRequest) returns (Response) {}
   // 播放一个文件或TTS
   rpc Play(PlayRequest) returns (Response) {}
@@ -662,6 +662,8 @@ message SpeechRequest {
   map<string, string> params = 7;
   string grammar = 8;
   uint32 max_speech_timeout = 9;
+  bool nobreak = 10;
+  uint32 nobreak_timeout = 11;
 }
 
 message DetectRequest {
@@ -690,6 +692,10 @@ message DetectedData {
   // string or JSON Struct, detailed object returned from ASR engine
   EngineData engine_data = 9;
   uint32 offset = 10;
+  string uuid = 11;
+  string node_uuid = 12;
+  string video_read_codec = 13;
+  string video_write_codec = 14;
 }
 
 message EngineData {

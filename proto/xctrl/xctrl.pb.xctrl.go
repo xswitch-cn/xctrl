@@ -46,7 +46,7 @@ type XNodeService interface {
 	Dial(ctx context.Context, in *DialRequest, opts ...client.CallOption) (*DialResponse, error)
 	// 应答
 	Answer(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	// 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管
+	// 接管呼叫，被接管的呼叫将会在10s后挂断
 	Accept(ctx context.Context, in *AcceptRequest, opts ...client.CallOption) (*Response, error)
 	// 播放一个文件或TTS
 	Play(ctx context.Context, in *PlayRequest, opts ...client.CallOption) (*Response, error)
@@ -88,9 +88,9 @@ type XNodeService interface {
 	GetState(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error)
 	// 获取通道数据
 	GetChannelData(ctx context.Context, in *GetChannelDataRequest, opts ...client.CallOption) (*ChannelDataResponse, error)
-	// 读取DTMF按键
+	//  读取DTMF按键
 	ReadDTMF(ctx context.Context, in *DTMFRequest, opts ...client.CallOption) (*DTMFResponse, error)
-	// 读取DTMF按键
+	//  读取DTMF按键
 	ReadDigits(ctx context.Context, in *DigitsRequest, opts ...client.CallOption) (*DigitsResponse, error)
 	// 语音识别
 	DetectSpeech(ctx context.Context, in *DetectRequest, opts ...client.CallOption) (*DetectResponse, error)
@@ -116,17 +116,17 @@ type XNodeService interface {
 	ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, opts ...client.CallOption) (*ConferenceInfoResponse, error)
 	// 获取全部会议信息
 	ConferenceList(ctx context.Context, in *ConferenceListRequest, opts ...client.CallOption) (*ConferenceListResponse, error)
-	// 呼叫中心FIFO队列（先入先出）
+	//呼叫中心FIFO队列（先入先出）
 	FIFO(ctx context.Context, in *FIFORequest, opts ...client.CallOption) (*FIFOResponse, error)
-	// 呼叫中心Callcenter
+	//呼叫中心Callcenter
 	Callcenter(ctx context.Context, in *CallcenterRequest, opts ...client.CallOption) (*CallcenterResponse, error)
-	// 会议Conference
+	//会议Conference
 	Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error)
-	// 会议AI
+	//会议AI
 	AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error)
-	// HttAPI
+	//HttAPI
 	HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error)
-	// Lua
+	//Lua
 	Lua(ctx context.Context, in *LuaRequest, opts ...client.CallOption) (*LuaResponse, error)
 	// Node Register
 	Register(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
@@ -591,7 +591,7 @@ type XNodeHandler interface {
 	Dial(context.Context, *DialRequest, *DialResponse) error
 	// 应答
 	Answer(context.Context, *Request, *Response) error
-	// 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管
+	// 接管呼叫，被接管的呼叫将会在10s后挂断
 	Accept(context.Context, *AcceptRequest, *Response) error
 	// 播放一个文件或TTS
 	Play(context.Context, *PlayRequest, *Response) error
@@ -633,9 +633,9 @@ type XNodeHandler interface {
 	GetState(context.Context, *GetStateRequest, *StateResponse) error
 	// 获取通道数据
 	GetChannelData(context.Context, *GetChannelDataRequest, *ChannelDataResponse) error
-	// 读取DTMF按键
+	//  读取DTMF按键
 	ReadDTMF(context.Context, *DTMFRequest, *DTMFResponse) error
-	// 读取DTMF按键
+	//  读取DTMF按键
 	ReadDigits(context.Context, *DigitsRequest, *DigitsResponse) error
 	// 语音识别
 	DetectSpeech(context.Context, *DetectRequest, *DetectResponse) error
@@ -661,17 +661,17 @@ type XNodeHandler interface {
 	ConferenceInfo(context.Context, *ConferenceInfoRequest, *ConferenceInfoResponse) error
 	// 获取全部会议信息
 	ConferenceList(context.Context, *ConferenceListRequest, *ConferenceListResponse) error
-	// 呼叫中心FIFO队列（先入先出）
+	//呼叫中心FIFO队列（先入先出）
 	FIFO(context.Context, *FIFORequest, *FIFOResponse) error
-	// 呼叫中心Callcenter
+	//呼叫中心Callcenter
 	Callcenter(context.Context, *CallcenterRequest, *CallcenterResponse) error
-	// 会议Conference
+	//会议Conference
 	Conference(context.Context, *ConferenceRequest, *ConferenceResponse) error
-	// 会议AI
+	//会议AI
 	AI(context.Context, *AIRequest, *AIResponse) error
-	// HttAPI
+	//HttAPI
 	HttAPI(context.Context, *HttAPIRequest, *HttAPIResponse) error
-	// Lua
+	//Lua
 	Lua(context.Context, *LuaRequest, *LuaResponse) error
 	// Node Register
 	Register(context.Context, *Request, *Response) error
