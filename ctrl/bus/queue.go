@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 )
 
 // queueEvent is given to a subscription handler for processing
@@ -74,7 +75,7 @@ func (q *queue) start() {
 		// 	close(q.done)
 		// }()
 		running := true
-		fmt.Printf("Queue %s started", q.name)
+		log.Tracef("Queue %s started", q.name)
 		if q.expire > 0 {
 			var handler Handler
 			for running {
@@ -85,7 +86,7 @@ func (q *queue) start() {
 						fmt.Errorf("error read from inbound chan")
 						continue
 					}
-					fmt.Printf("%s delivered to handler", e.Topic)
+					log.Tracef("%s delivered to handler", e.Topic)
 					// cache the last Handler
 					handler = e.handler
 					q.runWithRecovery(e)
@@ -95,7 +96,7 @@ func (q *queue) start() {
 					// sigh, we don't have a handler here ?
 					q.runWithRecovery(&Event{Flag: "TIMEOUT", handler: handler})
 					running = false
-					fmt.Printf("Queue %s timeout %d", q.name, q.expire)
+					log.Tracef("Queue %s timeout %d", q.name, q.expire)
 				}
 			}
 		} else {
@@ -113,6 +114,6 @@ func (q *queue) start() {
 			}
 
 		}
-		fmt.Printf("Queue %s done", q.name)
+		log.Tracef("Queue %s done", q.name)
 	}()
 }

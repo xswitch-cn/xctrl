@@ -457,8 +457,8 @@ message ChannelEvent {
 message DTMFEvent {
   string node_uuid = 1;
   string uuid = 2;
-  string dtmf = 3;
-  uint32 duration = 4;
+  string dtmf_digit = 3;
+  uint32 dtmf_duration = 4;
 }
 
 message CallParam {
