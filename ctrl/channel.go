@@ -54,10 +54,11 @@ func (channel *Channel) NodeAddress() client.CallOption {
 }
 
 // Answer 应答
-func (channel *Channel) Answer() *xctrl.Response {
-	response, err := Service().Answer(context.TODO(), &xctrl.Request{
-		CtrlUuid: UUID(),
-		Uuid:     channel.GetUuid(),
+func (channel *Channel) Answer(channel_params ...string) *xctrl.Response {
+	response, err := Service().Answer(context.TODO(), &xctrl.AnswerRequest{
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		ChannelParams: channel_params,
 	}, channel.NodeAddress())
 
 	if err != nil {
@@ -71,11 +72,12 @@ func (channel *Channel) Answer() *xctrl.Response {
 }
 
 // Accept 接管
-func (channel *Channel) Accept(takeover bool) *xctrl.Response {
+func (channel *Channel) Accept(takeover bool, channel_params ...string) *xctrl.Response {
 	response, err := Service().Accept(context.TODO(), &xctrl.AcceptRequest{
-		CtrlUuid: UUID(),
-		Uuid:     channel.GetUuid(),
-		Takeover: takeover,
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		Takeover:      takeover,
+		ChannelParams: channel_params,
 	}, channel.NodeAddress())
 
 	if err != nil {

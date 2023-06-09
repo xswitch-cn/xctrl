@@ -44,8 +44,8 @@ func NewXNodeEndpoints() []*api.Endpoint {
 type XNodeService interface {
 	// 外呼
 	Dial(ctx context.Context, in *DialRequest, opts ...client.CallOption) (*DialResponse, error)
-	// 应答
-	Answer(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	// 应答,
+	Answer(ctx context.Context, in *AnswerRequest, opts ...client.CallOption) (*Response, error)
 	// 接管呼叫，被接管的呼叫将会在10s后挂断
 	Accept(ctx context.Context, in *AcceptRequest, opts ...client.CallOption) (*Response, error)
 	// 播放一个文件或TTS
@@ -154,7 +154,7 @@ func (c *xNodeService) Dial(ctx context.Context, in *DialRequest, opts ...client
 	return out, nil
 }
 
-func (c *xNodeService) Answer(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+func (c *xNodeService) Answer(ctx context.Context, in *AnswerRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Answer", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -589,8 +589,8 @@ func (c *xNodeService) Register(ctx context.Context, in *Request, opts ...client
 type XNodeHandler interface {
 	// 外呼
 	Dial(context.Context, *DialRequest, *DialResponse) error
-	// 应答
-	Answer(context.Context, *Request, *Response) error
+	// 应答,
+	Answer(context.Context, *AnswerRequest, *Response) error
 	// 接管呼叫，被接管的呼叫将会在10s后挂断
 	Accept(context.Context, *AcceptRequest, *Response) error
 	// 播放一个文件或TTS
@@ -680,7 +680,7 @@ type XNodeHandler interface {
 func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.HandlerOption) error {
 	type xNode interface {
 		Dial(ctx context.Context, in *DialRequest, out *DialResponse) error
-		Answer(ctx context.Context, in *Request, out *Response) error
+		Answer(ctx context.Context, in *AnswerRequest, out *Response) error
 		Accept(ctx context.Context, in *AcceptRequest, out *Response) error
 		Play(ctx context.Context, in *PlayRequest, out *Response) error
 		Stop(ctx context.Context, in *StopRequest, out *Response) error
@@ -739,7 +739,7 @@ func (h *xNodeHandler) Dial(ctx context.Context, in *DialRequest, out *DialRespo
 	return h.XNodeHandler.Dial(ctx, in, out)
 }
 
-func (h *xNodeHandler) Answer(ctx context.Context, in *Request, out *Response) error {
+func (h *xNodeHandler) Answer(ctx context.Context, in *AnswerRequest, out *Response) error {
 	return h.XNodeHandler.Answer(ctx, in, out)
 }
 

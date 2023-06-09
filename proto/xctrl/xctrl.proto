@@ -16,8 +16,8 @@ package xctrl;
 service XNode {
   // 外呼
   rpc Dial(DialRequest) returns (DialResponse) {}
-  // 应答
-  rpc Answer(Request) returns (Response) {}
+  // 应答,
+  rpc Answer(AnswerRequest) returns (Response) {}
   // 接管呼叫，被接管的呼叫将会在10s后挂断
   rpc Accept(AcceptRequest) returns (Response) {}
   // 播放一个文件或TTS
@@ -118,6 +118,7 @@ message AcceptRequest {
   // optional, default to false.
   // when true, all subsequest events will be delivered to the new controller if already controlled by other controller, otherwise it will fail
   bool takeover = 3;
+  repeated string channel_params = 4;
 }
 
 message NativeRequest {
@@ -147,6 +148,13 @@ message NativeJSResponse {
 message Request {
   string ctrl_uuid = 1;
   string uuid = 2;
+  map<string, string> params = 3;
+}
+
+message AnswerRequest {
+  string ctrl_uuid = 1;
+  string uuid = 2;
+  repeated string channel_params = 3;
 }
 
 message Response {
