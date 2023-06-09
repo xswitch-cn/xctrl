@@ -1,7 +1,6 @@
 package bus
 
 import (
-	"fmt"
 	"runtime"
 	"sync"
 	"time"
@@ -43,7 +42,7 @@ func (q *queue) runWithRecovery(e *Event) {
 			const size = 64 << 10
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
-			fmt.Errorf("cron: panic running job: %v\n%s", r, string(buf))
+			log.Errorf("cron: panic running job: %v\n%s", r, string(buf))
 		}
 	}()
 	if e.handler != nil {
@@ -83,7 +82,7 @@ func (q *queue) start() {
 				select {
 				case e, ok := <-q.inbound:
 					if !ok {
-						fmt.Errorf("error read from inbound chan")
+						log.Error("error read from inbound chan")
 						continue
 					}
 					log.Tracef("%s delivered to handler", e.Topic)
