@@ -83,11 +83,26 @@ func TestPNGFile(t *testing.T) {
 			File: &File{
 				Path: "tmp/",
 				Name: "",
-				Params: map[string]string{
-					"png_ms": "20000",
-				},
 			},
 			DText: "请输入会议号",
+		},
+		{
+			File: &File{
+				Path: "tmp/",
+				Name: "test.png",
+			},
+			MS:        "1000",
+			Alpha:     true,
+			PNGFPS:    10,
+			Text:      "text",
+			TTSEngine: "ttsengine",
+			TTSVoice:  "ttsvoice",
+			DText:     "dtext",
+			FG:        "fg",
+			BG:        "bg",
+			Size:      "size",
+			ScaleW:    "scalew",
+			ScaleH:    "scaleh",
 		},
 	}
 	wanted := []PNGFileCase{
@@ -103,6 +118,9 @@ func TestPNGFile(t *testing.T) {
 		{
 			"", true,
 		},
+		{
+			"{png_ms=1000,dtext=dtext,png_fps=10,bg=bg,fg=fg,text=text,tts_engine=ttsengine,tts_voice=ttsvoice,alpha=true,size=size,scale_w=scalew,scale_h=scaleh}/tmp/test.png", false,
+		},
 	}
 	for index, signalCase := range Cases {
 		stringGot, err := signalCase.String()
@@ -115,4 +133,25 @@ func TestPNGFile(t *testing.T) {
 type PNGFileCase struct {
 	gotString string
 	gotError  bool
+}
+
+func TestQuote(t *testing.T) {
+	Cases := []string{
+		"'test'",
+		"'test'demo",
+		"'test',demo,example",
+	}
+
+	wanted := [][]string{
+		{"'", "\\", "'", "t", "e", "s", "t", "\\", "'", "'"},
+		{"'", "\\", "'", "t", "e", "s", "t", "\\", "'", "d", "e", "m", "o", "'"},
+		{"'", "\\", "'", "t", "e", "s", "t", "\\", "'", ",", "d", "e", "m", "o", ",", "e", "x", "a", "m", "p", "l", "e", "'"},
+	}
+	for index, signalCase := range Cases {
+		for j, char := range []rune(quote(signalCase)) {
+			if string(char) != wanted[index][j] {
+				t.Fail()
+			}
+		}
+	}
 }
