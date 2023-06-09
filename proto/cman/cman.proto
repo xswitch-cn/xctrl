@@ -33,63 +33,101 @@ service cMan {
   rpc loopSome(loopSomeRequest) returns (loopSomeResponse) {}
 }
 
-message ConferenceInfoRequestDataData {
-  string conferenceName = 1;
+message ConferenceInfoRequest {
+  string name = 1;
   bool showMembers = 2;
   map<string, string> memberFilters = 3;
 }
 
-message ConferenceInfoRequestData {
-  string command = 1;
-  ConferenceInfoRequestDataData data = 2;
-}
-
-message ConferenceInfoRequest {
-  string ctrl_uuid = 1;
-  ConferenceInfoRequestData data = 2;
-}
-
 message ConferenceInfoResponse {
-  int32 code = 1;
-  string message = 2;
-  string nodeUUID = 3;
-  // optional
-  string seq = 4;
-  ConferenceInfoResponseData data = 5;
-}
-
-message ConferenceInfoResponseData {
   ConferenceInfoResponseConference conference = 1;
 }
 
-message ConferenceInfoResponseConference {
-  string conference_name = 1;
-  int32 member_count = 2;
-  int32 ghost_count = 3;
-  int32 rate = 4;
-  int32 run_time = 5;
-  string conference_uuid = 6;
-  int32 canvas_count = 7;
-  int32 max_bw_in = 8;
-  int32 force_bw_in = 9;
-  int32 video_floor_packets = 10;
-  bool locked = 11;
-  bool destruct = 12;
-  bool wait_mod = 13;
-  bool audio_always = 14;
-  bool running = 15;
-  bool answered = 16;
-  bool enforce_min = 17;
-  bool bridge_to = 18;
-  bool dynamic = 19;
-  bool exit_sound = 20;
-  bool enter_sound = 21;
-  bool recording = 22;
-  bool video_bridge = 23;
-  bool video_floor_only = 24;
-  bool video_rfc4579 = 25;
-  ConferenceInfoResponseVariables variables = 26;
-  repeated ConferenceInfoResponseMembers members = 27;
+message ConferenceInfoResponseConference{
+  string name = 1;
+  string domain = 2;
+  repeated ConferenceInfoResponseConferenceNodes nodes = 3;
+  int32 size = 4;
+  int32 member_count = 5;
+  string states = 6;
+  repeated ConferenceInfoResponseConferenceMembers members = 7;
+}
+
+message ConferenceInfoResponseConferenceNodes{
+  string nodeUUID = 1;
+  int32 confMemberCount = 2;
+  int32 size = 3;
+  repeated ConferenceInfoResponseConferenceNodesGroupMembers GroupMembers = 4;
+  string confCreatTime = 5;
+  string confUUID = 6;
+  string nodeType = 7;
+  string localIP = 8;
+  ConferenceInfoResponseConferenceNodesNodeMembers nodeMembers = 9;
+  string moderatorMemberID = 10;
+  string destNumber = 11;
+  string action = 12;
+  string state = 13;
+  string lastUpdated = 14;
+  int32 port = 15;
+}
+
+message ConferenceInfoResponseConferenceNodesGroupMembers{
+  string groupID = 1;
+  int32 count = 2;
+}
+
+message ConferenceInfoResponseConferenceNodesNodeMembers{
+}
+
+message ConferenceInfoResponseConferenceMembers{
+  string memberID = 1;
+  string cidNumber = 2;
+  string cidName = 3;
+  string codec = 4;
+  ConferenceInfoResponseConferenceMembersStatus status = 5;
+  string email = 6;
+  string nodeUUID = 7;
+  bool active = 8;
+  string uuid = 9;
+  string groupID = 10;
+  string memberType = 11;
+  string nodeType = 12;
+  string domain = 13;
+  int32 canvasID = 14;
+  int32 watchingCanvasID = 15;
+  string roleID = 16;
+  int32 layerID = 17;
+  string reservationID = 18;
+  string channelName = 19;
+}
+
+message ConferenceInfoResponseConferenceMembersStatus{
+  ConferenceInfoResponseConferenceMembersStatusAudio audio = 1;
+  ConferenceInfoResponseConferenceMembersStatusVideo video = 2;
+}
+
+message ConferenceInfoResponseConferenceMembersStatusAudio{
+  bool talking = 1;
+  bool deaf = 2;
+  bool muted = 3;
+  bool onHold = 4;
+  int32 energyScore = 5;
+  bool floor = 6;
+}
+
+message ConferenceInfoResponseConferenceMembersStatusVideo{
+  bool visible = 1;
+  bool noRecover = 2;
+  bool avatarPresented = 3;
+  bool mediaFlow = 4;
+  bool muted = 5;
+  bool floor = 6;
+  string reservationID = 7;
+  string roleID = 8;
+  int32 videoLayerID = 9;
+  int32 canvasID = 10;
+  int32 watchingCanvasID = 11;
+  int32 order = 12;
 }
 
 message ConferenceInfoResponseVariables {
