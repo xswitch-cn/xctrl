@@ -19,9 +19,10 @@ import (
 // Channel call channel
 type Channel struct {
 	xctrl.ChannelEvent
-	CtrlUuid string
-	lock     sync.RWMutex
-	subs     []nats.Subscriber
+	CtrlUuid  string
+	lock      sync.RWMutex
+	subs      []nats.Subscriber
+	natsEvent *nats.Event
 }
 
 // only call at the first time
@@ -910,16 +911,16 @@ func (channel *Channel) Marshal() []byte {
 	return jsonBytes
 }
 
-func (channel *Channel) Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
+func (channel *Channel) Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
 	if globalCtrl == nil {
 		return nil, fmt.Errorf("ctrl uninitialized")
 	}
 
-	if topic == "" {
-		topic = "cn.xswitch.ctrl." + channel.CtrlUuid
+	if subject == "" {
+		return nil, fmt.Errorf("no subject specified")
 	}
 
-	sub, err := globalCtrl.Subscribe(topic, cb, queue)
+	sub, err := globalCtrl.Subscribe(subject, cb, queue)
 
 	if err != nil {
 		return nil, err

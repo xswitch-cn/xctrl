@@ -452,6 +452,7 @@ message ChannelEvent {
   bool answered = 19;
   string node_ip = 20;
   string domain = 21;
+  string dtmf = 22;
 }
 
 message DTMFEvent {

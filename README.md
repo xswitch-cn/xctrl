@@ -87,7 +87,7 @@ func EnableEvent(topic string, queue string) error
 ### Subscribe
 
 ```go
-func Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error)
+func Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error)
 ```
 
 调用底层的NATS发起一个订阅。所有回调在同一个NATS Go Routine中回调。需要避免阻塞。

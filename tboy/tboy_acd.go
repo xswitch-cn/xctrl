@@ -40,25 +40,12 @@ func (boy *TBoyACD) AddChannel(key string, channel *FakeChannel) {
 	Channels[key] = channel
 }
 
-func (boy *TBoyACD) EventCallback(ctx context.Context, ev nats.Event) error {
-	log.Info(ev.Topic(), string(ev.Message().Body))
-
-	var msg ctrl.Message
-	err := json.Unmarshal(ev.Message().Body, &msg)
-
-	if err != nil {
-		log.Error("parse error", ev)
-		return err
-	}
-
-	go boy.App(ctx, ev.Topic(), ev.Reply(), &msg)
-
-	return nil
-}
-
-// App .
-func (boy *TBoyACD) App(ctx context.Context, topic string, reply string, msg *ctrl.Message) {
+func (boy *TBoyACD) Event(msg *ctrl.Message, natsEvent nats.Event) {
+	topic := natsEvent.Topic()
+	reply := natsEvent.Reply()
 	log.Infof("Handle %s %s", topic, msg.Method)
+
+	ctx := context.Background()
 
 	switch msg.Method {
 
@@ -70,21 +57,10 @@ func (boy *TBoyACD) App(ctx context.Context, topic string, reply string, msg *ct
 		boy.Dial(ctx, msg, reply)
 	default:
 		// handle messages in TBoy
-		boy.TBoy.App(ctx, topic, reply, msg)
+		boy.TBoy.Event(msg, natsEvent)
 	}
 
 }
-
-// Event .
-func (boy *TBoyACD) Event(ctx context.Context, topic string, message *ctrl.Request) {
-}
-
-// Request .
-func (boy *TBoyACD) Request(ctx context.Context, topic string, reply string, request *ctrl.Request) {
-}
-
-// Result 异步请求结果
-func (boy *TBoyACD) Result(ctx context.Context, topic string, message *ctrl.Result) {}
 
 func (boy *TBoyACD) Play(ctx context.Context, msg *ctrl.Message, reply string) {
 	var request xctrl.Request

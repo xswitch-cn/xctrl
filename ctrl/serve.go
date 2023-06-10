@@ -31,85 +31,36 @@ func (h *Ctrl) deRegister(n *xctrl.Node) {
 	nodes.Delete(n.Name)
 }
 
-// NodeRegister 节点注册
-func (h *Ctrl) nodeRegister(ctx context.Context, frame *json.RawMessage) error {
-	n := &xctrl.Node{}
-	err := json.Unmarshal(*frame, n)
-	if err != nil {
-		fmt.Errorf("jsonrpc parse error:%s", err)
-	}
-
-	log.Tracef("Node Register: %s, %s, %s, %s, %d",
-		n.GetName(),
-		n.GetVersion(),
-		n.GetUuid(),
-		n.GetAddress(),
-		n.GetRack())
-
-	h.register(n)
-	return nil
-}
-
-// nodeUnregister 节点离线
-func (h *Ctrl) nodeUnregister(ctx context.Context, frame *json.RawMessage) error {
-	n := &xctrl.Node{}
-	err := json.Unmarshal(*frame, n)
-	if err != nil {
-		fmt.Errorf("jsonrpc parse error:%v", err)
-		return nil
-	}
-
-	log.Tracef("Node Unregister: %s, %s, %s, %s, %d",
-		n.GetName(),
-		n.GetVersion(),
-		n.GetUuid(),
-		n.GetAddress(),
-		n.GetRack())
-
-	h.deRegister(n)
-	return nil
-}
-
-// nodeUpdate 节点状态更新
-func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
-	n := &xctrl.Node{}
-	err := json.Unmarshal(*frame, n)
-	if err != nil {
-		fmt.Errorf("jsonrpc parse error:%v", err)
-		return nil
-	}
-	log.Tracef("Node Status: %s, %s, %s, %s, %d",
-		n.GetName(),
-		n.GetVersion(),
-		n.GetUuid(),
-		n.GetAddress(),
-		n.GetRack())
-	h.register(n)
-	return nil
-}
-
 // handleNode 节点事件响应
-func (h *Ctrl) handleNode(ctx context.Context, data nats.Event) error {
-	var message Request
-	err := json.Unmarshal(data.Message().Body, &message)
+func (h *Ctrl) handleNode(natsEvent nats.Event) error {
+	var event Request
+	err := json.Unmarshal(natsEvent.Message().Body, &event)
 	if err != nil {
-		fmt.Errorf("event parse error:%v", err)
-		return nil
+		return fmt.Errorf("event parse error: %v", err)
 	}
-	switch message.Method {
+	node := &xctrl.Node{}
+	err = json.Unmarshal(*event.Params, node)
+	if err != nil {
+		return fmt.Errorf("jsonrpc parse error: %v", err)
+	}
+	log.Tracef("Node Register: %s, %s, %s, %s, %d",
+		node.GetName(),
+		node.GetVersion(),
+		node.GetUuid(),
+		node.GetAddress(),
+		node.GetRack())
+
+	switch event.Method {
 	case "Event.NodeRegister":
-		h.nodeRegister(ctx, message.Params)
+		h.register(node)
 	case "Event.NodeUnregister":
-		h.nodeUnregister(ctx, message.Params)
+		h.deRegister(node)
 	case "Event.NodeUpdate":
-		h.nodeUpdate(ctx, message.Params)
+		h.register(node)
 	default:
-		fmt.Printf("Received unsupported event: %s\n", message.Method)
+		log.Warnf("Received unsupported event: %s\n", event.Method)
 	}
 
-	if h.enableNodeStatus && h.handler != nil {
-		h.handler.Event(ctx, `cn.xswitch.node.status`, &message)
-	}
 	return nil
 }
 
@@ -143,22 +94,10 @@ func (h *Ctrl) NewCManService(addr string) cman.CManService {
 	return h.cmanService
 }
 
-// 监听节点注册事件
-func (h *Ctrl) bindNodeStatus(subject string) error {
-	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
-		return h.handleNode(context.Background(), ev)
-	})
-	if err != nil {
-		fmt.Errorf("topic subscribe error: %v", err.Error())
-		return err
-	}
-	return nil
-}
-
 // handleRpc rpc请求路由
-func (h *Ctrl) handleRequest(ctx context.Context, data nats.Event) error {
+func (h *Ctrl) handleRequest(handler RequestHandler, event nats.Event) error {
 	message := &Request{}
-	err := json.Unmarshal(data.Message().Body, message)
+	err := json.Unmarshal(event.Message().Body, message)
 	if err != nil {
 		fmt.Errorf("event parse error:%v", err)
 		return nil
@@ -166,180 +105,149 @@ func (h *Ctrl) handleRequest(ctx context.Context, data nats.Event) error {
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Errorf("%s | %s ==> [painc] %v\n%s", data.Topic(), message.Method, err, string(debug.Stack()))
+				fmt.Errorf("%s | %s ==> [painc] %v\n%s", event.Topic(), message.Method, err, string(debug.Stack()))
 			}
 		}()
-
-		if h.handler != nil {
-			h.handler.Request(ctx, data.Topic(), data.Reply(), message)
-		}
+		handler.Request(message, event)
 	}()
 	return nil
 }
 
 // handleChannel 处理channel 事件
-func (h *Ctrl) handleChannel(ctx context.Context, data nats.Event, message *Message) error {
+func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nats.Event) error {
 	if message.Params == nil {
 		fmt.Print("recved nil param ", message.Params)
 		return nil
 	}
-	// channel
 	channel := new(Channel)
-	err := json.Unmarshal(*message.Params, channel)
-	if err != nil {
-		fmt.Errorf("%s: application json parse error %+v", data.Topic(), err.Error())
-		return nil
+	if message.Method == "Event.DTMF" {
+		dtmfEvent := new(xctrl.DTMFEvent)
+		err := json.Unmarshal(*message.Params, dtmfEvent)
+		if err != nil {
+			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
+		}
+		channel.Dtmf = dtmfEvent.DtmfDigit
+		channel.NodeUuid = dtmfEvent.NodeUuid
+		channel.Uuid = dtmfEvent.Uuid
+		channel.State = "DTMF"
+	} else {
+		err := json.Unmarshal(*message.Params, channel)
+		if err != nil {
+			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
+		}
 	}
 
 	timeout := 4*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
 	switch channel.GetState() {
 	case "START":
-		fmt.Printf("%s START", channel.GetUuid())
+		log.Tracef("%s START", channel.GetUuid())
+		var key ContextKey = "channel"
+		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
-			if h.handler != nil {
-				data := ev.Params.(nats.Event)
-				message := ev.Message.(*Message)
-				h.handler.App(ctx, data.Topic(), data.Reply(), message)
-			}
+			natsEvent := ev.Params.(nats.Event)
+			channelEvent := ev.Message.(*Channel)
+			channelEvent.natsEvent = &natsEvent
+			handler.ChannelEvent(ctx, channelEvent)
 			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 				bus.Unsubscribe(ev.Topic, ev.Queue)
 			}
 			return nil
 		})
-		fmt.Printf("%s Subscribered", channel.GetUuid())
+		log.Tracef("%s Subscribered", channel.GetUuid())
 	case "CALLING":
+		log.Tracef("%s CALLING", channel.GetUuid())
+		var key ContextKey = "channel"
+		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
-			if h.handler != nil {
-				data := ev.Params.(nats.Event)
-				message := ev.Message.(*Message)
-				h.handler.App(ctx, data.Topic(), data.Reply(), message)
-			}
+			natsEvent := ev.Params.(nats.Event)
+			channelEvent := ev.Message.(*Channel)
+			channelEvent.natsEvent = &natsEvent
+			handler.ChannelEvent(ctx, channelEvent)
 			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 				bus.Unsubscribe(ev.Topic, ev.Queue)
 			}
 			return nil
 		})
+	default:
+		log.Infof("Channel State %s %s", channel.GetUuid(), channel.GetState())
 	}
 
-	ev := bus.NewEvent(channel.GetState(), channel.GetUuid(), message, data)
+	ev := bus.NewEvent(channel.GetState(), channel.GetUuid(), channel, natsEvent)
 	bus.Publish(ev)
 	return nil
 }
 
 // handleApp app路由
-func (h *Ctrl) handleApp(ctx context.Context, data nats.Event) error {
+func (c *Ctrl) handleApp(handler AppHandler, natsEvent nats.Event) error {
 	var message Message
-	err := json.Unmarshal(data.Message().Body, &message)
+	err := json.Unmarshal(natsEvent.Message().Body, &message)
 	if err != nil {
-		fmt.Errorf("event parse error:%v", err)
-		return nil
+		return fmt.Errorf("event parse error:%v", err)
 	}
 
 	switch message.Method {
 	case "Event.Channel":
-		h.handleChannel(ctx, data, &message)
+		c.handleChannel(handler, &message, natsEvent)
 	default:
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Errorf("%s | %s ==> [painc] %v\n%s", data.Topic(), message.Method, err, string(debug.Stack()))
+				log.Errorf("%s | %s ==> [painc] %v\n%s", natsEvent.Topic(), message.Method, err, string(debug.Stack()))
 			}
 		}()
 
-		if h.forkDTMFEvent && message.Method == "Event.DTMF" {
+		if c.forkDTMFEvent && message.Method == "Event.DTMF" {
 			// fork this event and deliver to the Event Channel Thread
-			h.handleChannel(ctx, data, &message)
+			c.handleChannel(handler, &message, natsEvent)
 		}
 
-		if h.handler != nil {
-			h.handler.App(ctx, data.Topic(), data.Reply(), &message)
-		}
+		handler.Event(&message, natsEvent)
 	}
 
 	return nil
 }
 
-// handleApp result 路由
-func (h *Ctrl) handleResult(ctx context.Context, data nats.Event) error {
-	go func() {
-		var result Result
-		err := json.Unmarshal(data.Message().Body, &result)
-		if err != nil {
-			fmt.Errorf("event parse error:%v", err)
-			return
-		}
-
-		defer func() {
-			if err := recover(); err != nil {
-				fmt.Errorf("%s | %s ==> [painc] %v\n%s", data.Topic(), *result.ID, err, string(debug.Stack()))
-			}
-		}()
-
-		if h.handler != nil {
-			h.handler.Result(ctx, data.Topic(), &result)
-		}
-	}()
-	return nil
-}
-
-func processEvent(c *Ctrl, ctx context.Context, data nats.Event) {
+func processEvent(handler EventHandler, natsEvent nats.Event) {
 	var message Request
 
-	err := json.Unmarshal(data.Message().Body, &message)
+	err := json.Unmarshal(natsEvent.Message().Body, &message)
 	if err != nil {
-		fmt.Errorf("event parse error:%v", err)
+		log.Errorf("event parse error:%v", err)
 		return
 	}
 
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Errorf("%s | %s ==> [painc] %v\n%s", data.Topic(), message.Method, err, string(debug.Stack()))
+			log.Errorf("%s | %s ==> [painc] %v\n%s", natsEvent.Topic(), message.Method, err, string(debug.Stack()))
 		}
 	}()
 
-	if c.handler != nil {
-		c.handler.Event(ctx, data.Topic(), &message)
-	}
+	handler.Event(&message, natsEvent)
 }
 
 // handleEvent event路由
-func (c *Ctrl) handleEvent(ctx context.Context, data nats.Event) error {
-	if strings.HasPrefix(data.Topic(), "cn.xswitch.event.cdr") {
-		processEvent(c, ctx, data)
+func (c *Ctrl) handleEvent(handler EventHandler, natsEvent nats.Event) error {
+	if strings.HasPrefix(natsEvent.Topic(), "cn.xswitch.event.cdr") {
+		processEvent(handler, natsEvent)
 		return nil
 	}
 	go func() {
-		processEvent(c, ctx, data)
+		processEvent(handler, natsEvent)
 	}()
 	return nil
 }
 
 // EnableApp APP事件
-func (h *Ctrl) EnableApp(topic string) error {
-	// 呼叫控制
-	// cn.xswitch.app.callcenter 呼叫队列
-	// cn.xswitch.app.autodialer 预测外呼
-	_, err := h.conn.Subscribe(topic, func(ev nats.Event) error {
-		return h.handleApp(context.Background(), ev)
-	}, nats.Queue(`cn.xswitch.app`))
+func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error {
+	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
+		return h.handleApp(handler, ev)
+	}, nats.Queue(queue))
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
-	_, err = h.conn.Subscribe(fmt.Sprintf(`%s.%s`, topic, h.uuid), func(ev nats.Event) error {
-		return h.handleApp(context.Background(), ev)
-	}, nats.Queue(`cn.xswitch.app`))
-	if err != nil {
-		log.Errorf("topic subscribe error: %s", err.Error())
-		return err
-	}
-	return nil
-}
-
-// EnableApp Result 事件
-func (h *Ctrl) EnableResult(topic string) error {
-	_, err := h.conn.Subscribe(fmt.Sprintf(`%s.%s`, topic, h.uuid), func(ev nats.Event) error {
-		return h.handleResult(context.Background(), ev)
-	}, nats.Queue(`cn.xswitch.result`))
+	_, err = h.conn.Subscribe(fmt.Sprintf(`%s.%s`, subject, h.uuid), func(ev nats.Event) error {
+		return h.handleApp(handler, ev)
+	})
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
@@ -348,11 +256,11 @@ func (h *Ctrl) EnableResult(topic string) error {
 }
 
 // EnableRequest 开启Request请求监听
-func (h *Ctrl) EnableRequest(topic string) error {
+func (h *Ctrl) EnableRequest(handler RequestHandler, subject string, queue string) error {
 	// fetchXMl, Dialplan
-	_, err := h.conn.Subscribe(topic, func(ev nats.Event) error {
-		return h.handleRequest(context.Background(), ev)
-	}, nats.Queue(`cn.xswitch.request`))
+	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
+		return h.handleRequest(handler, ev)
+	}, nats.Queue(queue))
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
@@ -361,15 +269,12 @@ func (h *Ctrl) EnableRequest(topic string) error {
 }
 
 // EnableEvent 开启事件监听
-func (h *Ctrl) EnableEvent(topic string, queue string) error {
+func (h *Ctrl) EnableEvent(handler EventHandler, subject string, queue string) error {
 	// 例如
 	// cn.xswitch.event.cdr
 	// cn.xswitch.event.custom.sofia
-	if queue == "" {
-		queue = "cn.xswitch.event"
-	}
-	_, err := h.conn.Subscribe(topic, func(ev nats.Event) error {
-		return h.handleEvent(context.Background(), ev)
+	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
+		return h.handleEvent(handler, ev)
 	}, nats.Queue(queue))
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
@@ -385,9 +290,17 @@ func (h *Ctrl) EnableEvent(topic string, queue string) error {
 }
 
 // EnbaleNodeStatus 开启节点监听
-func (h *Ctrl) EnbaleNodeStatus() error {
-	// 例如
-	// cn.xswitch.node.status
+func (h *Ctrl) EnbaleNodeStatus(subject string) error {
+	if subject == "" {
+		subject = "cn.xswitch.ctrl.status"
+	}
+	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
+		return h.handleNode(ev)
+	})
+	if err != nil {
+		log.Errorf("topic subscribe error: %s", err.Error())
+		return err
+	}
 	h.enableNodeStatus = true
 	return nil
 }
@@ -398,34 +311,28 @@ func (h *Ctrl) ForkDTMFEventToChannelEventThread() error {
 	return nil
 }
 
-func initCtrl(handler Handler, trace bool, subject string, addrs ...string) (*Ctrl, error) {
-	h := &Ctrl{
+func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
+	c := &Ctrl{
 		conn:             nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
 		uuid:             uuid.New().String(),
 		serviceName:      "cn.xswitch.nodes",
-		handler:          handler,
 		enableNodeStatus: false,
 		channelHub:       map[string]*Channel{},
 		resultCallbacks:  map[string]*AsyncCallOption{},
 	}
 
-	// 连接消息队列
-	if err := h.conn.Connect(); err != nil {
-		return nil, err
-	}
-
-	// 监听节点状态事件
-	if err := h.bindNodeStatus(subject); err != nil {
+	// 连接NATS消息队列
+	if err := c.conn.Connect(); err != nil {
 		return nil, err
 	}
 
 	// 同步调用 xswitch
-	h.service = h.newNodeService()
+	c.service = c.newNodeService()
 	// 异步调用 xswitch
-	h.asyncService = h.newAsyncService()
+	c.asyncService = c.newAsyncService()
 	// 同步调用 xswitch, 使用nats的RequestWithContext, 可以返回结果，可以中途取消
-	h.aService = h.newAService()
-	return h, nil
+	c.aService = c.newAService()
+	return c, nil
 }
 
 // 订阅消息
@@ -434,7 +341,7 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 		return cb(context.Background(), ev)
 	}, nats.Queue(queue))
 	if err != nil {
-		fmt.Errorf("topic %s subscribe error: %+v", topic, err.Error())
+		return nil, fmt.Errorf("topic %s subscribe error: %+v", topic, err.Error())
 	}
 	return sub, err
 }

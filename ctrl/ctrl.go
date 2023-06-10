@@ -25,7 +25,6 @@ type Ctrl struct {
 	asyncService     xctrl.XNodeService // 异步调用
 	aService         xctrl.XNodeService // 异步调用2
 	cmanService      cman.CManService   // CManService
-	handler          Handler
 	enableNodeStatus bool
 	forkDTMFEvent    bool // fork and push Event.DTMF into Channel Event Thread Too
 
@@ -47,16 +46,20 @@ type AsyncCallOption struct {
 type ResultCallbackFunc func(msg *Message, data interface{})
 
 // Handler Ctrl事件响应
-type Handler interface {
-	// ctx , topic, reply,Params
-	Request(context.Context, string, string, *Request)
-	// ctx , topic ,reply  Params
-	App(context.Context, string, string, *Message)
-	// ctx , topic , Params
-	Event(context.Context, string, *Request)
-	// ctx , topic , Params
-	Result(context.Context, string, *Result)
+type EventHandler interface {
+	Event(req *Request, natsEvent nats.Event)
 }
+
+type AppHandler interface {
+	ChannelEvent(context.Context, *Channel)
+	Event(msg *Message, natsEvent nats.Event)
+}
+
+type RequestHandler interface {
+	Request(req *Request, natsEvent nats.Event)
+}
+
+type ContextKey string
 
 type LogLevel int
 
@@ -192,9 +195,9 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 }
 
 // Init 初始化Ctrl global 是否接收全局事件， addrs nats消息队列连接地址
-func Init(h Handler, trace bool, subject, addrs string) error {
-	log.Infof("ctrl starting with subject=%s addrs=%s\n", subject, addrs)
-	c, err := initCtrl(h, trace, subject, strings.Split(addrs, ",")...)
+func Init(trace bool, addrs string) error {
+	log.Infof("ctrl starting with addrs=%s\n", addrs)
+	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
 	if err != nil {
 		return err
 	}
@@ -211,11 +214,11 @@ func InitCManService(addr string) error {
 }
 
 // EnableEvent 开启事件监听
-// cn.xswitch.event.cdr
-// cn.xswitch.event.custom.sofia>
-func EnableEvent(topic string, queue string) error {
+// cn.xswitch.ctrl.event.cdr
+// cn.xswitch.ctrl.event.custom.sofia>
+func EnableEvent(handler EventHandler, subject string, queue string) error {
 	if globalCtrl != nil {
-		return globalCtrl.EnableEvent(topic, queue)
+		return globalCtrl.EnableEvent(handler, subject, queue)
 	}
 	return fmt.Errorf("ctrl uninitialized")
 }
@@ -223,35 +226,26 @@ func EnableEvent(topic string, queue string) error {
 // EnableRequest 开启Request请求监听
 // FetchXMl
 // Dialplan
-func EnableRequest(topic string) error {
+func EnableRequest(handler RequestHandler, subject string, queue string) error {
 	if globalCtrl != nil {
-		return globalCtrl.EnableRequest(topic)
+		return globalCtrl.EnableRequest(handler, subject, queue)
 	}
 	return fmt.Errorf("ctrl uninitialized")
 }
 
 // EnableApp APP事件
-// cn.xswitch.app.callcenter 呼叫队列
-// cn.xswitch.app.autodialer 预测外呼
-func EnableApp(topic string) error {
+func EnableApp(handler AppHandler, subject string, queue string) error {
 	if globalCtrl != nil {
-		return globalCtrl.EnableApp(topic)
+		return globalCtrl.EnableApp(handler, subject, queue)
 	}
 	return fmt.Errorf("ctrl uninitialized")
 }
 
 // EnableNodeStatus 启用节点状态事件
 // cn.xswitch.node.status
-func EnableNodeStatus() error {
+func EnableNodeStatus(subject string) error {
 	if globalCtrl != nil {
-		return globalCtrl.EnbaleNodeStatus()
-	}
-	return fmt.Errorf("ctrl uninitialized")
-}
-
-func EnableResult(topic string) error {
-	if globalCtrl != nil {
-		return globalCtrl.EnableResult(topic)
+		return globalCtrl.EnbaleNodeStatus(subject)
 	}
 	return fmt.Errorf("ctrl uninitialized")
 }
@@ -264,9 +258,9 @@ func ForkDTMFEventToChannelEventThread() error {
 	return fmt.Errorf("ctrl uninitialized")
 }
 
-func Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
+func Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
 	if globalCtrl != nil {
-		return globalCtrl.Subscribe(topic, cb, queue)
+		return globalCtrl.Subscribe(subject, cb, queue)
 	}
 	return nil, fmt.Errorf("ctrl uninitialized")
 }
@@ -277,13 +271,14 @@ func ToRawMessage(vPoint interface{}) *json.RawMessage {
 	return &data
 }
 
-type EmptyHandler struct {
-}
+type EmptyAppHandler struct{}
+type EmptyEventHandler struct{}
+type EmptyRequestHandler struct{}
 
-func (h *EmptyHandler) Request(context.Context, string, string, *Request) {}
-func (h *EmptyHandler) App(context.Context, string, string, *Message)     {}
-func (h *EmptyHandler) Event(context.Context, string, *Request)           {}
-func (h *EmptyHandler) Result(context.Context, string, *Result)           {}
+func (h *EmptyAppHandler) ChannelEvent(context.Context, *Channel) {}
+func (h *EmptyAppHandler) Event(*Message, nats.Event)             {}
+func (h *EmptyEventHandler) Event(*Request)                       {}
+func (h *EmptyRequestHandler) Request(*Request, nats.Event)       {}
 
 func ACallOption() *AsyncCallOption {
 	return &AsyncCallOption{}
