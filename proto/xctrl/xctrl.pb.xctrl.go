@@ -89,7 +89,7 @@ type XNodeService interface {
 	// 获取通道变量
 	GetVar(ctx context.Context, in *GetVarRequest, opts ...client.CallOption) (*VarResponse, error)
 	// 获取通道状态
-	GetState(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error)
+	GetState_(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error)
 	// 获取通道数据
 	GetChannelData(ctx context.Context, in *GetChannelDataRequest, opts ...client.CallOption) (*ChannelDataResponse, error)
 	//  读取DTMF按键
@@ -111,7 +111,7 @@ type XNodeService interface {
 	// 执行原生APP
 	NativeApp(ctx context.Context, in *NativeRequest, opts ...client.CallOption) (*NativeResponse, error)
 	// 执行原生API
-	NativeAPI(ctx context.Context, in *NativeRequest, opts ...client.CallOption) (*NativeResponse, error)
+	NativeAPI(ctx context.Context, in *NativeAPIRequest, opts ...client.CallOption) (*NativeResponse, error)
 	// 执行原生JSAPI
 	NativeJSAPI(ctx context.Context, in *XNativeJSRequest, opts ...client.CallOption) (*XNativeJSResponse, error)
 	// 状态
@@ -186,7 +186,7 @@ func (c *ChannelEvent) Answer(in *AnswerRequest, opts ...client.CallOption) *Res
 		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
 	}
 	if cOpts.RequestTimeout == 0 {
-		opts = append(opts, client.WithRequestTimeout(3*time.Second))
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
 	}
 	response, err := Service().Answer(context.TODO(), in, opts...)
 	if err != nil {
@@ -226,7 +226,7 @@ func (c *ChannelEvent) Accept(in *AcceptRequest, opts ...client.CallOption) *Res
 		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
 	}
 	if cOpts.RequestTimeout == 0 {
-		opts = append(opts, client.WithRequestTimeout(3*time.Second))
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
 	}
 	response, err := Service().Accept(context.TODO(), in, opts...)
 	if err != nil {
@@ -288,6 +288,36 @@ func (c *xNodeService) Stop(ctx context.Context, in *StopRequest, opts ...client
 	return out, nil
 }
 
+func (c *ChannelEvent) Stop(in *StopRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Stop(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Broadcast(ctx context.Context, in *BroadcastRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Broadcast", in)
 	out := new(Response)
@@ -296,6 +326,36 @@ func (c *xNodeService) Broadcast(ctx context.Context, in *BroadcastRequest, opts
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Broadcast(in *BroadcastRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Broadcast(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Mute(ctx context.Context, in *MuteRequest, opts ...client.CallOption) (*Response, error) {
@@ -308,6 +368,36 @@ func (c *xNodeService) Mute(ctx context.Context, in *MuteRequest, opts ...client
 	return out, nil
 }
 
+func (c *ChannelEvent) Mute(in *MuteRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Mute(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Record(ctx context.Context, in *RecordRequest, opts ...client.CallOption) (*RecordResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.Record", in)
 	out := new(RecordResponse)
@@ -316,6 +406,36 @@ func (c *xNodeService) Record(ctx context.Context, in *RecordRequest, opts ...cl
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Record(in *RecordRequest, opts ...client.CallOption) *RecordResponse {
+	if c == nil {
+		return &RecordResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Record(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(RecordResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Hangup(ctx context.Context, in *HangupRequest, opts ...client.CallOption) (*Response, error) {
@@ -328,6 +448,36 @@ func (c *xNodeService) Hangup(ctx context.Context, in *HangupRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) Hangup(in *HangupRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Hangup(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Bridge(ctx context.Context, in *BridgeRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Bridge", in)
 	out := new(Response)
@@ -338,6 +488,36 @@ func (c *xNodeService) Bridge(ctx context.Context, in *BridgeRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) Bridge(in *BridgeRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Bridge(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) ChannelBridge(ctx context.Context, in *ChannelBridgeRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.ChannelBridge", in)
 	out := new(Response)
@@ -346,6 +526,36 @@ func (c *xNodeService) ChannelBridge(ctx context.Context, in *ChannelBridgeReque
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) ChannelBridge(in *ChannelBridgeRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().ChannelBridge(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) UnBridge(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
@@ -378,6 +588,36 @@ func (c *xNodeService) Hold(ctx context.Context, in *HoldRequest, opts ...client
 	return out, nil
 }
 
+func (c *ChannelEvent) Hold(in *HoldRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Hold(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Transfer(ctx context.Context, in *TransferRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Transfer", in)
 	out := new(Response)
@@ -386,6 +626,36 @@ func (c *xNodeService) Transfer(ctx context.Context, in *TransferRequest, opts .
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Transfer(in *TransferRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().Transfer(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) ThreeWay(ctx context.Context, in *ThreeWayRequest, opts ...client.CallOption) (*Response, error) {
@@ -398,6 +668,36 @@ func (c *xNodeService) ThreeWay(ctx context.Context, in *ThreeWayRequest, opts .
 	return out, nil
 }
 
+func (c *ChannelEvent) ThreeWay(in *ThreeWayRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().ThreeWay(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Echo2(ctx context.Context, in *Echo2Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Echo2", in)
 	out := new(Response)
@@ -406,6 +706,36 @@ func (c *xNodeService) Echo2(ctx context.Context, in *Echo2Request, opts ...clie
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Echo2(in *Echo2Request, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Echo2(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Intercept(ctx context.Context, in *InterceptRequest, opts ...client.CallOption) (*Response, error) {
@@ -418,6 +748,36 @@ func (c *xNodeService) Intercept(ctx context.Context, in *InterceptRequest, opts
 	return out, nil
 }
 
+func (c *ChannelEvent) Intercept(in *InterceptRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Intercept(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Consult(ctx context.Context, in *ConsultRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Consult", in)
 	out := new(Response)
@@ -426,6 +786,36 @@ func (c *xNodeService) Consult(ctx context.Context, in *ConsultRequest, opts ...
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Consult(in *ConsultRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Consult(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) SetVar(ctx context.Context, in *SetVarRequest, opts ...client.CallOption) (*Response, error) {
@@ -448,7 +838,7 @@ func (c *xNodeService) GetVar(ctx context.Context, in *GetVarRequest, opts ...cl
 	return out, nil
 }
 
-func (c *xNodeService) GetState(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error) {
+func (c *xNodeService) GetState_(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.GetState", in)
 	out := new(StateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -456,6 +846,36 @@ func (c *xNodeService) GetState(ctx context.Context, in *GetStateRequest, opts .
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) GetState_(in *GetStateRequest, opts ...client.CallOption) *StateResponse {
+	if c == nil {
+		return &StateResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().GetState_(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(StateResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) GetChannelData(ctx context.Context, in *GetChannelDataRequest, opts ...client.CallOption) (*ChannelDataResponse, error) {
@@ -468,6 +888,36 @@ func (c *xNodeService) GetChannelData(ctx context.Context, in *GetChannelDataReq
 	return out, nil
 }
 
+func (c *ChannelEvent) GetChannelData(in *GetChannelDataRequest, opts ...client.CallOption) *ChannelDataResponse {
+	if c == nil {
+		return &ChannelDataResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().GetChannelData(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(ChannelDataResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) ReadDTMF(ctx context.Context, in *DTMFRequest, opts ...client.CallOption) (*DTMFResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.ReadDTMF", in)
 	out := new(DTMFResponse)
@@ -476,6 +926,36 @@ func (c *xNodeService) ReadDTMF(ctx context.Context, in *DTMFRequest, opts ...cl
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) ReadDTMF(in *DTMFRequest, opts ...client.CallOption) *DTMFResponse {
+	if c == nil {
+		return &DTMFResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(60*time.Second))
+	}
+	response, err := Service().ReadDTMF(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(DTMFResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) ReadDigits(ctx context.Context, in *DigitsRequest, opts ...client.CallOption) (*DigitsResponse, error) {
@@ -488,6 +968,36 @@ func (c *xNodeService) ReadDigits(ctx context.Context, in *DigitsRequest, opts .
 	return out, nil
 }
 
+func (c *ChannelEvent) ReadDigits(in *DigitsRequest, opts ...client.CallOption) *DigitsResponse {
+	if c == nil {
+		return &DigitsResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(60*time.Second))
+	}
+	response, err := Service().ReadDigits(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(DigitsResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) DetectSpeech(ctx context.Context, in *DetectRequest, opts ...client.CallOption) (*DetectResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.DetectSpeech", in)
 	out := new(DetectResponse)
@@ -496,6 +1006,36 @@ func (c *xNodeService) DetectSpeech(ctx context.Context, in *DetectRequest, opts
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) DetectSpeech(in *DetectRequest, opts ...client.CallOption) *DetectResponse {
+	if c == nil {
+		return &DetectResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(180*time.Second))
+	}
+	response, err := Service().DetectSpeech(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(DetectResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) StopDetectSpeech(ctx context.Context, in *StopDetectRequest, opts ...client.CallOption) (*Response, error) {
@@ -508,6 +1048,36 @@ func (c *xNodeService) StopDetectSpeech(ctx context.Context, in *StopDetectReque
 	return out, nil
 }
 
+func (c *ChannelEvent) StopDetectSpeech(in *StopDetectRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().StopDetectSpeech(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) RingBackDetection(ctx context.Context, in *RingBackDetectionRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.RingBackDetection", in)
 	out := new(Response)
@@ -516,6 +1086,36 @@ func (c *xNodeService) RingBackDetection(ctx context.Context, in *RingBackDetect
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) RingBackDetection(in *RingBackDetectionRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(60*time.Second))
+	}
+	response, err := Service().RingBackDetection(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) DetectFace(ctx context.Context, in *DetectFaceRequest, opts ...client.CallOption) (*Response, error) {
@@ -528,6 +1128,36 @@ func (c *xNodeService) DetectFace(ctx context.Context, in *DetectFaceRequest, op
 	return out, nil
 }
 
+func (c *ChannelEvent) DetectFace(in *DetectFaceRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(180*time.Second))
+	}
+	response, err := Service().DetectFace(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) SendDTMF(ctx context.Context, in *SendDTMFRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.SendDTMF", in)
 	out := new(Response)
@@ -536,6 +1166,36 @@ func (c *xNodeService) SendDTMF(ctx context.Context, in *SendDTMFRequest, opts .
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) SendDTMF(in *SendDTMFRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().SendDTMF(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) SendINFO(ctx context.Context, in *SendINFORequest, opts ...client.CallOption) (*Response, error) {
@@ -558,7 +1218,37 @@ func (c *xNodeService) NativeApp(ctx context.Context, in *NativeRequest, opts ..
 	return out, nil
 }
 
-func (c *xNodeService) NativeAPI(ctx context.Context, in *NativeRequest, opts ...client.CallOption) (*NativeResponse, error) {
+func (c *ChannelEvent) NativeApp(in *NativeRequest, opts ...client.CallOption) *NativeResponse {
+	if c == nil {
+		return &NativeResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().NativeApp(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(NativeResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
+func (c *xNodeService) NativeAPI(ctx context.Context, in *NativeAPIRequest, opts ...client.CallOption) (*NativeResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.NativeAPI", in)
 	out := new(NativeResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -618,6 +1308,36 @@ func (c *xNodeService) FIFO(ctx context.Context, in *FIFORequest, opts ...client
 	return out, nil
 }
 
+func (c *ChannelEvent) FIFO(in *FIFORequest, opts ...client.CallOption) *FIFOResponse {
+	if c == nil {
+		return &FIFOResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(1200*time.Second))
+	}
+	response, err := Service().FIFO(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(FIFOResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Callcenter(ctx context.Context, in *CallcenterRequest, opts ...client.CallOption) (*CallcenterResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.Callcenter", in)
 	out := new(CallcenterResponse)
@@ -626,6 +1346,36 @@ func (c *xNodeService) Callcenter(ctx context.Context, in *CallcenterRequest, op
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Callcenter(in *CallcenterRequest, opts ...client.CallOption) *CallcenterResponse {
+	if c == nil {
+		return &CallcenterResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(1200*time.Second))
+	}
+	response, err := Service().Callcenter(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(CallcenterResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Conference(ctx context.Context, in *ConferenceRequest, opts ...client.CallOption) (*ConferenceResponse, error) {
@@ -638,6 +1388,36 @@ func (c *xNodeService) Conference(ctx context.Context, in *ConferenceRequest, op
 	return out, nil
 }
 
+func (c *ChannelEvent) Conference(in *ConferenceRequest, opts ...client.CallOption) *ConferenceResponse {
+	if c == nil {
+		return &ConferenceResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Conference(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(ConferenceResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) AI(ctx context.Context, in *AIRequest, opts ...client.CallOption) (*AIResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.AI", in)
 	out := new(AIResponse)
@@ -646,6 +1426,36 @@ func (c *xNodeService) AI(ctx context.Context, in *AIRequest, opts ...client.Cal
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) AI(in *AIRequest, opts ...client.CallOption) *AIResponse {
+	if c == nil {
+		return &AIResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().AI(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(AIResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) HttAPI(ctx context.Context, in *HttAPIRequest, opts ...client.CallOption) (*HttAPIResponse, error) {
@@ -658,6 +1468,36 @@ func (c *xNodeService) HttAPI(ctx context.Context, in *HttAPIRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) HttAPI(in *HttAPIRequest, opts ...client.CallOption) *HttAPIResponse {
+	if c == nil {
+		return &HttAPIResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().HttAPI(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(HttAPIResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Lua(ctx context.Context, in *LuaRequest, opts ...client.CallOption) (*LuaResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.Lua", in)
 	out := new(LuaResponse)
@@ -666,6 +1506,36 @@ func (c *xNodeService) Lua(ctx context.Context, in *LuaRequest, opts ...client.C
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Lua(in *LuaRequest, opts ...client.CallOption) *LuaResponse {
+	if c == nil {
+		return &LuaResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3600*time.Second))
+	}
+	response, err := Service().Lua(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(LuaResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Register(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
@@ -724,7 +1594,7 @@ type XNodeHandler interface {
 	// 获取通道变量
 	GetVar(context.Context, *GetVarRequest, *VarResponse) error
 	// 获取通道状态
-	GetState(context.Context, *GetStateRequest, *StateResponse) error
+	GetState_(context.Context, *GetStateRequest, *StateResponse) error
 	// 获取通道数据
 	GetChannelData(context.Context, *GetChannelDataRequest, *ChannelDataResponse) error
 	//  读取DTMF按键
@@ -746,7 +1616,7 @@ type XNodeHandler interface {
 	// 执行原生APP
 	NativeApp(context.Context, *NativeRequest, *NativeResponse) error
 	// 执行原生API
-	NativeAPI(context.Context, *NativeRequest, *NativeResponse) error
+	NativeAPI(context.Context, *NativeAPIRequest, *NativeResponse) error
 	// 执行原生JSAPI
 	NativeJSAPI(context.Context, *NativeJSRequest, *NativeJSResponse) error
 	// 状态
@@ -794,7 +1664,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		Consult(ctx context.Context, in *ConsultRequest, out *Response) error
 		SetVar(ctx context.Context, in *SetVarRequest, out *Response) error
 		GetVar(ctx context.Context, in *GetVarRequest, out *VarResponse) error
-		GetState(ctx context.Context, in *GetStateRequest, out *StateResponse) error
+		GetState_(ctx context.Context, in *GetStateRequest, out *StateResponse) error
 		GetChannelData(ctx context.Context, in *GetChannelDataRequest, out *ChannelDataResponse) error
 		ReadDTMF(ctx context.Context, in *DTMFRequest, out *DTMFResponse) error
 		ReadDigits(ctx context.Context, in *DigitsRequest, out *DigitsResponse) error
@@ -805,7 +1675,7 @@ func RegisterXNodeHandler(s server.Server, hdlr XNodeHandler, opts ...server.Han
 		SendDTMF(ctx context.Context, in *SendDTMFRequest, out *Response) error
 		SendINFO(ctx context.Context, in *SendINFORequest, out *Response) error
 		NativeApp(ctx context.Context, in *NativeRequest, out *NativeResponse) error
-		NativeAPI(ctx context.Context, in *NativeRequest, out *NativeResponse) error
+		NativeAPI(ctx context.Context, in *NativeAPIRequest, out *NativeResponse) error
 		NativeJSAPI(ctx context.Context, in *NativeJSRequest, out *NativeJSResponse) error
 		JStatus(ctx context.Context, in *JStatusRequest, out *JStatusResponse) error
 		ConferenceInfo(ctx context.Context, in *ConferenceInfoRequest, out *ConferenceInfoResponse) error
@@ -913,8 +1783,8 @@ func (h *xNodeHandler) GetVar(ctx context.Context, in *GetVarRequest, out *VarRe
 	return h.XNodeHandler.GetVar(ctx, in, out)
 }
 
-func (h *xNodeHandler) GetState(ctx context.Context, in *GetStateRequest, out *StateResponse) error {
-	return h.XNodeHandler.GetState(ctx, in, out)
+func (h *xNodeHandler) GetState_(ctx context.Context, in *GetStateRequest, out *StateResponse) error {
+	return h.XNodeHandler.GetState_(ctx, in, out)
 }
 
 func (h *xNodeHandler) GetChannelData(ctx context.Context, in *GetChannelDataRequest, out *ChannelDataResponse) error {
@@ -957,7 +1827,7 @@ func (h *xNodeHandler) NativeApp(ctx context.Context, in *NativeRequest, out *Na
 	return h.XNodeHandler.NativeApp(ctx, in, out)
 }
 
-func (h *xNodeHandler) NativeAPI(ctx context.Context, in *NativeRequest, out *NativeResponse) error {
+func (h *xNodeHandler) NativeAPI(ctx context.Context, in *NativeAPIRequest, out *NativeResponse) error {
 	return h.XNodeHandler.NativeAPI(ctx, in, out)
 }
 

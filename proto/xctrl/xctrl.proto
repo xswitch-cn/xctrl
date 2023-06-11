@@ -79,7 +79,7 @@ service XNode {
   // 执行原生APP
   rpc NativeApp(NativeRequest) returns (NativeResponse) {}
   // 执行原生API
-  rpc NativeAPI(NativeRequest) returns (NativeResponse) {}
+  rpc NativeAPI(NativeAPIRequest) returns (NativeResponse) {}
   // 执行原生JSAPI
   rpc NativeJSAPI(NativeJSRequest) returns (NativeJSResponse) {}
   // 状态
@@ -127,6 +127,12 @@ message NativeRequest {
   string cmd = 3;
   string args = 4;
   bool sync = 5;
+}
+
+message NativeAPIRequest {
+  string ctrl_uuid = 1;
+  string cmd = 3;
+  string args = 4;
 }
 
 message NativeResponse {

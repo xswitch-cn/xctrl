@@ -398,6 +398,10 @@ func WithRequestTimeout(d time.Duration) client.CallOption {
 	return client.WithRequestTimeout(d)
 }
 
+func WithTimeout(d time.Duration) client.CallOption {
+	return client.WithRequestTimeout(d)
+}
+
 func SetLogLevel(level LogLevel) {
 	log.SetLevel(log.Level(level))
 }

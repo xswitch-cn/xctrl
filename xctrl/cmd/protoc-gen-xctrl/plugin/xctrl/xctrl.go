@@ -121,13 +121,47 @@ func (g *micro) GenerateImports(file *generator.FileDescriptor, imports map[gene
 
 // reservedClientName records whether a client name is reserved on the client side.
 var reservedClientName = map[string]bool{
-	// TODO: do we need any in go-micro?
+	"GetState": true, // conflict in ChannelEvent
 }
 
 var channelMethodTimeout = map[string]int{
-	"Answer": 3,
-	"Accept": 3,
-	"Play":   180,
+	"Answer":            5,
+	"Accept":            5,
+	"Play":              180,
+	"Stop":              5,
+	"Broadcast":         5,
+	"Mute":              5,
+	"Record":            5,
+	"Hangup":            5,
+	"Bridge":            3600,
+	"ChannelBridge":     5,
+	"Unbrdige":          5,
+	"Unbrdige2":         5,
+	"Hold":              5,
+	"Transfer":          5,
+	"ThreeWay":          3600,
+	"Echo2":             3600,
+	"Intercept":         3600,
+	"Consult":           3600,
+	"Setvar":            5,
+	"Getvar":            5,
+	"GetState":          5,
+	"GetChannelData":    5,
+	"ReadDTMF":          60,
+	"ReadDigits":        60,
+	"DetectSpeech":      180,
+	"StopDetectSpeech":  5,
+	"RingBackDetection": 60,
+	"DetectFace":        180,
+	"SendDTMF":          5,
+	"SendInfo":          5,
+	"NativeApp":         5,
+	"FIFO":              1200,
+	"Callcenter":        1200,
+	"Conference":        3600,
+	"AI":                3600,
+	"HttAPI":            3600,
+	"Lua":               3600,
 }
 
 func unexport(s string) string {
@@ -248,6 +282,9 @@ func (g *micro) generateService(file *generator.FileDescriptor, service *pb.Serv
 	// generate interface methods
 	for _, method := range service.Method {
 		methName := generator.CamelCase(method.GetName())
+		if reservedClientName[methName] {
+			methName += "_"
+		}
 		inType := g.typeName(method.GetInputType())
 		outType := g.typeName(method.GetOutputType())
 
@@ -387,6 +424,9 @@ func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, m
 		reqMethod = method.GetName()
 	}
 	methName := generator.CamelCase(method.GetName())
+	if reservedClientName[methName] {
+		methName += "_"
+	}
 	inType := g.typeName(method.GetInputType())
 	outType := g.typeName(method.GetOutputType())
 
@@ -415,10 +455,13 @@ func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, m
 		if timeoutSecond > 0 {
 			origMethName := method.GetName()
 			methName := generator.CamelCase(origMethName)
+			if reservedClientName[methName] {
+				methName += "_"
+			}
 			respName := g.typeName(method.GetOutputType())
 			g.P("func(c *ChannelEvent) ", g.generateChannelClientSignature(servName, method), "{")
 			g.P("	if c == nil {")
-			g.P("		return &Response{")
+			g.P("		return &", respName, "{")
 			g.P("			Code:    500,")
 			g.P("			Message: `Channel is nil`,")
 			g.P("		}")
@@ -554,6 +597,9 @@ func (g *micro) generateServerSignature(servName string, method *pb.MethodDescri
 
 func (g *micro) generateServerMethod(servName string, method *pb.MethodDescriptorProto) string {
 	methName := generator.CamelCase(method.GetName())
+	if reservedClientName[methName] {
+		methName += "_"
+	}
 	hname := fmt.Sprintf("_%s_%s_Handler", servName, methName)
 	serveType := servName + "Handler"
 	inType := g.typeName(method.GetInputType())

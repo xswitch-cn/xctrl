@@ -455,16 +455,12 @@ func (channel *Channel) Consult(req *xctrl.ConsultRequest) *xctrl.Response {
 }
 
 // NativeAPI native Api
-func (channel *Channel) NativeAPI(req *xctrl.NativeRequest) *xctrl.NativeResponse {
+func (channel *Channel) NativeAPI(req *xctrl.NativeAPIRequest) *xctrl.NativeResponse {
 	if channel == nil {
 		return &xctrl.NativeResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Unable to locate Channel",
 		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
 	}
 
 	response, err := Service().NativeAPI(context.TODO(), req, channel.NodeAddress())
@@ -641,7 +637,7 @@ func (channel *Channel) GetStates() *xctrl.StateResponse {
 		}
 	}
 
-	response, err := Service().GetState(context.Background(), &xctrl.GetStateRequest{
+	response, err := Service().GetState_(context.Background(), &xctrl.GetStateRequest{
 		Uuid: channel.GetUuid(),
 	}, channel.NodeAddress())
 	if err != nil {
