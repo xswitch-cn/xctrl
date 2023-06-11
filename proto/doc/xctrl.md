@@ -14,6 +14,7 @@
   - [AIResponse](#xctrl.AIResponse)
   - [AcceptRequest](#xctrl.AcceptRequest)
   - [Action](#xctrl.Action)
+  - [AnswerRequest](#xctrl.AnswerRequest)
   - [Application](#xctrl.Application)
   - [BridgeRequest](#xctrl.BridgeRequest)
   - [BroadcastRequest](#xctrl.BroadcastRequest)
@@ -40,6 +41,8 @@
   - [ConferenceResponse](#xctrl.ConferenceResponse)
   - [ConsultRequest](#xctrl.ConsultRequest)
   - [Ctrl](#xctrl.Ctrl)
+  - [CtrlStartUpRequest](#xctrl.CtrlStartUpRequest)
+  - [DTMFEvent](#xctrl.DTMFEvent)
   - [DTMFRequest](#xctrl.DTMFRequest)
   - [DTMFResponse](#xctrl.DTMFResponse)
   - [Destination](#xctrl.Destination)
@@ -79,6 +82,7 @@
   - [LuaResponse](#xctrl.LuaResponse)
   - [Media](#xctrl.Media)
   - [MuteRequest](#xctrl.MuteRequest)
+  - [NativeAPIRequest](#xctrl.NativeAPIRequest)
   - [NativeJSRequest](#xctrl.NativeJSRequest)
   - [NativeJSResponse](#xctrl.NativeJSResponse)
   - [NativeRequest](#xctrl.NativeRequest)
@@ -174,6 +178,7 @@
 | ctrl_uuid | [string](#string) |  | Controller UUID |
 | uuid | [string](#string) |  | optional, Channel UUID |
 | takeover | [bool](#bool) |  | optional, default to false.when true, all subsequest events will be delivered to the new controller if already controlled by other controller, otherwise it will fail |
+| channel_params | [string](#string) | repeated |  |
 
 
 
@@ -193,6 +198,24 @@
 | owner_uid | [string](#string) |  |  |
 | node_uuid | [string](#string) |  |  |
 | param | [CallParam](#xctrl.CallParam) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.AnswerRequest"/>
+<a name="xctrl.AnswerRequest"/>
+
+### AnswerRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ctrl_uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  |  |
+| channel_params | [string](#string) | repeated |  |
 
 
 
@@ -405,6 +428,7 @@
 | answered | [bool](#bool) |  |  |
 | node_ip | [string](#string) |  |  |
 | domain | [string](#string) |  |  |
+| dtmf | [string](#string) |  |  |
 
 
 
@@ -736,6 +760,41 @@
 
 
 
+<a name="user-content-xctrl.CtrlStartUpRequest"/>
+<a name="xctrl.CtrlStartUpRequest"/>
+
+### CtrlStartUpRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ctrl_uuid | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.DTMFEvent"/>
+<a name="xctrl.DTMFEvent"/>
+
+### DTMFEvent
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| node_uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  |  |
+| dtmf_digit | [string](#string) |  |  |
+| dtmf_duration | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="user-content-xctrl.DTMFRequest"/>
 <a name="xctrl.DTMFRequest"/>
 
@@ -886,6 +945,10 @@
 | engine | [string](#string) |  | the ASR engine |
 | engine_data | [EngineData](#xctrl.EngineData) |  | string or JSON Struct, detailed object returned from ASR engine |
 | offset | [uint32](#uint32) |  |  |
+| uuid | [string](#string) |  |  |
+| node_uuid | [string](#string) |  |  |
+| video_read_codec | [string](#string) |  |  |
+| video_write_codec | [string](#string) |  |  |
 
 
 
@@ -1506,6 +1569,24 @@
 
 
 
+<a name="user-content-xctrl.NativeAPIRequest"/>
+<a name="xctrl.NativeAPIRequest"/>
+
+### NativeAPIRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ctrl_uuid | [string](#string) |  |  |
+| cmd | [string](#string) |  |  |
+| args | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="user-content-xctrl.NativeJSRequest"/>
 <a name="xctrl.NativeJSRequest"/>
 
@@ -1755,6 +1836,7 @@ CDR = 13;
 | ----- | ---- | ----- | ----------- |
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
+| params | [map<string, string>](#map-string-string) |  |  |
 
 
 
@@ -1875,6 +1957,8 @@ CDR = 13;
 | params | [map<string, string>](#map-string-string) |  |  |
 | grammar | [string](#string) |  |  |
 | max_speech_timeout | [uint32](#uint32) |  |  |
+| nobreak | [bool](#bool) |  |  |
+| nobreak_timeout | [uint32](#uint32) |  |  |
 
 
 
@@ -2106,8 +2190,8 @@ CDR = 13;
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Dial | [DialRequest](#xctrl.DialRequest) | [DialResponse](#xctrl.DialRequest) | 外呼 |
-| Answer | [Request](#xctrl.Request) | [Response](#xctrl.Request) | 应答 |
-| Accept | [AcceptRequest](#xctrl.AcceptRequest) | [Response](#xctrl.AcceptRequest) | 接管呼叫，示接管的呼叫将会在10s后挂断，其它所有API都隐含接管 |
+| Answer | [AnswerRequest](#xctrl.AnswerRequest) | [Response](#xctrl.AnswerRequest) | 应答, |
+| Accept | [AcceptRequest](#xctrl.AcceptRequest) | [Response](#xctrl.AcceptRequest) | 接管呼叫，被接管的呼叫将会在10s后挂断 |
 | Play | [PlayRequest](#xctrl.PlayRequest) | [Response](#xctrl.PlayRequest) | 播放一个文件或TTS |
 | Stop | [StopRequest](#xctrl.StopRequest) | [Response](#xctrl.StopRequest) | 停止当前正在执行的API |
 | Broadcast | [BroadcastRequest](#xctrl.BroadcastRequest) | [Response](#xctrl.BroadcastRequest) | 广播 |
@@ -2137,7 +2221,7 @@ CDR = 13;
 | SendDTMF | [SendDTMFRequest](#xctrl.SendDTMFRequest) | [Response](#xctrl.SendDTMFRequest) | 发送DTMF |
 | SendINFO | [SendINFORequest](#xctrl.SendINFORequest) | [Response](#xctrl.SendINFORequest) | 发送SIP INFO |
 | NativeApp | [NativeRequest](#xctrl.NativeRequest) | [NativeResponse](#xctrl.NativeRequest) | 执行原生APP |
-| NativeAPI | [NativeRequest](#xctrl.NativeRequest) | [NativeResponse](#xctrl.NativeRequest) | 执行原生API |
+| NativeAPI | [NativeAPIRequest](#xctrl.NativeAPIRequest) | [NativeResponse](#xctrl.NativeAPIRequest) | 执行原生API |
 | NativeJSAPI | [NativeJSRequest](#xctrl.NativeJSRequest) | [NativeJSResponse](#xctrl.NativeJSRequest) | 执行原生JSAPI |
 | JStatus | [JStatusRequest](#xctrl.JStatusRequest) | [JStatusResponse](#xctrl.JStatusRequest) | 状态 |
 | ConferenceInfo | [ConferenceInfoRequest](#xctrl.ConferenceInfoRequest) | [ConferenceInfoResponse](#xctrl.ConferenceInfoRequest) | 获取会议信息 |
