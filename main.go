@@ -45,7 +45,7 @@ func main() {
 	// init cman service before we can talk to cman
 	ctrl.InitCManService("cn.xswitch.cman.control")
 
-	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
+	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd: "status",
 	}, ctrl.WithAddress("cn.xswitch.node"), ctrl.WithRequestTimeout(1*time.Second))
 

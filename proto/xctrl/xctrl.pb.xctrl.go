@@ -828,6 +828,36 @@ func (c *xNodeService) SetVar(ctx context.Context, in *SetVarRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) SetVar(in *SetVarRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().SetVar(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) GetVar(ctx context.Context, in *GetVarRequest, opts ...client.CallOption) (*VarResponse, error) {
 	req := c.c.NewRequest(c.name, "XNode.GetVar", in)
 	out := new(VarResponse)
@@ -836,6 +866,36 @@ func (c *xNodeService) GetVar(ctx context.Context, in *GetVarRequest, opts ...cl
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) GetVar(in *GetVarRequest, opts ...client.CallOption) *VarResponse {
+	if c == nil {
+		return &VarResponse{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(5*time.Second))
+	}
+	response, err := Service().GetVar(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(VarResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) GetState_(ctx context.Context, in *GetStateRequest, opts ...client.CallOption) (*StateResponse, error) {
