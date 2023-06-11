@@ -146,7 +146,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
 			natsEvent := ev.Params.(nats.Event)
 			channelEvent := ev.Message.(*Channel)
-			channelEvent.natsEvent = &natsEvent
+			channelEvent.natsEvent = natsEvent
 			handler.ChannelEvent(ctx, channelEvent)
 			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 				bus.Unsubscribe(ev.Topic, ev.Queue)
@@ -161,7 +161,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
 			natsEvent := ev.Params.(nats.Event)
 			channelEvent := ev.Message.(*Channel)
-			channelEvent.natsEvent = &natsEvent
+			channelEvent.natsEvent = natsEvent
 			handler.ChannelEvent(ctx, channelEvent)
 			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 				bus.Unsubscribe(ev.Topic, ev.Queue)

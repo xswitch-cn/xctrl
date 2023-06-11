@@ -13,7 +13,9 @@ import (
 	context "context"
 	api "git.xswitch.cn/xswitch/xctrl/xctrl/api"
 	client "git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	errors "git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	server "git.xswitch.cn/xswitch/xctrl/xctrl/server"
+	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -30,8 +32,10 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // Reference imports to suppress errors if they are not otherwise used.
 var _ api.Endpoint
 var _ context.Context
+var _ time.Duration
 var _ client.Option
 var _ server.Option
+var _ errors.Error
 
 // Api Endpoints for CMan service
 

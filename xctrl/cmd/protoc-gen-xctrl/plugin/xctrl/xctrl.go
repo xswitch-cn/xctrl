@@ -17,8 +17,10 @@ import (
 const (
 	apiPkgPath     = "git.xswitch.cn/xswitch/xctrl/xctrl/api"
 	contextPkgPath = "context"
+	timePkgPath    = "time"
 	clientPkgPath  = "git.xswitch.cn/xswitch/xctrl/xctrl/client"
 	serverPkgPath  = "git.xswitch.cn/xswitch/xctrl/xctrl/server"
+	errorsPkgPath  = "git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 )
 
 func init() {
@@ -42,8 +44,10 @@ func (g *micro) Name() string {
 var (
 	apiPkg     string
 	contextPkg string
+	timePkg    string
 	clientPkg  string
 	serverPkg  string
+	errorsPkg  string
 	pkgImports map[generator.GoPackageName]bool
 )
 
@@ -52,8 +56,10 @@ func (g *micro) Init(gen *generator.Generator) {
 	g.gen = gen
 	apiPkg = generator.RegisterUniquePackageName("api", nil)
 	contextPkg = generator.RegisterUniquePackageName("context", nil)
+	timePkg = generator.RegisterUniquePackageName("time", nil)
 	clientPkg = generator.RegisterUniquePackageName("client", nil)
 	serverPkg = generator.RegisterUniquePackageName("server", nil)
+	errorsPkg = generator.RegisterUniquePackageName("errors", nil)
 }
 
 // Given a type name defined in a .proto, return its object.
@@ -79,8 +85,10 @@ func (g *micro) Generate(file *generator.FileDescriptor) {
 	g.P("// Reference imports to suppress errors if they are not otherwise used.")
 	g.P("var _ ", apiPkg, ".Endpoint")
 	g.P("var _ ", contextPkg, ".Context")
+	g.P("var _ ", timePkg, ".Duration")
 	g.P("var _ ", clientPkg, ".Option")
 	g.P("var _ ", serverPkg, ".Option")
+	g.P("var _ ", errorsPkg, ".Error")
 	g.P()
 
 	for i, service := range file.FileDescriptorProto.Service {
@@ -96,8 +104,10 @@ func (g *micro) GenerateImports(file *generator.FileDescriptor, imports map[gene
 	g.P("import (")
 	g.P(apiPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, apiPkgPath)))
 	g.P(contextPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, contextPkgPath)))
+	g.P(timePkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, timePkgPath)))
 	g.P(clientPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, clientPkgPath)))
 	g.P(serverPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, serverPkgPath)))
+	g.P(errorsPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, errorsPkgPath)))
 	g.P(")")
 	g.P()
 
@@ -112,6 +122,12 @@ func (g *micro) GenerateImports(file *generator.FileDescriptor, imports map[gene
 // reservedClientName records whether a client name is reserved on the client side.
 var reservedClientName = map[string]bool{
 	// TODO: do we need any in go-micro?
+}
+
+var channelMethodTimeout = map[string]int{
+	"Answer": 3,
+	"Accept": 3,
+	"Play":   180,
 }
 
 func unexport(s string) string {
@@ -340,6 +356,31 @@ func (g *micro) generateClientSignature(servName string, method *pb.MethodDescri
 	return fmt.Sprintf("%s(ctx %s.Context%s, opts ...%s.CallOption) (%s, error)", methName, contextPkg, reqArg, clientPkg, respName)
 }
 
+// generateChannelClientSignature returns the client-side signature for a Channel method.
+func (g *micro) generateChannelClientSignature(servName string, method *pb.MethodDescriptorProto) string {
+	origMethName := method.GetName()
+	methName := generator.CamelCase(origMethName)
+	if reservedClientName[methName] {
+		methName += "_"
+	}
+	reqArg := "in *" + g.typeName(method.GetInputType())
+	if methName == "NativeJSAPI" { // our hack to support Any type of JSON by using json.RawMessage
+		reqArg = "in *X" + g.typeName(method.GetInputType())
+	}
+	if method.GetClientStreaming() {
+		reqArg = ""
+	}
+	respName := "*" + g.typeName(method.GetOutputType())
+	if methName == "NativeJSAPI" { // our hack to support Any type of JSON by using json.RawMessage
+		respName = "*X" + g.typeName(method.GetOutputType())
+	}
+	if method.GetServerStreaming() || method.GetClientStreaming() {
+		respName = servName + "_" + generator.CamelCase(origMethName) + "Service"
+	}
+
+	return fmt.Sprintf("%s(%s, opts ...%s.CallOption) %s", methName, reqArg, clientPkg, respName)
+}
+
 func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, method *pb.MethodDescriptorProto, descExpr string) {
 	reqMethod := fmt.Sprintf("%s.%s", servName, method.GetName())
 	if servName == "CMan" {
@@ -369,6 +410,44 @@ func (g *micro) generateClientMethod(reqServ, servName, serviceDescVar string, m
 		g.P("return out, nil")
 		g.P("}")
 		g.P()
+		// generate Channel methods
+		timeoutSecond := channelMethodTimeout[method.GetName()]
+		if timeoutSecond > 0 {
+			origMethName := method.GetName()
+			methName := generator.CamelCase(origMethName)
+			respName := g.typeName(method.GetOutputType())
+			g.P("func(c *ChannelEvent) ", g.generateChannelClientSignature(servName, method), "{")
+			g.P("	if c == nil {")
+			g.P("		return &Response{")
+			g.P("			Code:    500,")
+			g.P("			Message: `Channel is nil`,")
+			g.P("		}")
+			g.P("	}")
+			g.P("	if in.GetUuid() == `` {")
+			g.P("		in.Uuid = c.GetUuid()")
+			g.P("	}")
+			g.P("	cOpts := client.CallOptions{}")
+			g.P("	for _, opt := range opts {")
+			g.P("		opt(&cOpts)")
+			g.P("	}")
+			g.P("	if len(cOpts.Address) == 0 {")
+			g.P("		opts = append(opts, client.WithAddress(`cn.xswitch.node.` + c.GetNodeUuid()))")
+			g.P("	}")
+			g.P("	if cOpts.RequestTimeout == 0 {")
+			g.P("		opts = append(opts, client.WithRequestTimeout(", timeoutSecond, "*time.Second))")
+			g.P("	}")
+			g.P("	response, err := Service().", methName, "(context.TODO(), in, opts...)")
+			g.P("	if err != nil {")
+			g.P("		response = new(", respName, ")")
+			g.P("		e := errors.Parse(err.Error())")
+			g.P("		response.Code = e.Code")
+			g.P("		response.Message = e.Detail")
+			g.P("	}")
+			g.P("	return response")
+			g.P("}")
+			g.P()
+		}
+
 		return
 	}
 	streamType := unexport(servAlias) + methName

@@ -146,7 +146,7 @@ ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 resullt, err := ctrl.AService().Play(ctx, ...)
 defer cancel()
 if err != nil {
-		err1 := err.(*errors.Error)
+	err1 := err.(*errors.Error)
 	if err1.code == 408 {// timeout
 	}
 }
@@ -154,12 +154,12 @@ if err != nil {
 
 ```go
 ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
-resullt, err := ctrl.AService().Play(ctx, ...)
 go func() {
 	// 100ms后cancel
 	time.Sleep(100 * time.MilliSecond)
 	cancel()
 }
+resullt, err := ctrl.AService().Play(ctx, ...)
 if err != nil {
 	err1 := err.(*errors.Error)
 	if err1.code == 499 {// canceled ...

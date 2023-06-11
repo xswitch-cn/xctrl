@@ -18,11 +18,11 @@ import (
 
 // Channel call channel
 type Channel struct {
-	xctrl.ChannelEvent
+	*xctrl.ChannelEvent
 	CtrlUuid  string
 	lock      sync.RWMutex
 	subs      []nats.Subscriber
-	natsEvent *nats.Event
+	natsEvent nats.Event
 }
 
 // only call at the first time
@@ -36,6 +36,10 @@ func NewChannel(channel_uuid string) *Channel {
 	return channel.Save()
 }
 
+func (channel *Channel) GetNatsEvent() nats.Event {
+	return channel.natsEvent
+}
+
 func (channel *Channel) Save() *Channel {
 	return WriteChannel(channel.GetUuid(), channel)
 }
@@ -46,7 +50,7 @@ func (channel *Channel) FullCtrlUuid() string {
 
 // GetChannelEvent .
 func (channel *Channel) GetChannelEvent() *xctrl.ChannelEvent {
-	return &channel.ChannelEvent
+	return channel.ChannelEvent
 }
 
 // NodeAddress 生成NODE地址
@@ -55,11 +59,10 @@ func (channel *Channel) NodeAddress() client.CallOption {
 }
 
 // Answer 应答
-func (channel *Channel) Answer(channel_params ...string) *xctrl.Response {
+func (channel *Channel) Answer0() *xctrl.Response {
 	response, err := Service().Answer(context.TODO(), &xctrl.AnswerRequest{
-		CtrlUuid:      UUID(),
-		Uuid:          channel.GetUuid(),
-		ChannelParams: channel_params,
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
 	}, channel.NodeAddress())
 
 	if err != nil {
@@ -73,12 +76,10 @@ func (channel *Channel) Answer(channel_params ...string) *xctrl.Response {
 }
 
 // Accept 接管
-func (channel *Channel) Accept(takeover bool, channel_params ...string) *xctrl.Response {
+func (channel *Channel) Accept0() *xctrl.Response {
 	response, err := Service().Accept(context.TODO(), &xctrl.AcceptRequest{
-		CtrlUuid:      UUID(),
-		Uuid:          channel.GetUuid(),
-		Takeover:      takeover,
-		ChannelParams: channel_params,
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
 	}, channel.NodeAddress())
 
 	if err != nil {
@@ -110,7 +111,7 @@ func (channel *Channel) Ready() bool {
 }
 
 // GetVariable 获取通道变量
-func (channel *Channel) GetVariable(key string) string {
+func (channel *Channel) GetVariable0(key string) string {
 	if channel == nil {
 		return ""
 	}
@@ -126,7 +127,7 @@ func (channel *Channel) GetVariable(key string) string {
 }
 
 // SetVariable 保存通道变量
-func (channel *Channel) SetVariable(key, value string) error {
+func (channel *Channel) SetVariable0(key, value string) error {
 	if channel == nil {
 		return fmt.Errorf("Unable to locate Channel")
 	}
@@ -150,7 +151,7 @@ func (channel *Channel) SetVariable(key, value string) error {
 }
 
 // SetVariables 保存多个通道变量
-func (channel *Channel) SetVariables(varKv map[string]string) error {
+func (channel *Channel) SetVariables(vars map[string]string) error {
 	if channel == nil {
 		return fmt.Errorf("Unable to locate Channel")
 	}
@@ -159,7 +160,7 @@ func (channel *Channel) SetVariables(varKv map[string]string) error {
 	if channel.Params == nil {
 		channel.Params = make(map[string]string)
 	}
-	for k, v := range varKv {
+	for k, v := range vars {
 		channel.Params[k] = v
 		data[k] = v
 	}
@@ -177,7 +178,7 @@ func (channel *Channel) SetVariables(varKv map[string]string) error {
 }
 
 // Play 播放一个文件，默认超时时间1小时
-func (channel *Channel) Play(req *xctrl.PlayRequest) *xctrl.Response {
+func (channel *Channel) Play0(req *xctrl.PlayRequest) *xctrl.Response {
 	return channel.PlayWithTimeout(req, 1*time.Hour)
 }
 
@@ -267,7 +268,7 @@ func (channel *Channel) Stop() *xctrl.Response {
 }
 
 // Hangup 挂机
-func (channel *Channel) Hangup(cause string, flag xctrl.HangupRequest_HangupFlag) *xctrl.Response {
+func (channel *Channel) Hangup0(cause string, flag xctrl.HangupRequest_HangupFlag) *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,

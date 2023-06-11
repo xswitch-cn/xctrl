@@ -13,7 +13,9 @@ import (
 	context "context"
 	api "git.xswitch.cn/xswitch/xctrl/xctrl/api"
 	client "git.xswitch.cn/xswitch/xctrl/xctrl/client"
+	errors "git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	server "git.xswitch.cn/xswitch/xctrl/xctrl/server"
+	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -30,8 +32,10 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // Reference imports to suppress errors if they are not otherwise used.
 var _ api.Endpoint
 var _ context.Context
+var _ time.Duration
 var _ client.Option
 var _ server.Option
+var _ errors.Error
 
 // Api Endpoints for XNode service
 
@@ -164,6 +168,36 @@ func (c *xNodeService) Answer(ctx context.Context, in *AnswerRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) Answer(in *AnswerRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3*time.Second))
+	}
+	response, err := Service().Answer(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Accept(ctx context.Context, in *AcceptRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Accept", in)
 	out := new(Response)
@@ -174,6 +208,36 @@ func (c *xNodeService) Accept(ctx context.Context, in *AcceptRequest, opts ...cl
 	return out, nil
 }
 
+func (c *ChannelEvent) Accept(in *AcceptRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(3*time.Second))
+	}
+	response, err := Service().Accept(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
+}
+
 func (c *xNodeService) Play(ctx context.Context, in *PlayRequest, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "XNode.Play", in)
 	out := new(Response)
@@ -182,6 +246,36 @@ func (c *xNodeService) Play(ctx context.Context, in *PlayRequest, opts ...client
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *ChannelEvent) Play(in *PlayRequest, opts ...client.CallOption) *Response {
+	if c == nil {
+		return &Response{
+			Code:    500,
+			Message: `Channel is nil`,
+		}
+	}
+	if in.GetUuid() == `` {
+		in.Uuid = c.GetUuid()
+	}
+	cOpts := client.CallOptions{}
+	for _, opt := range opts {
+		opt(&cOpts)
+	}
+	if len(cOpts.Address) == 0 {
+		opts = append(opts, client.WithAddress(`cn.xswitch.node.`+c.GetNodeUuid()))
+	}
+	if cOpts.RequestTimeout == 0 {
+		opts = append(opts, client.WithRequestTimeout(180*time.Second))
+	}
+	response, err := Service().Play(context.TODO(), in, opts...)
+	if err != nil {
+		response = new(Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+	}
+	return response
 }
 
 func (c *xNodeService) Stop(ctx context.Context, in *StopRequest, opts ...client.CallOption) (*Response, error) {

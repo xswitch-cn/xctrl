@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/cman"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
@@ -183,7 +184,7 @@ func XCall(topic string, method string, params interface{}, timeout time.Duratio
 	return globalCtrl.conn.Request(topic, body, timeout)
 }
 
-// Respond 响应nats request 请求
+// Respond 响应NATS Request 请求
 func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 	resp.Version = "2.0"
 	body, err := json.MarshalIndent(resp, "", "  ")
@@ -194,7 +195,7 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 	return globalCtrl.conn.Publish(topic, body)
 }
 
-// Init 初始化Ctrl global 是否接收全局事件， addrs nats消息队列连接地址
+// Init 初始化Ctrl trace 是否开启NATS消息跟踪， addrs nats消息队列连接地址
 func Init(trace bool, addrs string) error {
 	log.Infof("ctrl starting with addrs=%s\n", addrs)
 	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
@@ -202,6 +203,7 @@ func Init(trace bool, addrs string) error {
 		return err
 	}
 	globalCtrl = c
+	xctrl.SetService(&c.service)
 	return err
 }
 
@@ -256,6 +258,11 @@ func ForkDTMFEventToChannelEventThread() error {
 		return globalCtrl.ForkDTMFEventToChannelEventThread()
 	}
 	return fmt.Errorf("ctrl uninitialized")
+}
+
+func DeliverToChannelEventThread(channel *Channel, natsEvent nats.Event) {
+	ev := bus.NewEvent(channel.GetState(), channel.GetUuid(), channel, natsEvent)
+	bus.Publish(ev)
 }
 
 func Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {

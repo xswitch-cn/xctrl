@@ -20,3 +20,13 @@ type XNativeJSResponse struct {
 	Seq  string           `json:"seq,omitempty"`
 	Data *json.RawMessage `json:"data,omitempty"`
 }
+
+var service *XNodeService
+
+func Service() XNodeService {
+	return *service
+}
+
+func SetService(s *XNodeService) {
+	service = s
+}
