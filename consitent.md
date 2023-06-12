@@ -68,12 +68,14 @@ func DeleteNodes(node *HashNode) error
 ```
 type NodeHashFun func(node *xctrl.Node, method string)
 ```
-此回调函数会自动在收到FreeSWITCH的节点相关消息的时候由系统自动回调
+此回调函数会自动在收到FreeSWITCH的节点相关消息的时候由系统自动回调，前提是开启了节点监听，调用ctrl.EnableNodeStatus($topic)
 
 # example
 
 ```
 	err := ctrl.Init(true, "nats://localhost:4222")
+	// 开启节点监听,参数为空，则默认topic为cn.xswitch.ctrl.status，此处细节不在此额外描述了
+	ctrl.EnableNodeStatus("cn.xswitch.ctrl")
 	// 初始化一百个虚拟节点
 	consistent.Init(100)
 	// 注册节点事件回调方法
