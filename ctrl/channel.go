@@ -225,7 +225,7 @@ func (channel *Channel) PlayFile(file string, opts ...client.CallOption) *xctrl.
 	return channel.Play(req, opts...)
 }
 
-func (channel *Channel) PlayTTS(engine string, voice, string, text string, opts ...client.CallOption) *xctrl.Response {
+func (channel *Channel) PlayTTS(engine string, voice string, string, text string, opts ...client.CallOption) *xctrl.Response {
 	media := &xctrl.Media{
 		Type:   "TEXT",
 		Data:   text,
