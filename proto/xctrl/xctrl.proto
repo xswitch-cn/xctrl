@@ -455,10 +455,13 @@ message ChannelEvent {
   string billsec = 15;
   string duration = 16;
   string cause = 17;
-  bool answered = 19;
-  string node_ip = 20;
-  string domain = 21;
-  string dtmf = 22;
+  string node_ip = 18;
+  string domain = 19;
+  string dtmf = 20;
+  bool answered = 21;
+  bool video = 22;
+  bool held = 23;
+  bool bridged = 24;
 }
 
 message DTMFEvent {
