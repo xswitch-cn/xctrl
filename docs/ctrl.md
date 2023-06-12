@@ -89,6 +89,17 @@ func EnableRequest(h *RequestHandler, subject string, queue string) error
 
 如果一个应用程序中即调用`EnableApp`和`EnableRequest`，则两者的`subject`不要重复，否则会有不可预知的结果。
 
+### ctrl.EnableStatus
+
+```go
+subject := "cn.xswitch.ctrl.status"
+ctrl.EnableNodeStatus(subject)
+```
+
+如果`subject`为空，则使用默认的`cn.xswitch.ctrl.status`。
+
+**注意**：在多ctrl的场景中，由于默认的订阅主题`cn.xswitch.ctrl`是通过队列方式订阅的，多个ctrl无法同时接收到节点状态，因此，需要使用独立的`EnableNodeStatus`订阅。
+
 ### Subscribe
 
 ```go
