@@ -279,3 +279,23 @@ data1 = channel.GetUserData()
 if data == data1 {
 }
 ```
+
+## Channel缓存
+
+Channel有一个缓存机制，可以写入内存或Redis等。这部分API只在某些内部项目中使用，未来可能会有变化，不推荐使用。
+
+相关的API有：
+
+- WriteChannel
+- Save
+- ReadChannel
+- Ready
+- ...
+
+### WriteChannel
+
+Todo.
+
+### Save
+
+Todo.
