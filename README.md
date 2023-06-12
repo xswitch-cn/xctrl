@@ -446,3 +446,29 @@ make doc-md
 go run main.go
 make test
 ```
+
+## 开发
+
+### channel缓存存取
+
+channel结构可以临时存到内存中，用于获取channel携带参数
+
+```
+type Channel struct {
+	xctrl.ChannelEvent
+	CtrlUuid string
+	lock     sync.RWMutex
+	subs     []nats.Subscriber
+}
+
+```
+
+```go
+//保存缓存
+channel.Save()
+//获取缓存中数据
+channe.GetVariable("variable_name")
+
+//channel.Save() 保存的变量在内存中，通话结束后需要主动调用函数释放
+crtl.DelChannel(channel.uuid)
+```
