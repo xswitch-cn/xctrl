@@ -79,7 +79,7 @@ service XNode {
   // 执行原生APP
   rpc NativeApp(NativeRequest) returns (NativeResponse) {}
   // 执行原生API
-  rpc NativeAPI(NativeRequest) returns (NativeResponse) {}
+  rpc NativeAPI(NativeAPIRequest) returns (NativeResponse) {}
   // 执行原生JSAPI
   rpc NativeJSAPI(NativeJSRequest) returns (NativeJSResponse) {}
   // 状态
@@ -127,6 +127,12 @@ message NativeRequest {
   string cmd = 3;
   string args = 4;
   bool sync = 5;
+}
+
+message NativeAPIRequest {
+  string ctrl_uuid = 1;
+  string cmd = 3;
+  string args = 4;
 }
 
 message NativeResponse {
@@ -415,6 +421,11 @@ message Node {
   uint32 session_peak_5min = 14;
   // 历史Session最大值
   uint32 session_peak_max = 15;
+  repeated SipProfile sip_profiles = 16;
+}
+message SipProfile {
+  string name = 1;
+  int32 port = 2;
 }
 
 message Ctrl {
@@ -449,9 +460,13 @@ message ChannelEvent {
   string billsec = 15;
   string duration = 16;
   string cause = 17;
-  bool answered = 19;
-  string node_ip = 20;
-  string domain = 21;
+  string node_ip = 18;
+  string domain = 19;
+  string dtmf = 20;
+  bool answered = 21;
+  bool video = 22;
+  bool held = 23;
+  bool bridged = 24;
 }
 
 message DTMFEvent {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"time"
 
@@ -15,16 +14,15 @@ import (
 )
 
 var (
-	node_topic = "test.simple-test"
-	domain     = "test.test"
-	node_uuid  = "test.simple-test.simple"
-	subject    = "cn.xswitch.ctrl"
+	domain      = "test.test"
+	ctrlSubject = "cn.xswitch.ctrl"
 )
 
-func PubStart() {
+func PubStart(node_uuid string) {
 	channelEvent := xctrl.ChannelEvent{
 		NodeUuid:    node_uuid,
 		Uuid:        uuid.New().String(),
+		Domain:      domain,
 		Direction:   "outbound",
 		State:       "START",
 		CidName:     "TEST",
@@ -48,32 +46,27 @@ func PubStart() {
 	}
 
 	req_str, _ := json.MarshalIndent(event_req, "", "  ")
-	ctrl.Publish(subject, req_str)
+	ctrl.Publish(ctrlSubject, req_str)
 }
 
 func main() {
 	var log = logrus.New()
 	log.SetReportCaller(true)
-	boy := tboy.NewSimple(node_uuid, domain, tboy.OptionPeerAnswer(true), tboy.OptionActualPlay(false))
-
 	natsAddress := os.Getenv("NATS_ADDRESS")
-
 	if natsAddress == "" {
 		natsAddress = "nats://127.0.0.1:4222"
 	}
 	log.Infof("connecting to nats: %s", natsAddress)
-	err := ctrl.Init(boy, true, "cn.xswitch.ctrl", natsAddress)
-	fmt.Println(err)
+	err := ctrl.Init(true, natsAddress)
 	if err != nil {
 		log.Fatal("ctrl init failed: ", err)
 	}
+	node_uuid := ctrl.UUID() // use ctrl uuid as node uuid
+	boy := tboy.NewSimple(node_uuid, domain, tboy.OptionPeerAnswer(true), tboy.OptionActualPlay(false))
 
-	ctrl.Subscribe("cn.xswitch.node", boy.EventCallback, "node")
-	ctrl.Subscribe("cn.xswitch.node.test", boy.EventCallback, "node")
-	ctrl.Subscribe("cn.xswitch.node."+node_topic, boy.EventCallback, "node")
-	ctrl.Subscribe("cn.xswitch.node."+node_uuid, boy.EventCallback, "")
+	// subscribe to cn.xswitch.node and cn.xswitch.node.$node_uuid
+	ctrl.EnableApp(boy, "cn.xswitch.node", "q")
 
-	PubStart()
+	PubStart(node_uuid)
 	time.Sleep(time.Second * 30)
-
 }

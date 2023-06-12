@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"github.com/sirupsen/logrus"
 )
@@ -1572,13 +1573,17 @@ func (boy *TBoy) NativeJSAPIStatus(ctx context.Context, msg *ctrl.Message, reply
 	ctrl.Publish(reply, result_bytes)
 }
 
-func (boy *TBoy) App(ctx context.Context, topic string, reply string, msg *ctrl.Message) {
+func (boy *TBoy) Event(msg *ctrl.Message, natsEvent nats.Event) {
+	topic := natsEvent.Topic()
+	reply := natsEvent.Reply()
 	log.Infof("%s %s", topic, msg.Method)
 
 	if msg.Method == "" && msg.Result != nil {
 		log.Infof("Got a response: %s", msg.ID)
 		return
 	}
+
+	ctx := context.Background()
 
 	switch msg.Method {
 	case "XNode.Accept":
@@ -1649,6 +1654,10 @@ func (boy *TBoy) App(ctx context.Context, topic string, reply string, msg *ctrl.
 		log.Errorf("Unsupported Method: %s", msg.Method)
 		boy.Error(ctx, msg, reply)
 	}
+}
+
+// we don't use this method in node side
+func (boy *TBoySimple) ChannelEvent(ctx context.Context, channel *ctrl.Channel) {
 }
 
 // trimSuffix 清除 topic 后缀

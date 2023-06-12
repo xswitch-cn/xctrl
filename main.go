@@ -36,14 +36,16 @@ func main() {
 	ctrl.SetLogger(new(Logger))         // tell ctrl to use our logger
 	log.Print("Hello, world!")          // the world starts from here
 	// init ctrl, connect to NATS and subscribe a subject
-	err := ctrl.Init(new(ctrl.EmptyHandler), isTrace, "cn.xswitch.ctrl", "nats://localhost:4222")
+	err := ctrl.Init(isTrace, "nats://localhost:4222")
 	if err != nil {
 		panic(err)
 	}
+	ctrl.EnableApp(new(ctrl.EmptyAppHandler), "cn.xswitch.ctrl", "ctrl")
+	ctrl.EnableNodeStatus("")
 	// init cman service before we can talk to cman
 	ctrl.InitCManService("cn.xswitch.cman.control")
 
-	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
+	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd: "status",
 	}, ctrl.WithAddress("cn.xswitch.node"), ctrl.WithRequestTimeout(1*time.Second))
 

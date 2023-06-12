@@ -82,7 +82,7 @@ func FindChannel(condition string, argument string) []*Channel {
 	matched := make([]*Channel, 0)
 	globalCtrl.hubLock.RLock()
 	for _, channel := range globalCtrl.channelHub {
-		if channel.GetVariable(condition) == argument {
+		if channel.GetVariable0(condition) == argument {
 			matched = append(matched, channel)
 		}
 	}

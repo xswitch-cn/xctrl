@@ -18,10 +18,12 @@ import (
 
 // Channel call channel
 type Channel struct {
-	xctrl.ChannelEvent
-	CtrlUuid string
-	lock     sync.RWMutex
-	subs     []nats.Subscriber
+	*xctrl.ChannelEvent                   // the parent ChannelEvent
+	CtrlUuid            string            // the Controller UUID
+	lock                sync.RWMutex      // a Mutex to protect the Channel, internal use only
+	subs                []nats.Subscriber // todo
+	natsEvent           nats.Event        // the original natsEvent received
+	userData            interface{}       // store private userData from the higher level Application
 }
 
 // only call at the first time
@@ -35,6 +37,16 @@ func NewChannel(channel_uuid string) *Channel {
 	return channel.Save()
 }
 
+func NewChannelEvent() *Channel {
+	return &Channel{
+		ChannelEvent: &xctrl.ChannelEvent{},
+	}
+}
+
+func (channel *Channel) GetNatsEvent() nats.Event {
+	return channel.natsEvent
+}
+
 func (channel *Channel) Save() *Channel {
 	return WriteChannel(channel.GetUuid(), channel)
 }
@@ -45,7 +57,7 @@ func (channel *Channel) FullCtrlUuid() string {
 
 // GetChannelEvent .
 func (channel *Channel) GetChannelEvent() *xctrl.ChannelEvent {
-	return &channel.ChannelEvent
+	return channel.ChannelEvent
 }
 
 // NodeAddress 生成NODE地址
@@ -54,38 +66,66 @@ func (channel *Channel) NodeAddress() client.CallOption {
 }
 
 // Answer 应答
-func (channel *Channel) Answer(channel_params ...string) *xctrl.Response {
-	response, err := Service().Answer(context.TODO(), &xctrl.AnswerRequest{
+func (channel *Channel) Answer0(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Answer(&xctrl.AnswerRequest{
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+	}, opts...)
+
+	return response
+}
+
+// Answer 应答
+func (channel *Channel) AnswerWithChannelParams(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Answer(&xctrl.AnswerRequest{
 		CtrlUuid:      UUID(),
 		Uuid:          channel.GetUuid(),
 		ChannelParams: channel_params,
-	}, channel.NodeAddress())
-
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
+	}, opts...)
 
 	return response
 }
 
 // Accept 接管
-func (channel *Channel) Accept(takeover bool, channel_params ...string) *xctrl.Response {
-	response, err := Service().Accept(context.TODO(), &xctrl.AcceptRequest{
+func (channel *Channel) Accept0(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+	}, opts...)
+
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptAndTakeOver(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+		Takeover: true,
+	}, opts...)
+
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptWithChannelParams(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
 		CtrlUuid:      UUID(),
 		Uuid:          channel.GetUuid(),
-		Takeover:      takeover,
 		ChannelParams: channel_params,
-	}, channel.NodeAddress())
+	}, opts...)
 
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptWithChannelParamsAndTakeOver(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		ChannelParams: channel_params,
+		Takeover:      true,
+	}, opts...)
 
 	return response
 }
@@ -109,7 +149,7 @@ func (channel *Channel) Ready() bool {
 }
 
 // GetVariable 获取通道变量
-func (channel *Channel) GetVariable(key string) string {
+func (channel *Channel) GetVariable0(key string) string {
 	if channel == nil {
 		return ""
 	}
@@ -125,7 +165,7 @@ func (channel *Channel) GetVariable(key string) string {
 }
 
 // SetVariable 保存通道变量
-func (channel *Channel) SetVariable(key, value string) error {
+func (channel *Channel) SetVariable0(key, value string) error {
 	if channel == nil {
 		return fmt.Errorf("Unable to locate Channel")
 	}
@@ -149,7 +189,7 @@ func (channel *Channel) SetVariable(key, value string) error {
 }
 
 // SetVariables 保存多个通道变量
-func (channel *Channel) SetVariables(varKv map[string]string) error {
+func (channel *Channel) SetVariables(vars map[string]string) error {
 	if channel == nil {
 		return fmt.Errorf("Unable to locate Channel")
 	}
@@ -158,7 +198,7 @@ func (channel *Channel) SetVariables(varKv map[string]string) error {
 	if channel.Params == nil {
 		channel.Params = make(map[string]string)
 	}
-	for k, v := range varKv {
+	for k, v := range vars {
 		channel.Params[k] = v
 		data[k] = v
 	}
@@ -175,8 +215,32 @@ func (channel *Channel) SetVariables(varKv map[string]string) error {
 	return nil
 }
 
+func (channel *Channel) PlayFile(file string, opts ...client.CallOption) *xctrl.Response {
+	media := &xctrl.Media{
+		Data: file,
+	}
+	req := &xctrl.PlayRequest{
+		Media: media,
+	}
+	return channel.Play(req, opts...)
+}
+
+func (channel *Channel) PlayTTS(engine string, voice string, text string, opts ...client.CallOption) *xctrl.Response {
+	media := &xctrl.Media{
+		Type:   "TEXT",
+		Data:   text,
+		Engine: engine,
+		Voice:  voice,
+	}
+	req := &xctrl.PlayRequest{
+		Uuid:  channel.Uuid,
+		Media: media,
+	}
+	return channel.Play(req, opts...)
+}
+
 // Play 播放一个文件，默认超时时间1小时
-func (channel *Channel) Play(req *xctrl.PlayRequest) *xctrl.Response {
+func (channel *Channel) Play0(req *xctrl.PlayRequest) *xctrl.Response {
 	return channel.PlayWithTimeout(req, 1*time.Hour)
 }
 
@@ -217,36 +281,8 @@ func (channel *Channel) PlayWithTimeout(req *xctrl.PlayRequest, timeout time.Dur
 	return response
 }
 
-// Broadcast 播放多个文件
-func (channel *Channel) Broadcast(req *xctrl.BroadcastRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().Broadcast(
-		context.Background(),
-		req,
-		channel.NodeAddress(),
-		client.WithRequestTimeout(60*time.Minute),
-	)
-
-	if err != nil {
-		responseErr := errors.Parse(err.Error())
-		response.Code = responseErr.Code
-		response.Message = responseErr.Detail
-	}
-	return response
-}
-
 // Stop 停止当前正在执行的API
-func (channel *Channel) Stop() *xctrl.Response {
+func (channel *Channel) Stop0() *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
@@ -266,7 +302,7 @@ func (channel *Channel) Stop() *xctrl.Response {
 }
 
 // Hangup 挂机
-func (channel *Channel) Hangup(cause string, flag xctrl.HangupRequest_HangupFlag) *xctrl.Response {
+func (channel *Channel) Hangup0(cause string, flag xctrl.HangupRequest_HangupFlag) *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
@@ -290,390 +326,8 @@ func (channel *Channel) Hangup(cause string, flag xctrl.HangupRequest_HangupFlag
 	return response
 }
 
-// UnBridge 停止bridge
-func (channel *Channel) UnBridge(req *xctrl.Request) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().UnBridge(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-
-	return response
-}
-
-// UnBridge2 断开桥接，park channel
-func (channel *Channel) UnBridge2(req *xctrl.Request) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().UnBridge2(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-
-	return response
-}
-
-// Hold 呼叫保持
-func (channel *Channel) Hold(req *xctrl.HoldRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().Hold(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Transfer 转移（待定）
-func (channel *Channel) Transfer(req *xctrl.TransferRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().Transfer(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// ThreeWay 三方通话
-func (channel *Channel) ThreeWay(req *xctrl.ThreeWayRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().ThreeWay(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Intercept 强插
-func (channel *Channel) Intercept(req *xctrl.InterceptRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().Intercept(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Consult 协商转移
-func (channel *Channel) Consult(req *xctrl.ConsultRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().Consult(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// NativeAPI native Api
-func (channel *Channel) NativeAPI(req *xctrl.NativeRequest) *xctrl.NativeResponse {
-	if channel == nil {
-		return &xctrl.NativeResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().NativeAPI(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// NativeApp native App
-func (channel *Channel) NativeApp(req *xctrl.NativeRequest) *xctrl.NativeResponse {
-	if channel == nil {
-		return &xctrl.NativeResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().NativeApp(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.NativeResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// NativeJSAPI Native js api
-func (channel *Channel) NativeJSAPI(req *xctrl.XNativeJSRequest) *xctrl.XNativeJSResponse {
-	if channel == nil {
-		return &xctrl.XNativeJSResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	response, err := Service().NativeJSAPI(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.XNativeJSResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// GetChannelData 获取通道数据
-func (channel *Channel) GetChannelData(req *xctrl.GetChannelDataRequest) *xctrl.ChannelDataResponse {
-	if channel == nil {
-		return &xctrl.ChannelDataResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().GetChannelData(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.ChannelDataResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// ReadDTMF 读取DTMF按键
-func (channel *Channel) ReadDTMF(req *xctrl.DTMFRequest) *xctrl.DTMFResponse {
-	if channel == nil {
-		return &xctrl.DTMFResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	req.Uuid = channel.GetUuid()
-	response, err := Service().ReadDTMF(context.Background(), req,
-		channel.NodeAddress(), client.WithRequestTimeout(60*time.Minute))
-	if err != nil {
-		response = new(xctrl.DTMFResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// ReadDTMF 收集DTMF按键，支持正则和错误音提示
-func (channel *Channel) ReadDigits(req *xctrl.DigitsRequest) *xctrl.DigitsResponse {
-	if channel == nil {
-		return &xctrl.DigitsResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	req.Uuid = channel.GetUuid()
-	response, err := Service().ReadDigits(context.Background(), req,
-		channel.NodeAddress(), client.WithRequestTimeout(60*time.Minute))
-	if err != nil {
-		response = new(xctrl.DigitsResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// 设置通道变量
-func (channel *Channel) SetVar(req *xctrl.SetVarRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().SetVar(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// GetVar 获取通道变量
-func (channel *Channel) GetVar(req *xctrl.GetVarRequest) *xctrl.VarResponse {
-	if channel == nil {
-		return &xctrl.VarResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().GetVar(context.TODO(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.VarResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// GetStates 获取通道状态
-func (channel *Channel) GetStates() *xctrl.StateResponse {
-	if channel == nil {
-		return &xctrl.StateResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	response, err := Service().GetState(context.Background(), &xctrl.GetStateRequest{
-		Uuid: channel.GetUuid(),
-	}, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.StateResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Dial 外呼
-func (channel *Channel) Dial(req *xctrl.DialRequest) *xctrl.DialResponse {
-	if channel == nil {
-		return &xctrl.DialResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	if req.GetCtrlUuid() == "" {
-		req.CtrlUuid = UUID()
-	}
-	response, err := Service().Dial(context.TODO(), req, channel.NodeAddress(), client.WithRequestTimeout(2*time.Minute))
-	if err != nil {
-		response = new(xctrl.DialResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
 // Bridge 在把当前呼叫桥接（发起）另一个呼叫
-func (channel *Channel) Bridge(req *xctrl.BridgeRequest, async bool) *xctrl.Response {
+func (channel *Channel) Bridge0(req *xctrl.BridgeRequest, async bool) *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
@@ -706,81 +360,8 @@ func (channel *Channel) Bridge(req *xctrl.BridgeRequest, async bool) *xctrl.Resp
 
 }
 
-// ChannelBridge 桥接两个呼叫
-func (channel *Channel) ChannelBridge(req *xctrl.ChannelBridgeRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := AsyncService().ChannelBridge(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
-
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-func (channel *Channel) SetMute(req *xctrl.MuteRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetCtrlUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-	response, err := Service().Mute(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
-
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-
-	return response
-}
-
-// Record 录音
-func (channel *Channel) Record(req *xctrl.RecordRequest) *xctrl.RecordResponse {
-	if channel == nil {
-		return &xctrl.RecordResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	// Record
-	response, err := Service().Record(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
-
-	if err != nil {
-		response = new(xctrl.RecordResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-		return response
-	}
-	return response
-}
-
 // SendDTMF 发送DTMF
-func (channel *Channel) SendDTMF(dtmf string) *xctrl.Response {
+func (channel *Channel) SendDTMF0(dtmf string) *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
@@ -804,7 +385,7 @@ func (channel *Channel) SendDTMF(dtmf string) *xctrl.Response {
 }
 
 // DetectSpeech 语音识别
-func (channel *Channel) DetectSpeech(req *xctrl.DetectRequest, async bool) *xctrl.DetectResponse {
+func (channel *Channel) DetectSpeech0(req *xctrl.DetectRequest, async bool) *xctrl.DetectResponse {
 	if channel == nil {
 		return &xctrl.DetectResponse{
 			Code:    http.StatusInternalServerError,
@@ -836,7 +417,7 @@ func (channel *Channel) DetectSpeech(req *xctrl.DetectRequest, async bool) *xctr
 }
 
 // RingBackDetection 回铃音检测
-func (channel *Channel) RingBackDetection(req *xctrl.RingBackDetectionRequest, async bool) *xctrl.Response {
+func (channel *Channel) RingBackDetection0(req *xctrl.RingBackDetectionRequest, async bool) *xctrl.Response {
 	if channel == nil {
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
@@ -852,31 +433,6 @@ func (channel *Channel) RingBackDetection(req *xctrl.RingBackDetectionRequest, a
 	} else {
 		response, err = AsyncService().RingBackDetection(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
 	}
-
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-		return response
-	}
-	return response
-}
-
-// DetectFace 人脸识别
-func (channel *Channel) DetectFace(req *xctrl.DetectFaceRequest) *xctrl.Response {
-	if channel == nil {
-		return &xctrl.Response{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-
-	if req.GetUuid() == "" {
-		req.Uuid = channel.GetUuid()
-	}
-
-	response, err := Service().DetectFace(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
 
 	if err != nil {
 		response = new(xctrl.Response)
@@ -910,16 +466,16 @@ func (channel *Channel) Marshal() []byte {
 	return jsonBytes
 }
 
-func (channel *Channel) Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
+func (channel *Channel) Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
 	if globalCtrl == nil {
 		return nil, fmt.Errorf("ctrl uninitialized")
 	}
 
-	if topic == "" {
-		topic = "cn.xswitch.ctrl." + channel.CtrlUuid
+	if subject == "" {
+		return nil, fmt.Errorf("no subject specified")
 	}
 
-	sub, err := globalCtrl.Subscribe(topic, cb, queue)
+	sub, err := globalCtrl.Subscribe(subject, cb, queue)
 
 	if err != nil {
 		return nil, err
@@ -930,109 +486,13 @@ func (channel *Channel) Subscribe(topic string, cb nats.EventCallback, queue str
 	return sub, nil
 }
 
-// FIFO 呼叫中心FIFO队列（先入先出）
-func (channel *Channel) FIFO(req *xctrl.FIFORequest) *xctrl.FIFOResponse {
+func (channel *Channel) SetUserData(userData interface{}) {
 	if channel == nil {
-		return &xctrl.FIFOResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
+		return
 	}
-	response, err := Service().FIFO(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.FIFOResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
+	channel.userData = userData
 }
 
-// Callcenter 呼叫中心Callcenter
-func (channel *Channel) Callcenter(req *xctrl.CallcenterRequest) *xctrl.CallcenterResponse {
-	if channel == nil {
-		return &xctrl.CallcenterResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().Callcenter(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.CallcenterResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Conference 会议
-func (channel *Channel) Conference(req *xctrl.ConferenceRequest) *xctrl.ConferenceResponse {
-	if channel == nil {
-		return &xctrl.ConferenceResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().Conference(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.ConferenceResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// AI
-func (channel *Channel) AI(req *xctrl.AIRequest) *xctrl.AIResponse {
-	if channel == nil {
-		return &xctrl.AIResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().AI(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.AIResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-func (channel *Channel) HttAPI(req *xctrl.HttAPIRequest) *xctrl.HttAPIResponse {
-	if channel == nil {
-		return &xctrl.HttAPIResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().HttAPI(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.HttAPIResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
-}
-
-// Lua
-func (channel *Channel) Lua(req *xctrl.LuaRequest) *xctrl.LuaResponse {
-	if channel == nil {
-		return &xctrl.LuaResponse{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to locate Channel",
-		}
-	}
-	response, err := Service().Lua(context.Background(), req, channel.NodeAddress())
-	if err != nil {
-		response = new(xctrl.LuaResponse)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
-	return response
+func (channel *Channel) GetUserData() interface{} {
+	return channel.userData
 }

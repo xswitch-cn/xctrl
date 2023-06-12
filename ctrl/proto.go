@@ -12,16 +12,16 @@ import (
 type Request struct {
 	Version string           `json:"jsonrpc"`
 	Method  string           `json:"method"`
-	Params  *json.RawMessage `json:"params"`
 	ID      *json.RawMessage `json:"id"`
+	Params  *json.RawMessage `json:"params"`
 }
 
 // Request RPC 请求对象
 type XRequest struct {
 	Version string      `json:"jsonrpc"`
 	Method  string      `json:"method"`
-	Params  interface{} `json:"params"`
 	ID      interface{} `json:"id"`
+	Params  interface{} `json:"params"`
 }
 
 // Response RPC 返回对象

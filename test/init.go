@@ -16,5 +16,5 @@ func init() {
 	if natsURL == "" {
 		natsURL = "nats://localhost:4222"
 	}
-	ctrl.Init(new(ctrl.EmptyHandler), true, "cn.xswitch.ctrl."+testNodeUUID, natsURL)
+	ctrl.Init(true, natsURL)
 }
