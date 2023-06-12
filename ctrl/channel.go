@@ -66,35 +66,66 @@ func (channel *Channel) NodeAddress() client.CallOption {
 }
 
 // Answer 应答
-func (channel *Channel) Answer0() *xctrl.Response {
-	response, err := Service().Answer(context.TODO(), &xctrl.AnswerRequest{
+func (channel *Channel) Answer0(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Answer(&xctrl.AnswerRequest{
 		CtrlUuid: UUID(),
 		Uuid:     channel.GetUuid(),
-	}, channel.NodeAddress())
+	}, opts...)
 
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
+	return response
+}
+
+// Answer 应答
+func (channel *Channel) AnswerWithChannelParams(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Answer(&xctrl.AnswerRequest{
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		ChannelParams: channel_params,
+	}, opts...)
 
 	return response
 }
 
 // Accept 接管
-func (channel *Channel) Accept0() *xctrl.Response {
-	response, err := Service().Accept(context.TODO(), &xctrl.AcceptRequest{
+func (channel *Channel) Accept0(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
 		CtrlUuid: UUID(),
 		Uuid:     channel.GetUuid(),
-	}, channel.NodeAddress())
+	}, opts...)
 
-	if err != nil {
-		response = new(xctrl.Response)
-		e := errors.Parse(err.Error())
-		response.Code = e.Code
-		response.Message = e.Detail
-	}
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptAndTakeOver(opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid: UUID(),
+		Uuid:     channel.GetUuid(),
+		Takeover: true,
+	}, opts...)
+
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptWithChannelParams(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		ChannelParams: channel_params,
+	}, opts...)
+
+	return response
+}
+
+// Accept 接管
+func (channel *Channel) AcceptWithChannelParamsAndTakeOver(channel_params []string, opts ...client.CallOption) *xctrl.Response {
+	response := channel.Accept(&xctrl.AcceptRequest{
+		CtrlUuid:      UUID(),
+		Uuid:          channel.GetUuid(),
+		ChannelParams: channel_params,
+		Takeover:      true,
+	}, opts...)
 
 	return response
 }
