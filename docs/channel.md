@@ -212,7 +212,18 @@ digraph G {
 
 针对收到的`Event.Channel`事件，系统会自动转换为`ChannelEvent`对象，并为期自动生成了一些函数，方便调用。
 
-`ctrl.Channel`是对`ChannelEvent`的封装，也可以继续`ChannelEvent`对象的函数。
+`ctrl.Channel`是对`ChannelEvent`的封装，也可以调用`ChannelEvent`对象的函数。
+
+### PlayFile
+
+对`Play()`的简单封装，用于播放文件。
+
+
+### PlayTTS
+
+对`Play()`的简单封装，播放TTS。
+
+### 其他
 
 更多channel相关的函数可以参阅[sdk.md](sdk.md)中的相关说明。
 
