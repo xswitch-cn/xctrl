@@ -295,6 +295,18 @@ if data == data1 {
 
 Channel有一个缓存机制，可以写入内存或Redis等。这部分API只在某些内部项目中使用，未来可能会有变化，不推荐使用。
 
+channel结构
+
+```
+type Channel struct {
+	xctrl.ChannelEvent
+	CtrlUuid string
+	lock     sync.RWMutex
+	subs     []nats.Subscriber
+}
+
+```
+
 相关的API有：
 
 - WriteChannel
@@ -303,10 +315,18 @@ Channel有一个缓存机制，可以写入内存或Redis等。这部分API只�
 - Ready
 - ...
 
-### WriteChannel
+### 存取
 
-Todo.
+channel结构可以临时存到内存中，用于获取channel携带参数
 
-### Save
 
-Todo.
+```go
+//保存缓存 两种方式
+channel.Save()
+ctrl.WriteChannel(channel.Uuid,channel)
+//获取缓存中数据
+value := channe.GetVariable("variable_name")
+
+//channel.Save() 保存的变量在内存中，通话结束后需要主动调用函数释放
+crtl.DelChannel(channel.uuid)
+```
