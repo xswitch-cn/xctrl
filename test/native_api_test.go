@@ -42,7 +42,7 @@ func TestNativeAPI(t *testing.T) {
 		return nil
 	}, "")
 
-	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeRequest{
+	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd: "ping",
 	}, client.WithAddress("cn.xswitch.node."+testNodeUUID), client.WithRequestTimeout(100*time.Millisecond))
 

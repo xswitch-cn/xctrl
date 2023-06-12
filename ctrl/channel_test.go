@@ -10,27 +10,33 @@ import (
 
 	"github.com/google/uuid"
 
+	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 func TestPlayWithTimeout(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
-	url := os.Getenv("NATS_ADDRESS")
+	// subject := "cn.xswitch.ctrl"
+	natsURL := os.Getenv("NATS_ADDRESS")
 
-	if url == "" {
-		url = "nats://localhost:4222"
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
 
 	nodeUUID := "test.node-uuid"
 
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
+	}
+
 	channel := &Channel{
-		CtrlUuid: UUID(),
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
 	}
 
 	channel.NodeUuid = nodeUUID
@@ -93,14 +99,14 @@ func TestPlayWithTimeout(t *testing.T) {
 }
 
 func TestFIFO(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -137,10 +143,14 @@ func TestFIFO(t *testing.T) {
 		t.Error(err)
 	}
 
-	channel := &Channel{
-		CtrlUuid: UUID(),
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
 	}
-	channel.NodeUuid = nodeUUID
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
 
 	req := &xctrl.FIFORequest{
 		Uuid:         UUID(),
@@ -160,14 +170,14 @@ func TestFIFO(t *testing.T) {
 }
 
 func TestChannel_Callcenter(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -204,10 +214,14 @@ func TestChannel_Callcenter(t *testing.T) {
 		t.Error(err)
 	}
 
-	channel := &Channel{
-		CtrlUuid: UUID(),
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
 	}
-	channel.NodeUuid = nodeUUID
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
 
 	req := &xctrl.CallcenterRequest{
 		Uuid: UUID(),
@@ -219,18 +233,17 @@ func TestChannel_Callcenter(t *testing.T) {
 	if res.Code != 200 {
 		t.Error(res)
 	}
-
 }
 
 func TestChannel_Conference(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -267,10 +280,14 @@ func TestChannel_Conference(t *testing.T) {
 		t.Error(err)
 	}
 
-	channel := &Channel{
-		CtrlUuid: UUID(),
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
 	}
-	channel.NodeUuid = nodeUUID
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
 
 	req := &xctrl.ConferenceRequest{
 		Uuid:    UUID(),
@@ -288,14 +305,14 @@ func TestChannel_Conference(t *testing.T) {
 }
 
 func TestChannel_AI(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -330,10 +347,15 @@ func TestChannel_AI(t *testing.T) {
 		t.Error(err)
 	}
 
-	channel := &Channel{
-		CtrlUuid: UUID(),
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
 	}
-	channel.NodeUuid = nodeUUID
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
+
 	req := &xctrl.AIRequest{
 		Uuid: UUID(),
 		Url:  "http://localhost:3000",
@@ -352,14 +374,14 @@ func TestChannel_AI(t *testing.T) {
 }
 
 func TestChannel_HttAPI(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -394,10 +416,15 @@ func TestChannel_HttAPI(t *testing.T) {
 		t.Error(err)
 	}
 
-	channel := &Channel{
-		CtrlUuid: UUID(),
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
 	}
-	channel.NodeUuid = nodeUUID
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
+
 	req := &xctrl.HttAPIRequest{
 		Uuid: UUID(),
 		Url:  "http://localhost:3000",
@@ -416,14 +443,14 @@ func TestChannel_HttAPI(t *testing.T) {
 }
 
 func TestConferenceInfo(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
@@ -474,7 +501,7 @@ func TestConferenceInfo(t *testing.T) {
 			Data:    &data,
 		},
 	}
-	response, err := Service().ConferenceInfo(context.Background(), req, channel.NodeAddress())
+	response, err := Service().ConferenceInfo(context.Background(), req, ctrl.WithAddress(nodeUUID))
 
 	if err != nil {
 		fmt.Println(err)
@@ -485,14 +512,14 @@ func TestConferenceInfo(t *testing.T) {
 }
 
 func TestLua(t *testing.T) {
-	subject := "cn.xswitch.ctrl"
+	// subject := "cn.xswitch.ctrl"
 	//获取nats地址
-	url := os.Getenv("NATS_ADDRESS")
-	if url == "" {
-		url = "nats://localhost:4222"
+	natsURL := os.Getenv("NATS_ADDRESS")
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
 	}
 	//初始化 ctrl
-	err := Init(nil, true, subject, url)
+	err := Init(true, natsURL)
 	if err != nil {
 		t.Error(err)
 	}
