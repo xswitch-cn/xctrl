@@ -99,6 +99,7 @@
   - [SendDTMFRequest](#xctrl.SendDTMFRequest)
   - [SendINFORequest](#xctrl.SendINFORequest)
   - [SetVarRequest](#xctrl.SetVarRequest)
+  - [SipProfile](#xctrl.SipProfile)
   - [SpeechRequest](#xctrl.SpeechRequest)
   - [StashResult](#xctrl.StashResult)
   - [StateResponse](#xctrl.StateResponse)
@@ -425,10 +426,13 @@
 | billsec | [string](#string) |  |  |
 | duration | [string](#string) |  |  |
 | cause | [string](#string) |  |  |
-| answered | [bool](#bool) |  |  |
 | node_ip | [string](#string) |  |  |
 | domain | [string](#string) |  |  |
 | dtmf | [string](#string) |  |  |
+| answered | [bool](#bool) |  |  |
+| video | [bool](#bool) |  |  |
+| held | [bool](#bool) |  |  |
+| bridged | [bool](#bool) |  |  |
 
 
 
@@ -1673,6 +1677,7 @@ placeholer type, do not use it, use XNativeJSResponse instead
 | sessions_since_startup | [uint32](#uint32) |  | 开机以来的Session数 |
 | session_peak_5min | [uint32](#uint32) |  | 5分钟Session最大值 |
 | session_peak_max | [uint32](#uint32) |  | 历史Session最大值 |
+| sip_profiles | [SipProfile](#xctrl.SipProfile) | repeated |  |
 
 
 
@@ -1933,6 +1938,23 @@ CDR = 13;
 | ctrl_uuid | [string](#string) |  |  |
 | uuid | [string](#string) |  |  |
 | data | [map<string, string>](#map-string-string) |  |  |
+
+
+
+
+
+
+<a name="user-content-xctrl.SipProfile"/>
+<a name="xctrl.SipProfile"/>
+
+### SipProfile
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| port | [int32](#int32) |  |  |
 
 
 
