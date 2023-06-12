@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 

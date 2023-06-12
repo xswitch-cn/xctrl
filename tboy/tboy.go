@@ -14,9 +14,9 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 	"github.com/sirupsen/logrus"
 )
 

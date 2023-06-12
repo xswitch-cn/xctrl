@@ -10,9 +10,9 @@ import (
 
 	"github.com/google/uuid"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 func TestPlayWithTimeout(t *testing.T) {

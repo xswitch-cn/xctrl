@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/metadata"
+	"git.xswitch.cn/xswitch/proto/xctrl/metadata"
 )
 
 // Request RPC 请求对象

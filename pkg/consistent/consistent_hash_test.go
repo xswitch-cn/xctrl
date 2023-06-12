@@ -1,11 +1,12 @@
 package consistent
 
 import (
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"math/rand"
 	"strconv"
 	"testing"
+
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 )
 
 // 基准测试

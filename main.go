@@ -6,9 +6,9 @@ import (
 
 	"log"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/cman"
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/proto/cman"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
 )
 
 type Logger struct {

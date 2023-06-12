@@ -3,7 +3,7 @@ package store
 import (
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
+	"git.xswitch.cn/xswitch/proto/xctrl/store"
 )
 
 // Config .

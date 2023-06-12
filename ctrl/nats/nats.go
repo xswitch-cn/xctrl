@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	nats "github.com/nats-io/nats.go"
 )
 

@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
+	"git.xswitch.cn/xswitch/proto/xctrl/errors"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/errors"
 	"github.com/google/uuid"
 
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 )
 
 // Channel call channel

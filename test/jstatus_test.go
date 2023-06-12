@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 )
 
 func service(c context.Context, e nats.Event) error {

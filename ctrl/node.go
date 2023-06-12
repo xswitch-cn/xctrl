@@ -3,9 +3,9 @@ package ctrl
 import (
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/store"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/store/memory"
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/store"
+	"git.xswitch.cn/xswitch/proto/xctrl/store/memory"
 )
 
 var nodes nodeList

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 )
 
 func TestNode(t *testing.T) {

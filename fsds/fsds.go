@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	log "git.xswitch.cn/xswitch/xctrl/xctrl/logger"
+	log "git.xswitch.cn/xswitch/proto/xctrl/logger"
 )
 
 type CallParams struct {

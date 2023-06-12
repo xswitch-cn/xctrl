@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
 )
 
 func TestNativeAPI(t *testing.T) {

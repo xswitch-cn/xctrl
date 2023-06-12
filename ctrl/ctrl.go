@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
+	"git.xswitch.cn/xswitch/proto/go/proto/cman"
+	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"git.xswitch.cn/xswitch/xctrl/proto/cman"
-	"git.xswitch.cn/xswitch/xctrl/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/client"
-	"git.xswitch.cn/xswitch/xctrl/xctrl/util/log"
 	"github.com/google/uuid"
 )
 
