@@ -23,6 +23,7 @@ type Channel struct {
 	lock      sync.RWMutex
 	subs      []nats.Subscriber
 	natsEvent nats.Event
+	userData  interface{}
 }
 
 // only call at the first time
@@ -422,4 +423,15 @@ func (channel *Channel) Subscribe(subject string, cb nats.EventCallback, queue s
 	channel.subs = append(channel.subs, sub)
 
 	return sub, nil
+}
+
+func (channel *Channel) SetUserData(userData interface{}) {
+	if channel == nil {
+		return
+	}
+	channel.userData = userData
+}
+
+func (channel *Channel) GetUserData() interface{} {
+	return channel.userData
 }

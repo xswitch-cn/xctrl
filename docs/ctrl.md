@@ -47,7 +47,8 @@ type Handler interface {
 - `ctx`：对于`ChannelEvent`，`ctx`是个`context.Context`，可以从里面取到最原始的Channel信息（第一个Channel事件，如`START`或`READY`）。
 
     ```go
-    channel := ctx.Value("channel").(*ctrl.Channel)
+    var key ctrl.ContextKey = "channel"
+    channel := ctx.Value(key).(*ctrl.Channel)
     ```
 
 - `channel`：对于次收到的`Event.Channel`事件，都将转换成一个新的`ctrl.Channel`类型的结构体。

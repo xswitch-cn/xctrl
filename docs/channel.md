@@ -260,3 +260,22 @@ func (h *MyAppHandler) ChannelEvent(context.Context, *Channel) {
 ```
 
 注意，`channel.Play0()`是阻塞的，在它执行过程中，后续的事件回调将会被阻塞，直到播放完成。不过由于整个ChannelEvent都是在一个Go Routine中回调执行的，不会阻塞其他通话。
+
+## 用户状态数据
+
+可以在`ctrl.Channel`上记录用户的状态数据，在`ctrl.Channel`生存周期内有效（注意，只有从`context`中获取到的`Channel`结构才有生命周期，从`START`到`DESTROY`）。
+
+```go
+data := "hello"
+channel.SetUserData(data)
+var key ctrl.ContextKey = "channel"
+ctx := context.WithValue(context.Background(), key, channel)
+
+...
+
+var key ctrl.ContextKey = "channel"
+channel := ctx.Value(key).(*ctrl.Channel)
+data1 = channel.GetUserData()
+if data == data1 {
+}
+```

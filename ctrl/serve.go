@@ -120,6 +120,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		return nil
 	}
 	channel := new(Channel)
+	channel.userData = nil
 	if message.Method == "Event.DTMF" {
 		dtmfEvent := new(xctrl.DTMFEvent)
 		err := json.Unmarshal(*message.Params, dtmfEvent)
