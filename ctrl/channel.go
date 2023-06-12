@@ -37,6 +37,12 @@ func NewChannel(channel_uuid string) *Channel {
 	return channel.Save()
 }
 
+func NewChannelEvent() *Channel {
+	return &Channel{
+		ChannelEvent: &xctrl.ChannelEvent{},
+	}
+}
+
 func (channel *Channel) GetNatsEvent() nats.Event {
 	return channel.natsEvent
 }
@@ -176,6 +182,30 @@ func (channel *Channel) SetVariables(vars map[string]string) error {
 		return fmt.Errorf("[%d]%s", response.GetCode(), response.GetMessage())
 	}
 	return nil
+}
+
+func (channel *Channel) PlayFile(file string, opts ...client.CallOption) *xctrl.Response {
+	media := &xctrl.Media{
+		Data: file,
+	}
+	req := &xctrl.PlayRequest{
+		Media: media,
+	}
+	return channel.Play(req, opts...)
+}
+
+func (channel *Channel) PlayTTS(engine string, voice, string, text string, opts ...client.CallOption) *xctrl.Response {
+	media := &xctrl.Media{
+		Type:   "TEXT",
+		Data:   text,
+		Engine: engine,
+		Voice:  voice,
+	}
+	req := &xctrl.PlayRequest{
+		Uuid:  channel.Uuid,
+		Media: media,
+	}
+	return channel.Play(req, opts...)
 }
 
 // Play 播放一个文件，默认超时时间1小时

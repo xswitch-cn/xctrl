@@ -127,6 +127,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		if err != nil {
 			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
 		}
+		channel.ChannelEvent = new(xctrl.ChannelEvent)
 		channel.Dtmf = dtmfEvent.DtmfDigit
 		channel.NodeUuid = dtmfEvent.NodeUuid
 		channel.Uuid = dtmfEvent.Uuid

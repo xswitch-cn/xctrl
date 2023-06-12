@@ -59,7 +59,7 @@ func (h *PlayHandler) Event(msg *ctrl.Message, natsEvent nats.Event) {
 			if err != nil {
 				return
 			}
-			channel := new(ctrl.Channel)
+			channel := ctrl.NewChannelEvent()
 			channel.Dtmf = dtmfEvent.DtmfDigit
 			channel.NodeUuid = dtmfEvent.NodeUuid
 			channel.Uuid = dtmfEvent.Uuid
