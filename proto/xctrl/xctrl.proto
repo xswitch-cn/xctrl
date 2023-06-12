@@ -347,8 +347,7 @@ message ConsultRequest {
   Destination destination = 3;
 }
 
-/*
-enum Method {
+enum EventMethod {
   Invalid = 0;
   // 节点注册
   NodeRegister = 1;
@@ -356,12 +355,10 @@ enum Method {
   NodeUnregister = 2;
   // 节点数据更新
   NodeUpdate = 3;
-
   // 通道
   Channel = 4;
   // FreeSWITCH原生消息
   Native = 5;
-
   // old VCC event
   Vcc = 6;
   // 如果API请求有后续事件
@@ -370,19 +367,18 @@ enum Method {
   DialResult = 8;
   // NativeAPI结果
   NativeResult = 9;
-
   // 获取配置信息
   FetchXML = 10;
   // 获取Dialplan
   Dialplan = 11;
-
   // 话机消息
   NativeEvent = 12;
-
   // 话单
   CDR = 13;
+  // ASR
+  DetectedSpeech = 14;
 }
-*/
+
 message RecordEvent {
   string node_uuid = 1;
   string uuid = 2;
