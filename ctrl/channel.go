@@ -18,12 +18,12 @@ import (
 
 // Channel call channel
 type Channel struct {
-	*xctrl.ChannelEvent
-	CtrlUuid  string
-	lock      sync.RWMutex
-	subs      []nats.Subscriber
-	natsEvent nats.Event
-	userData  interface{}
+	*xctrl.ChannelEvent                   // the parent ChannelEvent
+	CtrlUuid            string            // the Controller UUID
+	lock                sync.RWMutex      // a Mutex to protect the Channel, internal use only
+	subs                []nats.Subscriber // todo
+	natsEvent           nats.Event        // the original natsEvent received
+	userData            interface{}       // store private userData from the higher level Application
 }
 
 // only call at the first time
