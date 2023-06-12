@@ -421,6 +421,11 @@ message Node {
   uint32 session_peak_5min = 14;
   // 历史Session最大值
   uint32 session_peak_max = 15;
+  repeated SipProfile sip_profiles = 16;
+}
+message SipProfile {
+  string name = 1;
+  int32 port = 2;
 }
 
 message Ctrl {

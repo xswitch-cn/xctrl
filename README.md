@@ -13,6 +13,7 @@
 - proto：Google Protocol Buffer协议描述
 - tboy 是一个冒牌的的FreeSWITCH，用于测试
 - xctrl：xctrl Go语言SDK生成器，参考自Go Micro框架
+- consitent 多节点一致性hash管理器，用于多个FreeSWITCH的hash节点获取，文档参见[hash节点文档](consitent.md)
 
 更多文档参见[proto/doc](proto/doc)。
 

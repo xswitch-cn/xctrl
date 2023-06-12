@@ -32,9 +32,8 @@ type SipProfile struct {
 	Port int    `json:"port"`
 }
 type HashNode struct {
-	xctrl.Node
-	Port        int          `json:"port"`
-	SipProfiles []SipProfile `json:"sip_profiles"`
+	*xctrl.Node
+	Port int `json:"port"`
 }
 type consistentHash struct {
 	mux              sync.RWMutex         //lock
