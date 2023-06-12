@@ -2,6 +2,7 @@ package fsds
 
 import (
 	"errors"
+	"net"
 	"path"
 	"strconv"
 	"strings"
@@ -190,4 +191,67 @@ func (f PNGFile) String() (string, error) {
 
 func writeString(sb *strings.Builder, key string, value string) {
 	sb.WriteString(key + "=" + quote(value) + ",")
+}
+
+type Dial struct {
+	LocalExtensionNum int          // 通过分机号码呼出
+	IP                IPParam      // 通过IP呼出
+	Gateway           GatewayParam // 通过网关呼出
+}
+
+type IPParam struct {
+	Num       int
+	IP        string
+	Port      int
+	Transport TransportProtocol // TCP = 1; TLS = 2
+}
+
+type TransportProtocol int
+
+const (
+	NULL TransportProtocol = iota
+	TCP
+	TLS
+)
+
+type GatewayParam struct {
+	Realm    string
+	Username string
+	Password string
+}
+
+func (d Dial) String() (string, error) {
+	var sb strings.Builder
+	if d.LocalExtensionNum != 0 {
+		sb.WriteString("user/" + strconv.Itoa(d.LocalExtensionNum))
+		return sb.String(), nil
+	} else if d.Gateway != (GatewayParam{}) {
+		// todo
+		return "", errors.New("dial by gateway is not valid")
+	} else if d.IP != (IPParam{}) {
+		ip := net.ParseIP(d.IP.IP).To4()
+		if ip == nil {
+			return "", errors.New("IP is not invalid")
+		}
+		sb.WriteString("sofia/public/" + strconv.Itoa(d.IP.Num) + "@" + d.IP.IP)
+		if d.IP.Port != 0 {
+			if d.IP.Port < 0 || d.IP.Port > 65535 {
+				return "", errors.New("port is not valid")
+			} else {
+				sb.WriteString(":" + strconv.Itoa(d.IP.Port))
+			}
+		}
+		if d.IP.Transport != NULL {
+			if d.IP.Transport == TCP {
+				sb.WriteString(";transport=tcp")
+			} else if d.IP.Transport == TLS {
+				sb.WriteString(";transport=tls")
+			} else {
+				return "", errors.New("transport protocol is not valid")
+			}
+		}
+		return sb.String(), nil
+	} else {
+		return "", errors.New("input nothing")
+	}
 }

@@ -1,6 +1,7 @@
 package fsds
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -83,6 +84,9 @@ func TestPNGFile(t *testing.T) {
 			File: &File{
 				Path: "tmp/",
 				Name: "",
+				Params: map[string]string{
+					"png_ms": "20000",
+				},
 			},
 			DText: "请输入会议号",
 		},
@@ -154,4 +158,76 @@ func TestQuote(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestDialString(t *testing.T) {
+	cases := []Dial{
+		{
+			LocalExtensionNum: 1000,
+			IP:                IPParam{},
+			Gateway:           GatewayParam{},
+		},
+		{
+			LocalExtensionNum: 0,
+			IP: IPParam{
+				Num:       1001,
+				IP:        "127.0.0.1",
+				Port:      5090,
+				Transport: 0,
+			},
+			Gateway: GatewayParam{},
+		},
+		{
+			LocalExtensionNum: 0,
+			IP: IPParam{
+				Num:       1001,
+				IP:        "127.0.0.1",
+				Port:      5090,
+				Transport: TCP,
+			},
+			Gateway: GatewayParam{},
+		},
+		{
+			LocalExtensionNum: 0,
+			IP: IPParam{
+				Num:       1001,
+				IP:        "127.0.0.1",
+				Port:      0,
+				Transport: TLS,
+			},
+			Gateway: GatewayParam{},
+		},
+	}
+
+	wanted := []DialCase{
+		{
+			gottenString: "user/1000",
+			err:          nil,
+		},
+		{
+			gottenString: "sofia/public/1001@127.0.0.1:5090",
+			err:          nil,
+		},
+		{
+			gottenString: "sofia/public/1001@127.0.0.1:5090;transport=tcp",
+			err:          nil,
+		},
+		{
+			gottenString: "sofia/public/1001@127.0.0.1;transport=tls",
+			err:          nil,
+		},
+	}
+
+	for index, signalCase := range cases {
+
+		signalCaseString, err := signalCase.String()
+		if wanted[index].gottenString != signalCaseString || !errors.Is(err, wanted[index].err) {
+			t.Fail()
+		}
+	}
+}
+
+type DialCase struct {
+	gottenString string
+	err          error
 }
