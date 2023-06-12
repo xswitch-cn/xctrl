@@ -571,7 +571,7 @@ message StateResponse {
   string answer_state = 7;
   bool bridged = 8;
   bool answered = 9;
-  bool hold = 10;
+  bool held = 10;
   bool video = 11;
   bool video_ready = 12;
   bool controlled = 13;
