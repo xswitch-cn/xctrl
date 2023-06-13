@@ -12,7 +12,7 @@
 
 - ctrl：节点管理
 - tboy 是一个冒牌的的FreeSWITCH，用于测试
-- consitent 多节点一致性hash管理器，用于多个FreeSWITCH的hash节点获取，文档参见[hash节点文档](consitent.md)
+- consitent 多节点一致性hash管理器，用于多个FreeSWITCH的hash节点获取，文档参见[hash节点文档](docs/consitent.md)
 
 ## 使用
 
