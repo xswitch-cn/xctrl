@@ -1,6 +1,7 @@
 package consistent
 
 import (
+	"github.com/google/uuid"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -16,7 +17,7 @@ func TestConsistentHash_AddNodes(t *testing.T) {
 	nodes := make([]*HashNode, 0)
 	for i := 1; i < 10; i++ {
 
-		nodes = append(nodes, &HashNode{Node: xctrl.Node{Name: "xcc-node-1" + strconv.Itoa(i)}})
+		nodes = append(nodes, &HashNode{Node: &xctrl.Node{Uuid: uuid.New().String(), Name: "xcc-node-1" + strconv.Itoa(i)}})
 	}
 	err := AddNodes(nodes...)
 	if err != nil {
@@ -32,11 +33,11 @@ func TestConsistentHash_Get(t *testing.T) {
 	Init(100)
 	nodess := []*HashNode{
 		{
-			Node: xctrl.Node{Name: "xcc-node-1", Uuid: "1"},
+			Node: &xctrl.Node{Name: "xcc-node-1", Uuid: "1"},
 		}, {
-			Node: xctrl.Node{Name: "xcc-node-2", Uuid: "2"},
+			Node: &xctrl.Node{Name: "xcc-node-2", Uuid: "2"},
 		}, {
-			Node: xctrl.Node{Name: "xcc-node-3", Uuid: "3"},
+			Node: &xctrl.Node{Name: "xcc-node-3", Uuid: "3"},
 		},
 	}
 	AddNodes(nodess...)
@@ -62,7 +63,7 @@ func TestConsistentHash_DeleteNodes(t *testing.T) {
 	nodes := make([]*HashNode, 0)
 	for i := 1; i < 10; i++ {
 		nodes = append(nodes, &HashNode{
-			Node: xctrl.Node{
+			Node: &xctrl.Node{
 				Uuid: strconv.Itoa(i),
 				Name: strconv.Itoa(i),
 			},
@@ -95,7 +96,7 @@ func BenchmarkConsistentHash_Get(b *testing.B) {
 	// 10个真实节点
 	nodes := make([]*HashNode, 0)
 	for i := 1; i < 10; i++ {
-		nodes = append(nodes, &HashNode{Node: xctrl.Node{Uuid: strconv.Itoa(i), Name: "xcc-node-1" + strconv.Itoa(i)}})
+		nodes = append(nodes, &HashNode{Node: &xctrl.Node{Uuid: strconv.Itoa(i), Name: "xcc-node-1" + strconv.Itoa(i)}})
 	}
 	AddNodes(nodes...)
 	for i := 0; i < b.N; i++ {
