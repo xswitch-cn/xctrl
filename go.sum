@@ -1,6 +1,8 @@
-git.xswitch.cn/xswitch/proto v0.0.1 h1:AznJwfLdeQtpSF9oN04Acg/W8vgEU7uPY+NET6yNbcU=
-git.xswitch.cn/xswitch/proto v0.0.1/go.mod h1:Pue7TM3/U0NayOg1k4Jed3tGxb4Cx+/BH+OXxhIA80Y=
+git.xswitch.cn/xswitch/proto v0.0.0-20230612135521-10ee99d206f9/go.mod h1:Pue7TM3/U0NayOg1k4Jed3tGxb4Cx+/BH+OXxhIA80Y=
+git.xswitch.cn/xswitch/proto v0.0.2 h1:EKICChZM4zc6N1NPBBDnjwv06M3GCFtPxz2o6N0MOqg=
+git.xswitch.cn/xswitch/proto v0.0.2/go.mod h1:NlcX7cI6PlnIt5zOhm1jOt7MH2HK5S2lVk+H582PlVY=
 git.xswitch.cn/xswitch/xctrl v1.1.0/go.mod h1:tWRnhvFbdZ7/0IAzcW69uqWi+bkodvQmvZKnuQY+Myg=
+git.xswitch.cn/xswitch/xctrl v1.1.1/go.mod h1:Umra3PkKxNDmaENXid0LcHQJ2XJVSOdcdBgYRwals3U=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
