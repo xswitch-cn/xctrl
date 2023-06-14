@@ -10,9 +10,9 @@
 
 ## `Service()`相关函数
 
-收到`Event.Channel`的`state = START`事件后，一般都会先应答，执行`Accept()`函数。
+收到`Event.Channel`的`state = START`事件后，一般都需要先执行`Accept()`对呼叫进行接管。
 
-也可以执行`Answer()`函数，Answer()函数会隐藏执行`Accept()`。
+对于IVR类应答，也可以直接执行`Answer()`函数，`Answer()`函数会隐含执行`Accept()`。
 
 ### Answer
 
