@@ -10,6 +10,7 @@ import (
 
 	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/proto/xctrl/errors"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"github.com/google/uuid"
 
@@ -273,9 +274,9 @@ func (channel *Channel) PlayWithTimeout(req *xctrl.PlayRequest, timeout time.Dur
 
 	if response.Code < 200 || response.Code > 300 {
 		if response.Code < 500 {
-			fmt.Printf("%s Play %s error: %d %s", channel.GetUuid(), req.Media.Data, response.Code, response.GetMessage())
+			log.Errorf("%s Play %s error: %d %s", channel.GetUuid(), req.Media.Data, response.Code, response.GetMessage())
 		} else {
-			fmt.Errorf("%s Play %s error: %d %s", channel.GetUuid(), req.Media.Data, response.Code, response.GetMessage())
+			log.Errorf("%s Play %s error: %d %s", channel.GetUuid(), req.Media.Data, response.Code, response.GetMessage())
 		}
 	}
 	return response
