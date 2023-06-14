@@ -16,5 +16,6 @@
 - [ctrl](ctrl.md)
 - [channel](channel.md)
 - [SDK](sdk.md)
+- [DTMF](dtmf.md)
 - [bus](bus.md)
 - [开发](dev.md)
