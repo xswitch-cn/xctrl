@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 )
 
@@ -456,7 +455,8 @@ func TestConferenceInfo(t *testing.T) {
 	}
 	nodeUUID := "test.node-uuid.conferenceInfo"
 	channel := &Channel{
-		CtrlUuid: UUID(),
+		CtrlUuid:     UUID(),
+		ChannelEvent: &xctrl.ChannelEvent{},
 	}
 	channel.NodeUuid = nodeUUID
 	//订阅主题
@@ -501,7 +501,7 @@ func TestConferenceInfo(t *testing.T) {
 			Data:    &data,
 		},
 	}
-	response, err := Service().ConferenceInfo(context.Background(), req, ctrl.WithAddress(nodeUUID))
+	response, err := Service().ConferenceInfo(context.Background(), req, WithAddress(nodeUUID))
 
 	if err != nil {
 		fmt.Println(err)
@@ -525,7 +525,8 @@ func TestLua(t *testing.T) {
 	}
 	nodeUUID := "test.node-uuid.lua"
 	channel := &Channel{
-		CtrlUuid: UUID(),
+		CtrlUuid:     UUID(),
+		ChannelEvent: &xctrl.ChannelEvent{},
 	}
 	channel.NodeUuid = nodeUUID
 	//订阅主题
