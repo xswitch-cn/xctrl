@@ -61,7 +61,7 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 		isMethodForNode = false
 		log.Warnf("Received unsupported event: %s\n", event.Method)
 	}
-	if isMethodForNode {
+	if isMethodForNode && h.nodeCallback != nil {
 		node := new(xctrl.Node)
 		err = json.Unmarshal(*event.Params, node)
 		if err != nil {
