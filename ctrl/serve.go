@@ -267,6 +267,7 @@ func (c *Ctrl) handleEvent(handler EventHandler, natsEvent nats.Event) error {
 
 // EnableApp APP事件
 func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error {
+	log.Infof("EnableApp subject=%s queue=%s", subject, queue)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	}, nats.Queue(queue))
@@ -274,7 +275,9 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
-	_, err = h.conn.Subscribe(fmt.Sprintf(`%s.%s`, subject, h.uuid), func(ev nats.Event) error {
+	mySubject := fmt.Sprintf(`%s.%s`, subject, h.uuid)
+	log.Infof("EnableApp subscribe to subject=%s", mySubject)
+	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	})
 	if err != nil {
@@ -287,6 +290,7 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 // EnableRequest 开启Request请求监听
 func (h *Ctrl) EnableRequest(handler RequestHandler, subject string, queue string) error {
 	// fetchXMl, Dialplan
+	log.Infof("EnableRequest subject=%s queue=%s", subject, queue)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleRequest(handler, ev)
 	}, nats.Queue(queue))
@@ -302,6 +306,7 @@ func (h *Ctrl) EnableEvent(handler EventHandler, subject string, queue string) e
 	// 例如
 	// cn.xswitch.event.cdr
 	// cn.xswitch.event.custom.sofia
+	log.Infof("EnableEvent subject=%s queue=%s", subject, queue)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleEvent(handler, ev)
 	}, nats.Queue(queue))
@@ -323,6 +328,7 @@ func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 	if subject == "" {
 		subject = "cn.xswitch.ctrl.status"
 	}
+	log.Infof("EnableNodeStatus subject=%s", subject)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleNode(ev)
 	})
