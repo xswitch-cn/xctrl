@@ -11,11 +11,15 @@ import (
 	"github.com/google/uuid"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 )
 
-func TestPlayWithTimeout(t *testing.T) {
-	// subject := "cn.xswitch.ctrl"
+const (
+	nodeUUID = "test.node-uuid"
+)
+
+func init() {
 	natsURL := os.Getenv("NATS_ADDRESS")
 
 	if natsURL == "" {
@@ -24,11 +28,11 @@ func TestPlayWithTimeout(t *testing.T) {
 
 	err := Init(true, natsURL)
 	if err != nil {
-		t.Error(err)
+		log.Error(err)
 	}
+}
 
-	nodeUUID := "test.node-uuid"
-
+func TestPlayWithTimeout1(t *testing.T) {
 	channelEvent := &xctrl.ChannelEvent{
 		NodeUuid: nodeUUID,
 	}
@@ -48,7 +52,7 @@ func TestPlayWithTimeout(t *testing.T) {
 		},
 	}
 
-	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
+	sub, err := Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		return nil
 	}, nodeUUID)
 	if err != nil {
@@ -62,7 +66,22 @@ func TestPlayWithTimeout(t *testing.T) {
 		t.Error(res)
 	}
 
-	req = &xctrl.PlayRequest{
+	sub.Unsubscribe()
+}
+
+func TestPlayWithTimeout2(t *testing.T) {
+	channelEvent := &xctrl.ChannelEvent{
+		NodeUuid: nodeUUID,
+	}
+
+	channel := &Channel{
+		ChannelEvent: channelEvent,
+		CtrlUuid:     UUID(),
+	}
+
+	channel.NodeUuid = nodeUUID
+
+	req := &xctrl.PlayRequest{
 		CtrlUuid: UUID(),
 		Uuid:     "test-uuid",
 		Media: &xctrl.Media{
@@ -70,7 +89,7 @@ func TestPlayWithTimeout(t *testing.T) {
 		},
 	}
 
-	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
+	sub, err := Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
 		var request Request
 		err := json.Unmarshal(e.Message().Body, &request)
 		if err != nil {
@@ -100,7 +119,7 @@ func TestPlayWithTimeout(t *testing.T) {
 		return
 	}
 
-	res = channel.PlayWithTimeout(req, 100*time.Millisecond)
+	res := channel.PlayWithTimeout(req, 100*time.Millisecond)
 
 	if res.Code != 200 {
 		t.Error(res)
@@ -111,6 +130,8 @@ func TestPlayWithTimeout(t *testing.T) {
 	if res.Code != 200 {
 		t.Error(res)
 	}
+
+	sub.Unsubscribe()
 }
 
 func TestFIFO(t *testing.T) {
