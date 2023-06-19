@@ -115,11 +115,10 @@ func natsErrHandler(nc *nats.Conn, sub *nats.Subscription, natsErr error) {
 	if natsErr == nats.ErrSlowConsumer {
 		pendingMsgs, _, err := sub.Pending()
 		if err != nil {
-			fmt.Errorf("couldn't get pending messages: %v", err)
+			log.Error(fmt.Errorf("couldn't get pending messages: %v", err))
 			return
 		}
-		fmt.Errorf("Falling behind with %d pending messages on subject %q.\n",
-			pendingMsgs, sub.Subject)
+		log.Error(fmt.Errorf("falling behind with %d pending messages on subject %q ", pendingMsgs, sub.Subject))
 	}
 }
 

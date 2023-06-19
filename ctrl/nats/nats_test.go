@@ -97,6 +97,11 @@ func TestRequest(t *testing.T) {
 		url = nats.DefaultURL
 	}
 	nc, err := nats.Connect(url)
+	if err != nil {
+		t.Error(err)
+	}
+
+	nc.Subscribe("foo", func(msg *nats.Msg) {})
 
 	go func() {
 		time.Sleep(100 * time.Millisecond)

@@ -132,7 +132,6 @@ func PublishJSON(topic string, obj interface{}, opts ...nats.PublishOption) erro
 func Transfer(ctrlID string, channel *xctrl.ChannelEvent) error {
 	body, err := json.Marshal(channel)
 	if err != nil {
-		fmt.Errorf("err:%v", err)
 		return err
 	}
 	channel.State = "START"

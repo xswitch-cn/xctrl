@@ -48,10 +48,26 @@ func TestPlayWithTimeout(t *testing.T) {
 		},
 	}
 
+	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
+		return nil
+	}, nodeUUID)
+	if err != nil {
+		t.Error(err)
+	}
+
 	res := channel.PlayWithTimeout(req, 100*time.Millisecond)
 
+	fmt.Println(res.Code)
 	if res.Code != 408 {
 		t.Error(res)
+	}
+
+	req = &xctrl.PlayRequest{
+		CtrlUuid: UUID(),
+		Uuid:     "test-uuid",
+		Media: &xctrl.Media{
+			Data: "/tmp/test.wav",
+		},
 	}
 
 	_, err = Subscribe("cn.xswitch.node."+nodeUUID, func(c context.Context, e nats.Event) error {
