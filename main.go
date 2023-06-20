@@ -58,7 +58,7 @@ func main() {
 	_, err = ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd:  "log",
 		Args: "INFO xctrl test log",
-	}, ctrl.WithAddress("cn.xswitch.node"), ctrl.WithRequestTimeout(1*time.Second), ctrl.WithAsync())
+	}, ctrl.WithAddress("cn.xswitch.node"), ctrl.WithAsync())
 
 	if err != nil {
 		panic(err)

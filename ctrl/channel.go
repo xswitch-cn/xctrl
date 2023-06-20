@@ -349,7 +349,7 @@ func (channel *Channel) Bridge0(req *xctrl.BridgeRequest, async bool) *xctrl.Res
 		}
 		return response
 	}
-	response, err := Service().Bridge(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour), client.WithAsync())
+	response, err := Service().Bridge(context.Background(), req, channel.NodeAddress(), client.WithAsync())
 	if err != nil {
 		response = new(xctrl.Response)
 		e := errors.Parse(err.Error())
@@ -403,7 +403,7 @@ func (channel *Channel) DetectSpeech0(req *xctrl.DetectRequest, async bool) *xct
 	if !async {
 		response, err = Service().DetectSpeech(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
 	} else {
-		response, err = Service().DetectSpeech(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour), client.WithAsync())
+		response, err = Service().DetectSpeech(context.Background(), req, channel.NodeAddress(), client.WithAsync())
 	}
 
 	if err != nil {
@@ -431,7 +431,7 @@ func (channel *Channel) RingBackDetection0(req *xctrl.RingBackDetectionRequest, 
 	if !async {
 		response, err = Service().RingBackDetection(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour))
 	} else {
-		response, err = Service().RingBackDetection(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(24*time.Hour), client.WithAsync())
+		response, err = Service().RingBackDetection(context.Background(), req, channel.NodeAddress(), client.WithAsync())
 	}
 
 	if err != nil {
