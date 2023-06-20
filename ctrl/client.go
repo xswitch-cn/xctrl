@@ -5,11 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"net/http"
 	"sync/atomic"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/proto/xctrl/codec"
 	"git.xswitch.cn/xswitch/proto/xctrl/errors"
@@ -215,17 +213,8 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 	if r.async {
 		err = r.conn.Publish(address, body)
 		if err != nil {
-			log.Errorf("err : %v", err)
-			return errors.Timeout("nats.jsonrpc.client", fmt.Sprintf("%v", err))
+			return errors.New("nats.jsonrpc.client", fmt.Sprintf("%v", err), 500)
 		}
-
-		response := &xctrl.Response{
-			Code:    http.StatusCreated,
-			Message: requestID,
-		}
-
-		b, _ := json.MarshalIndent(response, "", " ")
-		json.Unmarshal(b, resp)
 		return nil
 	}
 
