@@ -94,11 +94,12 @@ func Service() xctrl.XNodeService {
 	return globalCtrl.service
 }
 
-// AsyncService 异步调用
+// AsyncService 异步调用，Depracated
 func AsyncService() xctrl.XNodeService {
 	if globalCtrl == nil || globalCtrl.asyncService == nil {
 		return nil
 	}
+	log.Warn("AsyncService is deprecated, use Service with WithAsync option instead")
 	return globalCtrl.asyncService
 }
 
@@ -400,6 +401,10 @@ func WithRequestTimeout(d time.Duration) client.CallOption {
 
 func WithTimeout(d time.Duration) client.CallOption {
 	return client.WithRequestTimeout(d)
+}
+
+func WithAsync() client.CallOption {
+	return client.WithAsync()
 }
 
 func SetLogLevel(level LogLevel) {

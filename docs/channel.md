@@ -75,17 +75,16 @@ if err != nil {
 
 ## 异步处理机制
 
-有一个`ctrl.AsyncService()`可以发送异步的命令。如：
+使用`ctrl.WithAsync()` Option参数可以启用异步处理机制。
 
 ```go
-ctrl.AsyncService().Play(...)
+ctrl.Service().Play(..., ctrl.WithAsync())
 ```
 
-异步命令调用`nats.Publish`发送消息，会立即返回。除非NATS连接失败，结果永远会返回`code = 201`。
-
+异步命令调用`nats.Publish`发送消息，会立即返回。Response返回值无意义，可以检查`error`返回值检查消息是否正常发送。
 异步命令无法获取执行结果。
 
-虽然有一个`ctrl.EnableResult`可用，但它独占一个订阅主题，实际上用处不大。
+旧版本中也有一个`ctrl.AsyncService()`接口，该接口已经废弃，从v1.1.11起不推荐使用。
 
 ## ACall接口
 

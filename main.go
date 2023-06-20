@@ -55,6 +55,15 @@ func main() {
 
 	log.Printf("response: %v", response.Data)
 
+	_, err = ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
+		Cmd:  "log",
+		Args: "INFO xctrl test log",
+	}, ctrl.WithAddress("cn.xswitch.node"), ctrl.WithRequestTimeout(1*time.Second), ctrl.WithAsync())
+
+	if err != nil {
+		panic(err)
+	}
+
 	cListReq := &xctrl.ConferenceListRequest{
 		CtrlUuid: ctrl.UUID(),
 		Data: &xctrl.ConferenceListRequestData{

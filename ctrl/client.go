@@ -210,7 +210,7 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 		requestTimeout = defaultTimeout
 	}
 
-	if r.async {
+	if opts.Async || r.async {
 		err = r.conn.Publish(address, body)
 		if err != nil {
 			return errors.New("nats.jsonrpc.client", fmt.Sprintf("%v", err), 500)
