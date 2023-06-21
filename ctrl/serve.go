@@ -326,7 +326,7 @@ func (h *Ctrl) EnableEvent(handler EventHandler, subject string, queue string) e
 // EnbaleNodeStatus 开启节点监听
 func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 	if subject == "" {
-		subject = "cn.xswitch.ctrl.status"
+		subject = "cn.xswitch.status.node"
 	}
 	log.Infof("EnableNodeStatus subject=%s", subject)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
