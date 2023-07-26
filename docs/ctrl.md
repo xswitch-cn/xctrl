@@ -11,9 +11,20 @@ func Init(trace bool, addrs string) error
 ```
 
 * `trace`：是否开启内部Trace日志。
-* `addrs`是NATS地址，可能可以支持多个以逗号分隔的地址，但未测试。
+* `addrs`：是NATS地址，可能可以支持多个以逗号分隔的地址，但未测试。
 
 初始化后，内部会生成一个全局的`globalCtrl`单例，用于存储内部状态。
+
+## ctrl.SetMaxChannelLifeTime
+
+设置Channel的最长保留事件小时数，超时就会销毁，默认为4小时
+
+```go
+func SetMaxChannelLifeTime(time uint)
+```
+
+* `time`：为小时数
+
 
 ## ctrl.EnableApp
 
