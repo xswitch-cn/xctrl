@@ -166,7 +166,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		}
 	}
 
-	timeout := 4*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
+	timeout := time.Duration(globalCtrl.maxChannelLifeTime)*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
 	switch channel.GetState() {
 	case "START":
 		log.Tracef("%s START", channel.GetUuid())
@@ -348,12 +348,13 @@ func (h *Ctrl) ForkDTMFEventToChannelEventThread() error {
 
 func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
 	c := &Ctrl{
-		conn:             nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
-		uuid:             uuid.New().String(),
-		serviceName:      "cn.xswitch.nodes",
-		enableNodeStatus: false,
-		channelHub:       map[string]*Channel{},
-		resultCallbacks:  map[string]*AsyncCallOption{},
+		conn:               nats.NewConn(nats.Addrs(addrs...), nats.Trace(trace)),
+		uuid:               uuid.New().String(),
+		serviceName:        "cn.xswitch.nodes",
+		enableNodeStatus:   false,
+		channelHub:         map[string]*Channel{},
+		resultCallbacks:    map[string]*AsyncCallOption{},
+		maxChannelLifeTime: 4,
 	}
 
 	// 连接NATS消息队列

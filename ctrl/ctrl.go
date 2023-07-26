@@ -36,6 +36,8 @@ type Ctrl struct {
 	cbLock          sync.RWMutex
 	resultCallbacks map[string]*AsyncCallOption
 	nodeCallback    NodeHashFun
+
+	maxChannelLifeTime uint
 }
 
 type AsyncCallOption struct {
@@ -418,5 +420,11 @@ func SetLogger(l Logger) {
 func RegisterHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	if globalCtrl != nil {
 		globalCtrl.registerHashNodeFun(nodeCallbackFunc)
+	}
+
+}
+func SetMaxChannelLifeTime(time uint) {
+	if globalCtrl != nil {
+		globalCtrl.maxChannelLifeTime = time
 	}
 }
