@@ -7,11 +7,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"internal/log"
 	"strings"
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	nats "github.com/nats-io/nats.go"
 )
 

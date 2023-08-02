@@ -3,12 +3,12 @@ package test
 import (
 	"context"
 	"encoding/json"
+	"internal/log"
 	"testing"
 	"time"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/client"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 )

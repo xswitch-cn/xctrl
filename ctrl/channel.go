@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"internal/log"
 	"net/http"
 	"sync"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/proto/xctrl/errors"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"github.com/google/uuid"
 )
