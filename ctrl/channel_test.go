@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
@@ -526,9 +527,14 @@ func TestConferenceInfo(t *testing.T) {
 	data := xctrl.ConferenceInfoRequestDataData{
 		ConferenceName: "ConferenceName",
 		ShowMembers:    true,
-		MemberFilters: map[string]string{
-			"role-id": "3",
-			"target":  "moderator",
+		MemberFilters: &structpb.ListValue{
+			Values: []*structpb.Value{
+				{
+					Kind: &structpb.Value_StringValue{
+						StringValue: "moderator",
+					},
+				},
+			},
 		},
 	}
 	req := &xctrl.ConferenceInfoRequest{

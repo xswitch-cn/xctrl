@@ -4,19 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"internal/log"
 	"runtime/debug"
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
-
-	"git.xswitch.cn/xswitch/proto/xctrl/client"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
-
 	"git.xswitch.cn/xswitch/proto/go/proto/cman"
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/google/uuid"
 )
 
 // register 注册node节点
@@ -384,8 +382,8 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 
 type NodeHashFun func(node *xctrl.Node, method string)
 
-//RegisterHashNodeFun 注册hash节点事件
-//nodeCallbackFunc 节点事件方法
+// RegisterHashNodeFun 注册hash节点事件
+// nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
 }

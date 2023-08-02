@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
+	"internal/log"
 )
 
 // queueEvent is given to a subscription handler for processing
