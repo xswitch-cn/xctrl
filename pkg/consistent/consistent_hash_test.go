@@ -1,13 +1,13 @@
 package consistent
 
 import (
-	"internal/log"
+	"github.com/google/uuid"
 	"math/rand"
 	"strconv"
 	"testing"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"github.com/google/uuid"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 )
 
 // 基准测试

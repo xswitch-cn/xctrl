@@ -3,12 +3,12 @@ package consistent
 import (
 	"errors"
 	"hash/crc32"
-	"internal/log"
 	"sort"
 	"strconv"
 	"sync"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 )
 
 // NodesSlice 为了快速查找

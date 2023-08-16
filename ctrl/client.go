@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"internal/log"
+
 	"sync/atomic"
 	"time"
 
@@ -12,6 +12,7 @@ import (
 	"git.xswitch.cn/xswitch/proto/xctrl/codec"
 	"git.xswitch.cn/xswitch/proto/xctrl/errors"
 	"git.xswitch.cn/xswitch/proto/xctrl/metadata"
+	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 )
 
