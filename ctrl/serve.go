@@ -173,29 +173,43 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		var key ContextKey = "channel"
 		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
-			natsEvent := ev.Params.(nats.Event)
-			channelEvent := ev.Message.(*Channel)
-			channelEvent.natsEvent = natsEvent
-			handler.ChannelEvent(ctx, channelEvent)
-			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
-				bus.Unsubscribe(ev.Topic, ev.Queue)
+			if ev.Params == nil {
+				log.Error("ev.Params is nil")
+				return nil
+			}
+			if natsEvent, ok := ev.Params.(nats.Event); ok {
+				channelEvent := ev.Message.(*Channel)
+				channelEvent.natsEvent = natsEvent
+				handler.ChannelEvent(ctx, channelEvent)
+				if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
+					bus.Unsubscribe(ev.Topic, ev.Queue)
+				}
+				return nil
 			}
 			return nil
 		})
 		log.Tracef("%s Subscribered", channel.GetUuid())
+
 	case "CALLING":
 		log.Tracef("%s CALLING", channel.GetUuid())
 		var key ContextKey = "channel"
 		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
-			natsEvent := ev.Params.(nats.Event)
-			channelEvent := ev.Message.(*Channel)
-			channelEvent.natsEvent = natsEvent
-			handler.ChannelEvent(ctx, channelEvent)
-			if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
-				bus.Unsubscribe(ev.Topic, ev.Queue)
+			if ev.Params == nil {
+				log.Error("ev.Params is nil")
+				return nil
+			}
+			if natsEvent, ok := ev.Params.(nats.Event); ok {
+				channelEvent := ev.Message.(*Channel)
+				channelEvent.natsEvent = natsEvent
+				handler.ChannelEvent(ctx, channelEvent)
+				if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
+					bus.Unsubscribe(ev.Topic, ev.Queue)
+				}
+				return nil
 			}
 			return nil
+
 		})
 	default:
 		log.Infof("Channel State %s %s", channel.GetUuid(), channel.GetState())
