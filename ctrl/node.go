@@ -16,7 +16,7 @@ type nodeList struct {
 }
 
 func init() {
-	nodes.store = memory.NewStore(store.Table("xnodes"))
+	nodes.store = memory.NewStore(store.Table("xnodes"), store.WithCleanupInterval(10*time.Second))
 }
 
 // Hostname 根据 node uuid 获取 hostname

@@ -354,6 +354,10 @@ func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 	return nil
 }
 
+func (h *Ctrl) OnEvicted(f func(string, interface{})) {
+	nodes.store.OnEvicted(f)
+}
+
 // ForkDTMFEventToChannelEventThread
 func (h *Ctrl) ForkDTMFEventToChannelEventThread() error {
 	h.forkDTMFEvent = true
@@ -398,8 +402,8 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 
 type NodeHashFun func(node *xctrl.Node, method string)
 
-//RegisterHashNodeFun 注册hash节点事件
-//nodeCallbackFunc 节点事件方法
+// RegisterHashNodeFun 注册hash节点事件
+// nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
 }

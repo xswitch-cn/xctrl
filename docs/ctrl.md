@@ -111,6 +111,18 @@ ctrl.EnableNodeStatus(subject)
 
 **注意**：在多ctrl的场景中，由于默认的订阅主题`cn.xswitch.ctrl`是通过队列方式订阅的，多个ctrl无法同时接收到节点状态，因此，需要使用独立的`EnableNodeStatus`订阅。
 
+### ctrl.OnEvicted
+
+设置节点过期回调函数，如果Node节点过期，将会调用此回调函数。如：
+
+```go
+ctrl.OnEvicted(func(s string, i interface{}) {
+    log.Printf("Node %s has expired", s)
+})
+```
+
+目前内置定时器固定`10`秒检查一次，因此，最长可能在`Expiry`过期时间`10`秒后才能触发。
+
 ### Subscribe
 
 ```go

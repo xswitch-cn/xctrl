@@ -428,3 +428,9 @@ func SetMaxChannelLifeTime(time uint) {
 		globalCtrl.maxChannelLifeTime = time
 	}
 }
+
+func OnEvicted(f func(string, interface{})) {
+	if globalCtrl != nil {
+		globalCtrl.OnEvicted(f)
+	}
+}
