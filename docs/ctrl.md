@@ -4,7 +4,7 @@
 
 ## ctrl.Init
 
-初始化
+初始化Ctrl
 
 ```go
 func Init(trace bool, addrs string) error
@@ -15,13 +15,19 @@ func Init(trace bool, addrs string) error
 
 初始化后，内部会生成一个全局的`globalCtrl`单例，用于存储内部状态。
 
-## ctrl.SetMaxChannelLifeTime
+### 示例
 
-设置Channel的最长保留事件小时数，超时就会销毁，默认为4小时
+```go
+ctrl.Init(true,"nats://localhost:4222")
+```
+
+## ctrl.SetMaxChannelLifeTime
 
 ```go
 func SetMaxChannelLifeTime(time uint)
 ```
+
+设置Channel的最长保留事件小时数，超时就会销毁，默认为4小时
 
 * `time`：为小时数
 
@@ -78,6 +84,19 @@ type Handler interface {
 
 一般来说一个应用程序仅调用一次`EnableApp`，对多个`EnableApp`的调用，结果是未知的。
 
+### 示例
+
+```go
+subject := "cn.xswitch.ctrl"
+type AppExample struct {}
+
+func (h *AppExample) Event(msg *ctrl.Message, natsEvent nats.Event) {}
+
+func (a *AppExample) ChannelEvent(ctx context.Context, c *ctrl.Channel) {}
+
+ctrl.EnableApp(new(AppExample),subject,"")
+```
+
 ### EnableEvent
 
 ```go
@@ -87,6 +106,17 @@ func EnableEvent(h *EventHandler, subject string, queue string) error
 订阅事件对应的Subject，如`cn.xswitch.ctrl.cdr`。目前，除`cn.xswitch.ctrl.cdr`是在NATS中串行回调外，其它均为在新的Go Routine中回调。
 
 如果一个应用程序中即调用`EnableApp`和`EnableEvent`，则两者的`subject`不要重复，否则会有不可预知的结果。
+
+### 示例
+
+```go
+subject := "cn.xswitch.ctrl"
+type EventExample struct {}
+
+func (h *EventExample) Event(req *ctrl.Request, natsEvent nats.Event) {}
+
+ctrl.EnableEvent(new(EventExample), subject, "")
+```
 
 ### ctrl.EnableRequest
 
@@ -100,29 +130,70 @@ func EnableRequest(h *RequestHandler, subject string, queue string) error
 
 如果一个应用程序中即调用`EnableApp`和`EnableRequest`，则两者的`subject`不要重复，否则会有不可预知的结果。
 
+### 示例
+
+```go
+subject := "cn.xswitch.ctrl"
+
+type RequestExample struct {}
+
+func (r RequestExample) Request(req *ctrl.Request, natsEvent nats.Event)  {}
+
+ctrl.EnableRequest(new(RequestExample),subject,"")
+
+```
+
 ### ctrl.EnableStatus
 
 ```go
-subject := "cn.xswitch.ctrl.status"
-ctrl.EnableNodeStatus(subject)
+func EnableNodeStatus(subject string) error
 ```
 
-如果`subject`为空，则使用默认的`cn.xswitch.ctrl.status`。
+如果`subject`为空，则使用默认的`cn.xswitch.status.node`。
 
 **注意**：在多ctrl的场景中，由于默认的订阅主题`cn.xswitch.ctrl`是通过队列方式订阅的，多个ctrl无法同时接收到节点状态，因此，需要使用独立的`EnableNodeStatus`订阅。
 
-### ctrl.OnEvicted
-
-设置节点过期回调函数，如果Node节点过期，将会调用此回调函数。如：
+### 示例
 
 ```go
-ctrl.OnEvicted(func(s string, i interface{}) {
+subject := "cn.xswitch.status.node"
+ctrl.EnableNodeStatus(subject)
+```
+
+### ctrl.OnEvicted
+
+```go
+func OnEvicted(f func(string, interface{}))
+```
+
+设置节点过期回调函数，如果Node节点过期，将会调用此回调函数。
+
+目前内置定时器固定`10`秒检查一次，因此，最长可能在`Expiry`过期时间`10`秒后才能触发。
+
+### 示例
+
+```go
+ctrl.OnEvicted(func(s string, i interface{}){
     log.Printf("Node %s has expired", s)
 })
 ```
 
-目前内置定时器固定`10`秒检查一次，因此，最长可能在`Expiry`过期时间`10`秒后才能触发。
+### ctrl.GetNATSConn
 
+```go
+func GetNATSConn() *natsio.Conn
+```
+
+返回Ctrl内部的nats Connection的对象，用于修改内部默认方法。 具体请参考：
+
+* [NATS Reconnect](https://docs.nats.io/using-nats/developer/connecting/reconnect)
+* [Go Demo](../example/nats-conn/demo.go)
+
+### 示例
+
+```go
+ctrl.GetNATSConn()
+```
 ### Subscribe
 
 ```go
@@ -139,9 +210,7 @@ Ctrl中的Context使用了标准的Go Context包，目前没有太大用处，�
 
 在订阅事件的时候会使用这个变量大小进行channel的初始化，1024容量足够事件使用，太小会导致程序阻塞卡顿，影响运行效率。
 
-### protobuf 扩展
-
-在NativeJSAPI中，请求和返回的对象是多种多样的，因此定义一个单一的函数比较困难。我们在`xctrl`包中扩展了`XNativeJSRequest`和`XNativeJSResponse`以代替原来的`NatvieJSRequest`和`NativeJSResponse`。用法如下：
+### protobuf 扩展示例
 
 ```go
 req := &xctrl.XNativeJSRequest{
@@ -155,3 +224,5 @@ req := &xctrl.XNativeJSRequest{
 }
 response, err := ctrl.Service().NativeJSAPI(context.Background(), req, ctrl.WithAddress(""))
 ```
+
+在NativeJSAPI中，请求和返回的对象是多种多样的，因此定义一个单一的函数比较困难。我们在`xctrl`包中扩展了`XNativeJSRequest`和`XNativeJSResponse`以代替原来的`NatvieJSRequest`和`NativeJSResponse`。用法如下：
