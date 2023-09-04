@@ -443,11 +443,3 @@ func GetNATSConn() *natsio.Conn {
 
 	return globalCtrl.conn.GetConn()
 }
-
-func SetNatsMaxReconnectTimes(max int) {
-	conn := GetNATSConn()
-	if conn == nil {
-		return
-	}
-	conn.Opts.MaxReconnect = max
-}
