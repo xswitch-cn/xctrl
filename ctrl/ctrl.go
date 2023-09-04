@@ -15,6 +15,7 @@ import (
 	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	"github.com/google/uuid"
+	natsio "github.com/nats-io/nats.go"
 )
 
 // Ctrl 控制中心
@@ -433,4 +434,20 @@ func OnEvicted(f func(string, interface{})) {
 	if globalCtrl != nil {
 		globalCtrl.OnEvicted(f)
 	}
+}
+
+func GetNATSConn() *natsio.Conn {
+	if globalCtrl == nil {
+		return nil
+	}
+
+	return globalCtrl.conn.GetConn()
+}
+
+func SetNatsMaxReconnectTimes(max int) {
+	conn := GetNATSConn()
+	if conn == nil {
+		return
+	}
+	conn.Opts.MaxReconnect = max
 }

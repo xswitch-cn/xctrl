@@ -166,6 +166,10 @@ func (n *nConn) Disconnect() error {
 	return nil
 }
 
+func (n *nConn) GetConn() *nats.Conn {
+	return n.conn
+}
+
 func (n *nConn) Init(opts ...Option) error {
 	for _, o := range opts {
 		o(&n.opts)
@@ -294,6 +298,7 @@ type Conn interface {
 	Request(topic string, data []byte, timeout time.Duration) (*Message, error)
 	RequestWithContext(ctx context.Context, topic string, data []byte) (*Message, error)
 	String() string
+	GetConn() *nats.Conn
 }
 
 // NewConn .
