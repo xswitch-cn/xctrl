@@ -1,28 +1,35 @@
 package ctrl
 
 import (
-	"time"
-
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/store"
+	"git.xswitch.cn/xswitch/proto/xctrl/store/memory"
+	"time"
 )
 
-// nodeList .
-type nodeList struct {
+type CtrlNodes struct {
 	store store.Store
 }
 
-// Hostname 根据 node uuid 获取 hostname
-func Hostname(uuid string) string {
-	list, err := globalCtrl.nodes.store.List()
+func InitCtrlNodes() CtrlNodes {
+	newStore := memory.NewStore(store.Table("xnodes"), store.WithCleanupInterval(10*time.Second))
 
-	if globalCtrl == nil || err != nil {
+	return CtrlNodes{
+		store: newStore,
+	}
+
+}
+
+func (c *CtrlNodes) Hostname(uuid string) string {
+	list, err := c.store.List()
+
+	if err != nil {
 		return ""
 	}
 
 	var node *xctrl.Node
 	for _, key := range list {
-		rec, err := globalCtrl.nodes.store.Read(key)
+		rec, err := c.store.Read(key)
 		if err != nil {
 			continue
 		}
@@ -38,16 +45,16 @@ func Hostname(uuid string) string {
 }
 
 // Node 根据 hostname 获取 node 节点信息
-func Node(hostname string) *xctrl.Node {
-	list, err := globalCtrl.nodes.store.List()
+func (c *CtrlNodes) Node(hostname string) *xctrl.Node {
+	list, err := c.store.List()
 
-	if globalCtrl == nil || err != nil {
+	if err != nil {
 		return nil
 	}
-	var node *xctrl.Node
 
+	var node *xctrl.Node
 	for _, key := range list {
-		rec, err := globalCtrl.nodes.store.Read(key)
+		rec, err := c.store.Read(key)
 		if err != nil {
 			continue
 		}
@@ -62,22 +69,17 @@ func Node(hostname string) *xctrl.Node {
 	return node
 }
 
-// GetNodeList 获取当前注册节点列表
-// func GetNodeList() map[string]*xctrl.Node {
-// 	return nodes.list
-// }
-
-func GetNodeList() map[string]*xctrl.Node {
-
-	list, err := globalCtrl.nodes.store.List()
+func (c *CtrlNodes) GetNodeList() map[string]*xctrl.Node {
+	list, err := c.store.List()
 
 	nodeList := map[string]*xctrl.Node{}
-	if globalCtrl == nil || err != nil {
+
+	if err != nil {
 		return nodeList
 	}
 
 	for _, key := range list {
-		rec, err := globalCtrl.nodes.store.Read(key)
+		rec, err := c.store.Read(key)
 		if err != nil {
 			continue
 		}
@@ -91,8 +93,8 @@ func GetNodeList() map[string]*xctrl.Node {
 }
 
 // Store 保存节点信息
-func (x *nodeList) Store(hostname string, node *xctrl.Node) {
-	x.store.Write(&store.Record{
+func (c *CtrlNodes) Store(hostname string, node *xctrl.Node) {
+	c.store.Write(&store.Record{
 		Key: hostname,
 		Metadata: map[string]interface{}{
 			hostname: node,
@@ -102,6 +104,6 @@ func (x *nodeList) Store(hostname string, node *xctrl.Node) {
 }
 
 // Delete 删除节点信息
-func (x *nodeList) Delete(hostname string) {
-	x.store.Delete(hostname)
+func (c *CtrlNodes) Delete(hostname string) {
+	c.store.Delete(hostname)
 }

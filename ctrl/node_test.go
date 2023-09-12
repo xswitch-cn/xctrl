@@ -17,8 +17,9 @@ func TestNode(t *testing.T) {
 		Name: hostname,
 		Rack: 99,
 	}
+	nodes := InitCtrlNodes()
 	nodes.Store(hostname, node)
-	list := GetNodeList()
+	list := nodes.GetNodeList()
 	if len(list) != 1 {
 		t.Errorf("GetNodeList() = %v, want %v", len(list), 1)
 	}
@@ -28,7 +29,7 @@ func TestNode(t *testing.T) {
 	}
 
 	time.Sleep(100 * time.Millisecond)
-	list = GetNodeList()
+	list = nodes.GetNodeList()
 	if len(list) != 1 {
 		t.Errorf("GetNodeList() = %v, want %v", len(list), 1)
 	}
@@ -37,6 +38,7 @@ func TestNode(t *testing.T) {
 
 func TestOnEvicted(t *testing.T) {
 	hostname := "test.test"
+	nodes := &CtrlNodes{}
 
 	nodes.store = memory.NewStore(store.Table("xnodes"), store.WithCleanupInterval(1*time.Second))
 

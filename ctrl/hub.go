@@ -102,6 +102,17 @@ func ReadChannel(uuid string) (*Channel, error) {
 	return nil, fmt.Errorf("not found")
 }
 
+func ReadChannelByInstance(c *Ctrl, uuid string) (*Channel, error) {
+	c.hubLock.RLock()
+	data, ok := c.channelHub[uuid]
+	if ok {
+		c.hubLock.RUnlock()
+		return data, nil
+	}
+	c.hubLock.RUnlock()
+	return nil, fmt.Errorf("not found")
+}
+
 // DelChannel get channel
 func DelChannel(uuid string) error {
 	globalCtrl.hubLock.Lock()

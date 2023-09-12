@@ -21,14 +21,12 @@ import (
 
 // register 注册node节点
 func (h *Ctrl) register(n *xctrl.Node) {
-	// 节点注册
-	nodes.Store(n.Name, n)
+	h.nodes.Store(n.Name, n)
 }
 
 // deRegister 取消节点注册
 func (h *Ctrl) deRegister(n *xctrl.Node) {
-	// 节点离线
-	nodes.Delete(n.Name)
+	h.nodes.Delete(n.Name)
 }
 
 // handleNode 节点事件响应
@@ -166,7 +164,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		}
 	}
 
-	timeout := time.Duration(globalCtrl.maxChannelLifeTime)*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
+	timeout := time.Duration(h.maxChannelLifeTime)*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
 	switch channel.GetState() {
 	case "START":
 		log.Tracef("%s START", channel.GetUuid())
@@ -355,7 +353,9 @@ func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 }
 
 func (h *Ctrl) OnEvicted(f func(string, interface{})) {
-	nodes.store.OnEvicted(f)
+
+	h.nodes.store.OnEvicted(f)
+
 }
 
 // ForkDTMFEventToChannelEventThread
@@ -386,6 +386,8 @@ func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
 	c.asyncService = c.newAsyncService()
 	// 同步调用 xswitch, 使用nats的RequestWithContext, 可以返回结果，可以中途取消
 	c.aService = c.newAService()
+
+	c.nodes = InitCtrlNodes()
 	return c, nil
 }
 
