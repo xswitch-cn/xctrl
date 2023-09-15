@@ -54,7 +54,6 @@ func main() {
 	}
 
 	log.Printf("response: %v", response.Data)
-
 	_, err = ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd:  "log",
 		Args: "INFO xctrl test log",

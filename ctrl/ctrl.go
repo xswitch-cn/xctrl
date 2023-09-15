@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
+	"github.com/google/uuid"
+	natsio "github.com/nats-io/nats.go"
 	"strings"
 	"sync"
 	"time"
@@ -12,10 +15,7 @@ import (
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
 	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
-	"github.com/google/uuid"
-	natsio "github.com/nats-io/nats.go"
 )
 
 // Ctrl 控制中心
@@ -39,6 +39,9 @@ type Ctrl struct {
 	nodeCallback    NodeHashFun
 
 	maxChannelLifeTime uint
+
+	instanceName string
+	nodes        CtrlNodes
 }
 
 type AsyncCallOption struct {
