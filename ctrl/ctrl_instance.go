@@ -50,15 +50,33 @@ func (c *Ctrl) UUID() string {
 
 // Service 同步调用
 func (c *Ctrl) Service() xctrl.XNodeService {
+	if c.service == nil {
+		return nil
+	}
 	return c.service
 }
 
+// AsyncService 异步调用，Depracated
 func (c *Ctrl) AsyncService() xctrl.XNodeService {
+	if c.asyncService == nil {
+		return nil
+	}
+	log.Warn("AsyncService is deprecated, use Service with WithAsync option instead")
+	return c.asyncService
+}
+
+func (c *Ctrl) AService() xctrl.XNodeService {
+	if c.asyncService == nil {
+		return nil
+	}
 	return c.aService
 }
 
 // CManService 同步调用
 func (c *Ctrl) CManService() cman.CManService {
+	if c.cmanService == nil {
+		return nil
+	}
 	return c.cmanService
 }
 
