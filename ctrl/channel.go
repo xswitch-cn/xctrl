@@ -512,5 +512,6 @@ func (channel *Channel) GetUserData() interface{} {
 }
 
 func (channel *Channel) GetTenantID() string {
-	return channel.tenantID
+	// return channel.tenantID
+	return channel.GetPNATSTenantID()
 }

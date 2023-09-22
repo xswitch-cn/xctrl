@@ -146,11 +146,6 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 	}
 	channel := new(Channel)
 	channel.userData = nil
-	subject := natsEvent.Topic()
-	tenantID := findTenantId(subject, h.fromPrefix)
-	if tenantID != "" {
-		channel.tenantID = tenantID
-	}
 	if message.Method == "Event.DTMF" {
 		dtmfEvent := new(xctrl.DTMFEvent)
 		err := json.Unmarshal(*message.Params, dtmfEvent)
@@ -166,6 +161,16 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		err := json.Unmarshal(*message.Params, channel)
 		if err != nil {
 			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
+		}
+	}
+	if channel.ChannelEvent != nil {
+		subject := natsEvent.Topic()
+		tenantID := findTenantId(subject, h.fromPrefix)
+		if tenantID != "" {
+			channel.ChannelEvent.SetTenantID(tenantID)
+		}
+		if h.toPrefix != "" {
+			channel.ChannelEvent.SetToPrefix(h.toPrefix)
 		}
 	}
 
