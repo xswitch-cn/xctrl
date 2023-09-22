@@ -97,7 +97,7 @@ func (a *AppExample) ChannelEvent(ctx context.Context, c *ctrl.Channel) {}
 ctrl.EnableApp(new(AppExample),subject,"")
 ```
 
-### EnableEvent
+## ctrl.EnableEvent
 
 ```go
 func EnableEvent(h *EventHandler, subject string, queue string) error
@@ -118,7 +118,7 @@ func (h *EventExample) Event(req *ctrl.Request, natsEvent nats.Event) {}
 ctrl.EnableEvent(new(EventExample), subject, "")
 ```
 
-### ctrl.EnableRequest
+## ctrl.EnableRequest
 
 ```go
 func EnableRequest(h *RequestHandler, subject string, queue string) error
@@ -143,7 +143,7 @@ ctrl.EnableRequest(new(RequestExample),subject,"")
 
 ```
 
-### ctrl.EnableStatus
+## ctrl.EnableStatus
 
 ```go
 func EnableNodeStatus(subject string) error
@@ -160,7 +160,7 @@ subject := "cn.xswitch.status.node"
 ctrl.EnableNodeStatus(subject)
 ```
 
-### ctrl.OnEvicted
+## ctrl.OnEvicted
 
 ```go
 func OnEvicted(f func(string, interface{}))
@@ -178,7 +178,7 @@ ctrl.OnEvicted(func(s string, i interface{}){
 })
 ```
 
-### ctrl.GetNATSConn
+## ctrl.GetNATSConn
 
 ```go
 func GetNATSConn() *natsio.Conn
@@ -194,7 +194,7 @@ func GetNATSConn() *natsio.Conn
 ```go
 ctrl.GetNATSConn()
 ```
-### Subscribe
+## ctrl.Subscribe
 
 ```go
 func Subscribe(subject string, cb nats.EventCallback, queue string) (nats.Subscriber, error)
@@ -210,7 +210,7 @@ Ctrl中的Context使用了标准的Go Context包，目前没有太大用处，�
 
 在订阅事件的时候会使用这个变量大小进行channel的初始化，1024容量足够事件使用，太小会导致程序阻塞卡顿，影响运行效率。
 
-### protobuf 扩展示例
+## protobuf 扩展示例
 
 ```go
 req := &xctrl.XNativeJSRequest{
