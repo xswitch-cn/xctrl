@@ -150,7 +150,7 @@ instance.EnableRequest(new(RequestExample),subject,"")
 
 ```
 
-### EnableStatus
+### EnableNodeStatus
 
 ```go
 func(c *Ctrl) EnableNodeStatus(subject string) error
@@ -163,7 +163,7 @@ func(c *Ctrl) EnableNodeStatus(subject string) error
 ### 示例
 
 ```go
-instance, err := ctrl.NewCtrlInstance(true,natsUrl)
+instance, err := ctrl.NewCtrlInstance(true, natsUrl)
 
 subject := "cn.xswitch.status.node"
 instance.EnableNodeStatus(subject)

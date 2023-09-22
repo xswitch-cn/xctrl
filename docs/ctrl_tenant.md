@@ -67,6 +67,10 @@ option := WithTenantAddress("cherry", "node-uuid-1")
 
 获取事件中的租户名。
 
+## EnableNodeStatus
+
+在多租户情况下，EnableNodeStatus会取到所有节点，并不会按租户区分。如果需要区分租户，则可以通过相应的回调在上层实现。
+
 ## cMan
 
 在多租户状态下，`ctrl.InitCManService("to-cherry.cn.xswitch.cman.control")`中的参数不再有用。在调用所有cMan相关接口时都需要明确传入租户名。使用`ctrl.WithTenantAddress(tenant, address)`函数可以生成对应的Option。

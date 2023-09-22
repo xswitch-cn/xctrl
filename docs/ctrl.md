@@ -143,7 +143,7 @@ ctrl.EnableRequest(new(RequestExample),subject,"")
 
 ```
 
-## ctrl.EnableStatus
+## ctrl.EnableNodeStatus
 
 ```go
 func EnableNodeStatus(subject string) error
