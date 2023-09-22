@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
-	"github.com/google/uuid"
-	natsio "github.com/nats-io/nats.go"
 	"strings"
 	"sync"
 	"time"
+
+	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
+	"github.com/google/uuid"
+	natsio "github.com/nats-io/nats.go"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/cman"
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
@@ -42,6 +43,8 @@ type Ctrl struct {
 
 	instanceName string
 	nodes        CtrlNodes
+	fromPrefix   string
+	toPrefix     string
 }
 
 type AsyncCallOption struct {
@@ -400,6 +403,11 @@ func WithAddress(nodeUUID string) client.CallOption {
 	return client.WithAddress(NodeAddress(nodeUUID))
 }
 
+// WithTenantAddress 创建租户对应的Node地址
+func WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
+	return globalCtrl.WithTenantAddress(tenant, nodeUUID)
+}
+
 // NATS Request Timeout
 func WithRequestTimeout(d time.Duration) client.CallOption {
 	return client.WithRequestTimeout(d)
@@ -427,6 +435,7 @@ func RegisterHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	}
 
 }
+
 func SetMaxChannelLifeTime(time uint) {
 	if globalCtrl != nil {
 		globalCtrl.maxChannelLifeTime = time
@@ -445,4 +454,12 @@ func GetNATSConn() *natsio.Conn {
 	}
 
 	return globalCtrl.conn.GetConn()
+}
+
+func GetTenantId(subject string) string {
+	if globalCtrl == nil {
+		return ""
+	}
+
+	return globalCtrl.GetTenantId(subject)
 }

@@ -2,13 +2,15 @@ package ctrl
 
 import (
 	"encoding/json"
+	"strings"
+	"time"
+
 	"git.xswitch.cn/xswitch/proto/go/proto/cman"
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
+	"git.xswitch.cn/xswitch/proto/xctrl/client"
 	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
 	natsio "github.com/nats-io/nats.go"
-	"strings"
-	"time"
 )
 
 func NewCtrlInstance(trace bool, addrs string) (*Ctrl, error) {
@@ -155,4 +157,46 @@ func (c *Ctrl) Respond(topic string, resp *Response, opts ...nats.PublishOption)
 		return err
 	}
 	return c.conn.Publish(topic, body)
+}
+
+func (c *Ctrl) SetFromPrefix(prefix string) {
+	c.fromPrefix = prefix
+}
+
+func SetFromPrefix(prefix string) {
+	if globalCtrl != nil {
+		globalCtrl.SetFromPrefix(prefix)
+	}
+}
+
+func (c *Ctrl) SetToPrefix(prefix string) {
+	c.toPrefix = prefix
+}
+
+func SetToPrefix(prefix string) {
+	if globalCtrl != nil {
+		globalCtrl.SetToPrefix(prefix)
+	}
+}
+
+func (c *Ctrl) GetTenantId(subject string) string {
+	return findTenantId(subject, c.fromPrefix)
+}
+
+func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
+	if tenant == "" {
+		return WithAddress(nodeUUID)
+	}
+	prefix := c.toPrefix + tenant + "."
+	address := ""
+	if nodeUUID == "" {
+		address = prefix + "cn.xswitch.node"
+	} else {
+		if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
+			address = prefix + "cn.xswitch.node." + nodeUUID
+		} else {
+			address = prefix + nodeUUID
+		}
+	}
+	return client.WithAddress(address)
 }

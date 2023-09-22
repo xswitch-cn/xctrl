@@ -24,6 +24,8 @@ type Channel struct {
 	subs                []nats.Subscriber // todo
 	natsEvent           nats.Event        // the original natsEvent received
 	userData            interface{}       // store private userData from the higher level Application
+	toPrefix            string            // the to- prefix of the channel
+	tenantID            string            // the tenant ID of the channel
 }
 
 // only call at the first time
@@ -38,6 +40,12 @@ func NewChannel(channel_uuid string) *Channel {
 }
 
 func NewChannelEvent() *Channel {
+	return &Channel{
+		ChannelEvent: &xctrl.ChannelEvent{},
+	}
+}
+
+func NewChannelEventWithPrefix(prefix string) *Channel {
 	return &Channel{
 		ChannelEvent: &xctrl.ChannelEvent{},
 	}
@@ -62,7 +70,13 @@ func (channel *Channel) GetChannelEvent() *xctrl.ChannelEvent {
 
 // NodeAddress 生成NODE地址
 func (channel *Channel) NodeAddress() client.CallOption {
-	return client.WithAddress("cn.xswitch.node." + channel.GetNodeUuid())
+	subject := ""
+	if channel.tenantID != "" {
+		subject = fmt.Sprintf("%s%s.cn.xswitch.node.%s", channel.toPrefix, channel.tenantID, channel.GetNodeUuid())
+	} else {
+		subject = fmt.Sprintf("cn.xswitch.node.%s", channel.GetNodeUuid())
+	}
+	return client.WithAddress(subject)
 }
 
 // Answer 应答
@@ -495,4 +509,8 @@ func (channel *Channel) SetUserData(userData interface{}) {
 
 func (channel *Channel) GetUserData() interface{} {
 	return channel.userData
+}
+
+func (channel *Channel) GetTenantID() string {
+	return channel.tenantID
 }
