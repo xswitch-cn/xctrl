@@ -39,6 +39,24 @@ ctrl.SetToPrefix("to-")
 *.cn.xswitch.ctrl
 ```
 
+## ctrl.GetTenantId
+
+`GetTenantId(subject string)`
+
+该函数用于用`subject`中获取租户名。
+
+如果`subject`中在`cn.xswitch.`之前有字符串，则认为是租户名，如：
+
+```go
+ctrl.GetTenantId("cn.xswitch.ctrl") == ""
+ctrl.GetTenantId("cherry.cn.xswitch.ctrl") == "cherry"
+ctrl.GetTenantId("from-cherry.cn.xswitch.ctrl") == "from-cherry"
+ctrl.SetFromPrefix("from-")
+ctrl.GetTenantId("from-cherry.cn.xswitch.ctrl") == "cherry"
+```
+
+注意，`SetFromPrefix`后可以使该函数去掉相关前缀。
+
 ## ChannelEvent
 
 如果是`ChannelEvent`，在多租户情况可以使用`ChannelEvent.GetTenant()`获取租户名。
