@@ -146,6 +146,11 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 	}
 	channel := new(Channel)
 	channel.userData = nil
+	subject := natsEvent.Topic()
+	tenantID := findTenantId(subject, h.fromPrefix)
+	if tenantID != "" {
+		channel.tenantID = tenantID
+	}
 	if message.Method == "Event.DTMF" {
 		dtmfEvent := new(xctrl.DTMFEvent)
 		err := json.Unmarshal(*message.Params, dtmfEvent)
@@ -408,4 +413,26 @@ type NodeHashFun func(node *xctrl.Node, method string)
 // nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
+}
+
+func before(str1, str2 string) string {
+	index := strings.Index(str1, str2)
+	if index == -1 {
+		return ""
+	}
+	return str1[:index]
+}
+
+func findTenantId(str string, fromPrefix string) string {
+	s := before(str, ".cn.xswitch")
+	if s == "" {
+		return ""
+	}
+	if fromPrefix == "" {
+		return s
+	}
+	if strings.HasPrefix(s, fromPrefix) {
+		return s[len(fromPrefix):]
+	}
+	return ""
 }
