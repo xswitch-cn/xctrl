@@ -14,6 +14,8 @@
 - [1.0向1.1迁移](migration.md)
 - [SDK使用](sdk.md)
 - [ctrl](ctrl.md)
+    - [多租户](ctrl_tenant.md)
+    - [多实例](ctrl_instance.md)
 - [channel](channel.md)
 - [SDK](sdk.md)
 - [DTMF](dtmf.md)
