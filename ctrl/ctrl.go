@@ -456,10 +456,15 @@ func GetNATSConn() *natsio.Conn {
 	return globalCtrl.conn.GetConn()
 }
 
-func GetTenantId(subject string) string {
+func GetTenantID(subject string) string {
 	if globalCtrl == nil {
 		return ""
 	}
 
-	return globalCtrl.GetTenantId(subject)
+	return globalCtrl.GetTenantID(subject)
+}
+
+// deprecated over GetTenantID
+func GetTenantId(subject string) string {
+	return GetTenantID(subject)
 }

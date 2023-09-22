@@ -183,6 +183,10 @@ func (c *Ctrl) GetTenantId(subject string) string {
 	return findTenantId(subject, c.fromPrefix)
 }
 
+func (c *Ctrl) GetTenantID(subject string) string {
+	return findTenantId(subject, c.fromPrefix)
+}
+
 func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
 	if tenant == "" {
 		return WithAddress(nodeUUID)
