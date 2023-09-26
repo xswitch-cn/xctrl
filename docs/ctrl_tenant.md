@@ -61,6 +61,19 @@ ctrl.GetTenantId("from-cherry.cn.xswitch.ctrl") == "cherry"
 
 注意，`SetFromPrefix`后可以使该函数去掉相关前缀。
 
+## ctrl.TenantNodeAddress
+
+```go
+TenantNodeAddress(tenant string, nodeUUID string) string
+```
+根据租户名和消息地址生成租户专用的租户地址。
+
+示例：
+
+```go
+address := ctrl.TenantNodeAddress("cherry", "node-uuid-1")
+```
+
 ## ChannelEvent
 
 如果是`ChannelEvent`，在多租户情况可以使用`ChannelEvent.GetTenant()`获取租户名。

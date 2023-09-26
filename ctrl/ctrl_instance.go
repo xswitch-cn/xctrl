@@ -197,8 +197,9 @@ func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOpti
 
 func (c *Ctrl) TenantNodeAddress(tenant string, nodeUUID string) string {
 	if tenant == "" {
-		return nodeUUID
+		return NodeAddress(nodeUUID)
 	}
+
 	prefix := c.toPrefix + tenant + "."
 	address := ""
 	if nodeUUID == "" {

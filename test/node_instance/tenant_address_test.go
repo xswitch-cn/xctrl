@@ -1,40 +1,85 @@
 package node_instance
 
 import (
-	"context"
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"os"
 	"testing"
-	"time"
+
+	"git.xswitch.cn/xswitch/xctrl/ctrl"
 )
 
-var successful = false
+func init() {
+	natsURL := os.Getenv("NATS_ADDRESS")
+
+	if natsURL == "" {
+		natsURL = "nats://localhost:4222"
+	}
+	ctrl.Init(true, natsURL)
+}
 
 func TestTenantAddress(t *testing.T) {
-	tenant := "foo"
-	nodeUUID := "test.tenant"
-
-	instance, err := ctrl.NewCtrlInstance(true, "nats://192.168.3.235:4222")
-	if err != nil {
-		return
+	type args struct {
+		tenant   string
+		nodeUUID string
 	}
-
-	instance.Subscribe(instance.TenantNodeAddress(tenant, nodeUUID), func(ctx context.Context, event nats.Event) error {
-
-		s := string(event.Message().Body)
-		if "hello" == s {
-			successful = true
-		}
-		return nil
-	}, "")
-
-	instance.Publish(instance.TenantNodeAddress(tenant, nodeUUID), []byte("hello"))
-	if err != nil {
-		t.Error("Publish error")
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "test with empty tenant and uuid",
+			args: args{
+				tenant:   "",
+				nodeUUID: "",
+			},
+			want: "cn.xswitch.node",
+		},
+		{
+			name: "test with empty tenant but short uuid",
+			args: args{
+				tenant:   "",
+				nodeUUID: "test.test",
+			},
+			want: "cn.xswitch.node.test.test",
+		},
+		{
+			name: "test with empty tenant and full uuid",
+			args: args{
+				tenant:   "",
+				nodeUUID: "cn.xswitch.node.test.test",
+			},
+			want: "cn.xswitch.node.test.test",
+		},
+		{
+			name: "test with tenant and empty uuid",
+			args: args{
+				tenant:   "foo",
+				nodeUUID: "",
+			},
+			want: "foo.cn.xswitch.node",
+		},
+		{
+			name: "test with tenant and short uuid",
+			args: args{
+				tenant:   "foo",
+				nodeUUID: "test.test",
+			},
+			want: "foo.cn.xswitch.node.test.test",
+		},
+		{
+			name: "test with tenant and full uuid",
+			args: args{
+				tenant:   "foo",
+				nodeUUID: "cn.xswitch.node.test.test",
+			},
+			want: "foo.cn.xswitch.node.test.test",
+		},
 	}
-	time.Sleep(2 * time.Second)
-
-	if !successful {
-		t.Error("Test failed")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ctrl.TenantNodeAddress(tt.args.tenant, tt.args.nodeUUID); got != tt.want {
+				t.Errorf("NodeAddress() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
