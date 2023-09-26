@@ -403,6 +403,11 @@ func WithAddress(nodeUUID string) client.CallOption {
 	return client.WithAddress(NodeAddress(nodeUUID))
 }
 
+// TenantNodeAddress Get tenant node add string
+func TenantNodeAddress(tenant string, nodeUUID string) string {
+	return globalCtrl.TenantNodeAddress(tenant, nodeUUID)
+}
+
 // WithTenantAddress 创建租户对应的Node地址
 func WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
 	return globalCtrl.WithTenantAddress(tenant, nodeUUID)
