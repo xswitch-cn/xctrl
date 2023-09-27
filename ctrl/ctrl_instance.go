@@ -189,9 +189,6 @@ func (c *Ctrl) GetTenantID(subject string) string {
 
 func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
 	address := c.TenantNodeAddress(tenant, nodeUUID)
-	if tenant == "" {
-		return WithAddress(address)
-	}
 	return client.WithAddress(address)
 }
 
