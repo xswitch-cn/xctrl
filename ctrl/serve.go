@@ -297,6 +297,7 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
+
 	mySubject := fmt.Sprintf(`%s.%s`, subject, h.uuid)
 	log.Infof("EnableApp subscribe to subject=%s", mySubject)
 	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
@@ -306,6 +307,17 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
+
+	mySubject = fmt.Sprintf(`%s.%s`, "cn.xswitch.ctrl", h.uuid)
+	log.Infof("EnableApp subscribe to subject=%s", mySubject)
+	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
+		return h.handleApp(handler, ev)
+	})
+	if err != nil {
+		log.Errorf("topic subscribe error: %s", err.Error())
+		return err
+	}
+
 	return nil
 }
 
