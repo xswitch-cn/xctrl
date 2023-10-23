@@ -473,3 +473,18 @@ func GetTenantID(subject string) string {
 func GetTenantId(subject string) string {
 	return GetTenantID(subject)
 }
+
+func GetTenancyTopicAndUser(rawTopic string) (user string, topic string) {
+	if globalCtrl == nil {
+		return "", ""
+	}
+	return globalCtrl.GetTenancyTopicAndUser(rawTopic)
+
+}
+
+func GetTenancyTopicAddress(userPrefix string, topic string) string {
+	if globalCtrl == nil {
+		return ""
+	}
+	return globalCtrl.GetTenancyTopicAddress(userPrefix, topic)
+}

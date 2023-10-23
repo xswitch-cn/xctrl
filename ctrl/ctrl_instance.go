@@ -210,3 +210,24 @@ func (c *Ctrl) TenantNodeAddress(tenant string, nodeUUID string) string {
 	}
 	return address
 }
+
+func (c *Ctrl) GetTenancyTopicAndUser(rawTopic string) (user string, topic string) {
+	user = ""
+	topic = ""
+	frontIndex := strings.Index(rawTopic, "from-")
+	if frontIndex > -1 {
+		pointIndex := strings.Index(rawTopic, ".")
+		user = rawTopic[frontIndex+5 : pointIndex]
+		topic = rawTopic[pointIndex+1:]
+	} else {
+		topic = rawTopic
+	}
+	return user, topic
+}
+
+func (c *Ctrl) GetTenancyTopicAddress(userPrefix string, topic string) string {
+	if userPrefix == "" || c.toPrefix == "" {
+		return topic
+	}
+	return c.toPrefix + userPrefix + "." + topic
+}
