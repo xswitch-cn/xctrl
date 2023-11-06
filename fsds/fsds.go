@@ -2,6 +2,7 @@ package fsds
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"path"
 	"strconv"
@@ -20,7 +21,7 @@ type CallParams struct {
 	Params    map[string]string
 }
 
-func FSDS(params *CallParams) string {
+func (params *CallParams) String() string {
 	var sb strings.Builder
 
 	// Append the call parameters
@@ -60,14 +61,30 @@ type User struct {
 	Domain string
 	Number string
 	IP     string
+	Params map[string]string
 }
 
 func (u *User) String() string {
+	var sb strings.Builder
+	if len(u.Params) > 0 {
+		sb.WriteString("{")
+		comma := ""
+		for key, value := range u.Params {
+			sb.WriteString(comma)
+			sb.WriteString(key)
+			sb.WriteString("=")
+			sb.WriteString(quote(value))
+			comma = ","
+		}
+		sb.WriteString("}")
+		sb.WriteString("/")
+	}
 	s := "user/" + u.Number
 	if u.Domain != "" {
 		s += "@" + u.Domain
 	}
-	return s
+	sb.WriteString(s)
+	return sb.String()
 }
 
 type File struct {
@@ -197,6 +214,7 @@ type Dial struct {
 	LocalExtensionNum int          // 通过分机号码呼出
 	IP                IPParam      // 通过IP呼出
 	Gateway           GatewayParam // 通过网关呼出
+	Params            map[string]string
 }
 
 type IPParam struct {
@@ -222,6 +240,14 @@ type GatewayParam struct {
 
 func (d Dial) String() (string, error) {
 	var sb strings.Builder
+	comma := ""
+	for key, value := range d.Params {
+		sb.WriteString(comma)
+		sb.WriteString(key)
+		sb.WriteString("=")
+		sb.WriteString(quote(value))
+		comma = ","
+	}
 	if d.LocalExtensionNum != 0 {
 		sb.WriteString("user/" + strconv.Itoa(d.LocalExtensionNum))
 		return sb.String(), nil
@@ -254,4 +280,117 @@ func (d Dial) String() (string, error) {
 	} else {
 		return "", errors.New("input nothing")
 	}
+}
+
+type Agora struct {
+	APPID      string
+	Token      string
+	Channel    string
+	DestNumber string
+	Params     map[string]string
+}
+
+func (agora Agora) String() (string, error) {
+	var sb strings.Builder
+	if len(agora.Params) > 0 {
+		sb.WriteString("{")
+		comma := ""
+		for key, value := range agora.Params {
+			sb.WriteString(comma)
+			sb.WriteString(key)
+			sb.WriteString("=")
+			sb.WriteString(quote(value))
+			comma = ","
+		}
+		sb.WriteString("}")
+		sb.WriteString("/")
+	}
+	sb.WriteString("agora")
+	sb.WriteString("/")
+	if agora.Token != "" {
+		sb.WriteString(agora.Token)
+		sb.WriteString("/")
+	} else if agora.APPID != "" {
+		sb.WriteString(agora.APPID)
+		sb.WriteString("/")
+	} else {
+		return "", fmt.Errorf("agora token and agora appid is nil")
+	}
+	if agora.Channel != "" {
+		sb.WriteString(agora.Channel)
+		sb.WriteString("/")
+	} else {
+		return "", fmt.Errorf("agora channel is nil")
+	}
+	if agora.DestNumber != "" {
+		sb.WriteString(agora.DestNumber)
+	}
+	return sb.String(), nil
+}
+
+type XRTC struct {
+	VideoUseAudioIce    string
+	RtpPayloadSpace     string
+	AbsoluteCodecString string
+	Url                 string
+	Params              map[string]string
+}
+
+func (xrtc XRTC) String() (string, error) {
+	var sb strings.Builder
+	sb.WriteString("{")
+	for key, value := range xrtc.Params {
+		sb.WriteString(key)
+		sb.WriteString("=")
+		sb.WriteString(quote(value))
+		sb.WriteString(",")
+	}
+	sb.WriteString("video_use_audio_ice=")
+	sb.WriteString(xrtc.VideoUseAudioIce)
+	sb.WriteString(",")
+	sb.WriteString("rtp_payload_space=")
+	sb.WriteString(xrtc.RtpPayloadSpace)
+	sb.WriteString(",")
+	sb.WriteString("absolute_codec_string=")
+	sb.WriteString(xrtc.AbsoluteCodecString)
+	sb.WriteString(",")
+	sb.WriteString("url=")
+	sb.WriteString(xrtc.Url)
+	sb.WriteString("}")
+	return sb.String(), nil
+}
+
+type TRTC struct {
+	AppId      string
+	RoomId     string
+	UserId     string
+	UserSig    string
+	DestNumber string
+	Params     map[string]string
+}
+
+func (trtc TRTC) String() (string, error) {
+	var sb strings.Builder
+	sb.WriteString("{")
+	for key, value := range trtc.Params {
+		sb.WriteString(key)
+		sb.WriteString("=")
+		sb.WriteString(quote(value))
+		sb.WriteString(",")
+	}
+	sb.WriteString("trtc_user_id=")
+	sb.WriteString(trtc.UserId)
+	sb.WriteString(",")
+	sb.WriteString("trtc_user_sig=")
+	sb.WriteString(trtc.UserSig)
+	sb.WriteString("}")
+	sb.WriteString("/")
+	sb.WriteString("trtc")
+	sb.WriteString("/")
+	sb.WriteString(trtc.AppId)
+	sb.WriteString("/")
+	sb.WriteString(trtc.RoomId)
+	sb.WriteString("/")
+	sb.WriteString(trtc.DestNumber)
+	return sb.String(), nil
 }
