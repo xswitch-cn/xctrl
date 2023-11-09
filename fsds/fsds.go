@@ -3,94 +3,142 @@ package fsds
 import (
 	"errors"
 	"fmt"
-	"net"
 	"path"
 	"strconv"
 	"strings"
-
-	log "git.xswitch.cn/xswitch/proto/xctrl/logger"
 )
 
-type CallParams struct {
-	Endpoint  string
-	Profile   string
-	DestNum   string
+const (
+	TCP string = "tcp"
+	TLS string = "tls"
+)
+
+type FSDS struct {
+	Params         map[string]string
+	CallerIDName   string
+	CallerIDNumber string
+}
+
+type Endpoint struct {
+	*FSDS
+	Type    string
+	Profile string
+	Dest    string
+}
+
+type IP struct {
+	*Endpoint
 	IP        string
 	Port      string
 	Transport string
-	Params    map[string]string
 }
 
-func (params *CallParams) String() string {
-	var sb strings.Builder
-
-	// Append the call parameters
-	if len(params.Params) > 0 {
-		comma := ""
-		sb.WriteString("{")
-		for key, value := range params.Params {
-			sb.WriteString(comma)
-			sb.WriteString(key)
-			sb.WriteString("=")
-			sb.WriteString(value)
-			comma = ","
-		}
-		sb.WriteString("}")
-	}
-	// Append the endpoint, profile, destination number, IP, port, and transport
-	sb.WriteString(params.Endpoint)
-	sb.WriteString("/")
-	sb.WriteString(params.Profile)
-	sb.WriteString("/")
-	sb.WriteString(params.DestNum)
-	sb.WriteString("@")
-	sb.WriteString(params.IP)
-	sb.WriteString(":")
-	sb.WriteString(params.Port)
-	if params.Transport == "udp" || params.Transport == "tcp" || params.Transport == "tls" {
-		sb.WriteString(";transport=")
-		sb.WriteString(params.Transport)
-	} else {
-		log.Warn("Transport in params is wrong or not found")
-	}
-
-	return sb.String()
+type Gateway struct {
+	*Endpoint
+	GatewayName string
 }
 
 type User struct {
+	*Endpoint
 	Domain string
-	Number string
-	IP     string
-	Params map[string]string
 }
 
-func (u *User) String() string {
+func (fsds FSDS) String() string {
 	var sb strings.Builder
-	if len(u.Params) > 0 {
+	if len(fsds.Params) > 0 || fsds.CallerIDName != "" || fsds.CallerIDNumber != "" {
 		sb.WriteString("{")
 		comma := ""
-		for key, value := range u.Params {
+		for key, value := range fsds.Params {
 			sb.WriteString(comma)
 			sb.WriteString(key)
 			sb.WriteString("=")
 			sb.WriteString(quote(value))
 			comma = ","
 		}
+		if fsds.CallerIDName != "" {
+			sb.WriteString(comma)
+			sb.WriteString("caller_id_name")
+			sb.WriteString("=")
+			sb.WriteString(quote(fsds.CallerIDName))
+			comma = ","
+		}
+		if fsds.CallerIDNumber != "" {
+			sb.WriteString(comma)
+			sb.WriteString("caller_id_number")
+			sb.WriteString("=")
+			sb.WriteString(quote(fsds.CallerIDNumber))
+			comma = ","
+		}
 		sb.WriteString("}")
+	} else {
+		return ""
+	}
+	return sb.String()
+}
+
+func (e Endpoint) String() string {
+	var sb strings.Builder
+	if e.FSDS != nil {
+		sb.WriteString(e.FSDS.String())
+	}
+	sb.WriteString(e.Type)
+	sb.WriteString("/")
+	if e.Profile != "" {
+		sb.WriteString(e.Profile)
 		sb.WriteString("/")
 	}
-	s := "user/" + u.Number
-	if u.Domain != "" {
-		s += "@" + u.Domain
+	sb.WriteString(e.Dest)
+	return sb.String()
+}
+
+func (e IP) String() string {
+	var sb strings.Builder
+	sb.WriteString(e.Endpoint.String())
+	if e.IP != "" {
+		sb.WriteString("@")
+		sb.WriteString(e.IP)
+		if e.Port != "" {
+			sb.WriteString(":")
+			sb.WriteString(e.Port)
+		}
 	}
-	sb.WriteString(s)
+	if e.Transport != "" {
+		sb.WriteString(";")
+		sb.WriteString("transport=")
+		sb.WriteString(e.Transport)
+	}
+	return sb.String()
+}
+
+func (e Gateway) String() string {
+	var sb strings.Builder
+	if e.FSDS != nil {
+		sb.WriteString(e.FSDS.String())
+	}
+	sb.WriteString(e.Endpoint.Type)
+	sb.WriteString("/")
+	sb.WriteString(e.Endpoint.Profile)
+	sb.WriteString("/")
+	sb.WriteString(e.GatewayName)
+	sb.WriteString("/")
+	sb.WriteString(e.Endpoint.Dest)
+	return sb.String()
+}
+
+func (e User) String() string {
+	var sb strings.Builder
+	sb.WriteString(e.Endpoint.String())
+	if e.Domain != "" {
+		sb.WriteString("@")
+		sb.WriteString(e.Domain)
+	}
 	return sb.String()
 }
 
 type File struct {
-	Path   string
-	Name   string
-	Params map[string]string
+	*FSDS
+	Path string
+	Name string
 }
 
 type PNGFile struct {
@@ -128,21 +176,10 @@ func quote(str string) string {
 
 func (f *File) String() string {
 	var sb strings.Builder
-
 	// Append the file parameters
-	if len(f.Params) > 0 {
-		sb.WriteString("{")
-		comma := ""
-		for key, value := range f.Params {
-			sb.WriteString(comma)
-			sb.WriteString(key)
-			sb.WriteString("=")
-			sb.WriteString(quote(value))
-			comma = ","
-		}
-		sb.WriteString("}")
+	if f.FSDS != nil {
+		sb.WriteString(f.FSDS.String())
 	}
-
 	// Append the file name
 	sb.WriteString(f.Path)
 
@@ -155,11 +192,11 @@ func (f PNGFile) String() (string, error) {
 	}
 	var sb strings.Builder
 	// Append the file parameters
-	sb.WriteString("{")
-	if len(f.Params) > 0 {
-		for key, value := range f.Params {
-			writeString(&sb, key, value)
-		}
+	if f.FSDS != nil && f.FSDS.String() != "" {
+		sb.WriteString(f.FSDS.String()[:len(f.FSDS.String())-1])
+		sb.WriteString(",")
+	} else {
+		sb.WriteString("{")
 	}
 	if f.MS != "" {
 		writeString(&sb, "png_ms", f.MS)
@@ -210,103 +247,26 @@ func writeString(sb *strings.Builder, key string, value string) {
 	sb.WriteString(key + "=" + quote(value) + ",")
 }
 
-type Dial struct {
-	LocalExtensionNum int          // 通过分机号码呼出
-	IP                IPParam      // 通过IP呼出
-	Gateway           GatewayParam // 通过网关呼出
-	Params            map[string]string
-}
-
-type IPParam struct {
-	Num       int
-	IP        string
-	Port      int
-	Transport TransportProtocol // TCP = 1; TLS = 2
-}
-
-type TransportProtocol int
-
-const (
-	NULL TransportProtocol = iota
-	TCP
-	TLS
-)
-
-type GatewayParam struct {
-	Realm    string
-	Username string
-	Password string
-}
-
-func (d Dial) String() (string, error) {
-	var sb strings.Builder
-	comma := ""
-	for key, value := range d.Params {
-		sb.WriteString(comma)
-		sb.WriteString(key)
-		sb.WriteString("=")
-		sb.WriteString(quote(value))
-		comma = ","
-	}
-	if d.LocalExtensionNum != 0 {
-		sb.WriteString("user/" + strconv.Itoa(d.LocalExtensionNum))
-		return sb.String(), nil
-	} else if d.Gateway != (GatewayParam{}) {
-		// todo
-		return "", errors.New("dial by gateway is not valid")
-	} else if d.IP != (IPParam{}) {
-		ip := net.ParseIP(d.IP.IP).To4()
-		if ip == nil {
-			return "", errors.New("IP is not invalid")
-		}
-		sb.WriteString("sofia/public/" + strconv.Itoa(d.IP.Num) + "@" + d.IP.IP)
-		if d.IP.Port != 0 {
-			if d.IP.Port < 0 || d.IP.Port > 65535 {
-				return "", errors.New("port is not valid")
-			} else {
-				sb.WriteString(":" + strconv.Itoa(d.IP.Port))
-			}
-		}
-		if d.IP.Transport != NULL {
-			if d.IP.Transport == TCP {
-				sb.WriteString(";transport=tcp")
-			} else if d.IP.Transport == TLS {
-				sb.WriteString(";transport=tls")
-			} else {
-				return "", errors.New("transport protocol is not valid")
-			}
-		}
-		return sb.String(), nil
-	} else {
-		return "", errors.New("input nothing")
-	}
-}
-
 type Agora struct {
-	APPID      string
-	Token      string
-	Channel    string
-	DestNumber string
-	Params     map[string]string
+	*Endpoint
+	APPID   string
+	Token   string
+	Channel string
 }
 
 func (agora Agora) String() (string, error) {
 	var sb strings.Builder
-	if len(agora.Params) > 0 {
-		sb.WriteString("{")
-		comma := ""
-		for key, value := range agora.Params {
-			sb.WriteString(comma)
-			sb.WriteString(key)
-			sb.WriteString("=")
-			sb.WriteString(quote(value))
-			comma = ","
-		}
-		sb.WriteString("}")
+	if agora.FSDS != nil {
+		sb.WriteString(agora.FSDS.String())
+	}
+	if agora.Endpoint.Type != "" {
+		sb.WriteString(agora.Endpoint.Type)
 		sb.WriteString("/")
 	}
-	sb.WriteString("agora")
-	sb.WriteString("/")
+	if agora.Endpoint.Profile != "" {
+		sb.WriteString(agora.Endpoint.Profile)
+		sb.WriteString("/")
+	}
 	if agora.Token != "" {
 		sb.WriteString(agora.Token)
 		sb.WriteString("/")
@@ -322,27 +282,24 @@ func (agora Agora) String() (string, error) {
 	} else {
 		return "", fmt.Errorf("agora channel is nil")
 	}
-	if agora.DestNumber != "" {
-		sb.WriteString(agora.DestNumber)
+	if agora.Endpoint.Dest != "" {
+		sb.WriteString(agora.Endpoint.Dest)
 	}
 	return sb.String(), nil
 }
 
 type XRTC struct {
+	*Endpoint
 	VideoUseAudioIce    string
 	RtpPayloadSpace     string
 	AbsoluteCodecString string
 	Url                 string
-	Params              map[string]string
 }
 
 func (xrtc XRTC) String() (string, error) {
 	var sb strings.Builder
-	sb.WriteString("{")
-	for key, value := range xrtc.Params {
-		sb.WriteString(key)
-		sb.WriteString("=")
-		sb.WriteString(quote(value))
+	if xrtc.FSDS != nil && xrtc.FSDS.String() != "" {
+		sb.WriteString(xrtc.FSDS.String()[:len(xrtc.FSDS.String())-1])
 		sb.WriteString(",")
 	}
 	sb.WriteString("video_use_audio_ice=")
@@ -357,25 +314,29 @@ func (xrtc XRTC) String() (string, error) {
 	sb.WriteString("url=")
 	sb.WriteString(xrtc.Url)
 	sb.WriteString("}")
+	if xrtc.Endpoint.Type != "" {
+		sb.WriteString(xrtc.Endpoint.Type)
+		sb.WriteString("/")
+	}
+	if xrtc.Endpoint.Profile != "" {
+		sb.WriteString(xrtc.Endpoint.Profile)
+		sb.WriteString("/")
+	}
 	return sb.String(), nil
 }
 
 type TRTC struct {
-	AppId      string
-	RoomId     string
-	UserId     string
-	UserSig    string
-	DestNumber string
-	Params     map[string]string
+	*Endpoint
+	AppId   string
+	RoomId  string
+	UserId  string
+	UserSig string
 }
 
 func (trtc TRTC) String() (string, error) {
 	var sb strings.Builder
-	sb.WriteString("{")
-	for key, value := range trtc.Params {
-		sb.WriteString(key)
-		sb.WriteString("=")
-		sb.WriteString(quote(value))
+	if trtc.FSDS != nil && trtc.FSDS.String() != "" {
+		sb.WriteString(trtc.FSDS.String()[:len(trtc.FSDS.String())-1])
 		sb.WriteString(",")
 	}
 	sb.WriteString("trtc_user_id=")
@@ -384,13 +345,12 @@ func (trtc TRTC) String() (string, error) {
 	sb.WriteString("trtc_user_sig=")
 	sb.WriteString(trtc.UserSig)
 	sb.WriteString("}")
-	sb.WriteString("/")
-	sb.WriteString("trtc")
+	sb.WriteString(trtc.Endpoint.Type)
 	sb.WriteString("/")
 	sb.WriteString(trtc.AppId)
 	sb.WriteString("/")
 	sb.WriteString(trtc.RoomId)
 	sb.WriteString("/")
-	sb.WriteString(trtc.DestNumber)
+	sb.WriteString(trtc.Endpoint.Dest)
 	return sb.String(), nil
 }

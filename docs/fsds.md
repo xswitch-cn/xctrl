@@ -6,7 +6,7 @@ FSDS指FreeSWITCH Dial String，亦指File String and Dial String，用于格式
 
 ```go
 import "git.xswitch.cn/xswitch/xctrl/fsds"
-var params = &fsds.CallParams{
+var params = &fsds.Endpoint{
 	...
 }
 callString := params.String()
@@ -16,28 +16,6 @@ callString := params.String()
 
 FSDS结构体输入示例。
 
-```go
-var FSDS = &fsds.FSDS{
-	Endpoint:  "sofia",
-	Profile:   "public",
-	DestNum:   "number",
-	IP:        "ip",
-	Port:      "port",
-	Transport: "tcp",
-	Params: map[string]string{
-		"a": "1",
-		"b": "2",
-	},
-}
-callString := FSDS.String()
-```
-
-FSDS输出。
-
-```sh
-{a=1,b=2}sofia/public/number@ip:port;transport=tcp
-```
-
 ## Endpoint接口
 
 ### user
@@ -45,13 +23,17 @@ FSDS输出。
 user结构体输入。
 
 ```go
-u := &fsds.User{
-	Number: "1000",
-	Domain: "test.test",//可选参数
-	Params: map[string]string{
-		"a": "1",
-		"b": "2",
+endpoint := fsds.User{
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params:         map[string]string{"param1": "value1", "param2": "value2"},
+			CallerIDName:   "test1",
+			CallerIDNumber: "test2",
+		},
+		Type: "test",
+		Dest: "1234",
 	},
+	Domain: "domain",
 }
 callString := u.String()
 ```
@@ -59,61 +41,60 @@ callString := u.String()
 user输出。
 
 ```sh
-{a=1,b=2}/user/1000@test.test
+{param1=value1,param2=value2}sofia/1000@domain
 ```
 
-user结构体输入，domain为空时。
+
+### IP
+
+IP结构体输入。
 
 ```go
-u := &User{
-	Number: "1000",
-	Params: map[string]string{
-		"a": "1",
-		"b": "2",
+ipEndpoint := fsds.IP{
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params: map[string]string{},
+		},
+		Type:    "test",
+		Dest:    "1234",
+		Profile: "public",
 	},
+	IP:        "127.0.0.1",
+	Port:      "5060",
+	Transport: "tcp",
 }
-callString := u.String()
 ```
 
-user输出。
+IP输出。
 
-```shell
-user/1000
+```sh
+test/public/1234@127.0.0.1:5060;transport=tcp
 ```
 
 
-### dial
+### gateway
 
-dial结构体输入。
+gateway结构体输入。
 
 ```go
-Dial := fsds.Dial {
-	LocalExtensionNum: 0,
-	IP: IPParam{
-		Num:       1001,
-		IP:        "127.0.0.1",
-		Port:      5090,//可选参数
-		Transport: 0,
+gatewayEndpoint := Gateway{
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params:       map[string]string{"param1": "value1", "param2": "value2"},
+			CallerIDName: "test1",
+		},
+		Type:    "test",
+		Profile: "gateway",
+		Dest:    "1234",
 	},
-	Gateway: GatewayParam{},
-	Params: map[string]string{
-		"a": "1",
-		"b": "2",
-	},
+	GatewayName: "gatewayname",
 }
-signalCaseString, err := Dial.String()
 ```
 
-Transport：如果使用TCP或TLS链路：
+gateway输出。
 
-- 0：空
-- 1：TCP
-- 2：TLS
-
-dial输出。
-
-```
-{A=1,B=2}/sofia/public/1001@127.0.0.1:5090
+```sh
+{param1=value1,param2=value2,caller_id_name=test1}test/gateway/gatewayname/1234
 ```
 
 ### Agora
@@ -122,16 +103,16 @@ Agora结构体输入。
 
 ```go
 agora := fsds.Agora{
-	AppID:      "appid1",
-	Token:      "token1",
-	Channel:    "channel1",
-	DestNumber: "number1",
-	Params: map[string]string{
-		"a": "1",
-		"b": "2",
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params: map[string]string{"a": "a"},
+		},
+		Type: "agora",
+		Dest: "number1",
 	},
+	Token:   "token1",
+	Channel: "channel1",
 }
-expectedResult = "agora/token1/channel1/number1"
 result, err = agora.String()
 ```
 
@@ -142,7 +123,7 @@ result, err = agora.String()
 Agora输出。
 
 ```sh
-{a=1,b=2}/agora/token1/channel1/number1
+{a=1}agora/token1/channel1/number1
 ```
 
 ### XRTC
@@ -151,14 +132,16 @@ xrtc结构体输入。
 
 ```go
 xrtc := fsds.XRTC{
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params:       map[string]string{"a": "a"},
+			CallerIDName: "test",
+		},
+	},
 	VideoUseAudioIce:    "video_use_audio_ice_value",
 	RtpPayloadSpace:     "rtp_payload_space_value",
 	AbsoluteCodecString: "absolute_codec_string_value",
 	Url:                 "url_value",
-		Params: map[string]string{
-		"a": "1",
-		"b": "2",
-	},
 }
 result, err := xrtc.String()
 ```
@@ -182,16 +165,21 @@ trtc结构体输入。
 
 ```go
 trtc := fsds.TRTC{
-	UserId:     "trtc_user_id_value",
-	UserSig:    "trtc_user_sig_value",
-	AppId:      "trtc_app_id_value",
-	RoomId:     "trtc_room_id_value",
-	DestNumber: "trtc_dest_number_value",
-		Params: map[string]string{
-		"a": "1",
-		"b": "2",
+	Endpoint: &fsds.Endpoint{
+		FSDS: &fsds.FSDS{
+			Params: map[string]string{
+				"a": "a",
+			},
+			CallerIDName:   "",
+			CallerIDNumber: "",
+		},
+		Type: "trtc",
+		Dest: "trtc_dest_number_value",
 	},
-	
+	UserId:  "trtc_user_id_value",
+	UserSig: "trtc_user_sig_value",
+	AppId:   "trtc_app_id_value",
+	RoomId:  "trtc_room_id_value",
 }
 result, err := trtc.String()
 ```
@@ -204,7 +192,7 @@ result, err := trtc.String()
 TRTC输出。
 
 ```sh
-{a=1,b=2,trtc_user_id=trtc_user_id_value,trtc_user_sig=trtc_user_sig_value}/trtc/trtc_app_id_value/trtc_room_id_value/trtc_dest_number_value"
+{a=a,trtc_user_id=trtc_user_id_value,trtc_user_sig=trtc_user_sig_value}trtc/trtc_app_id_value/trtc_room_id_value/trtc_dest_number_value
 ```
 
 ## File接口
@@ -215,11 +203,13 @@ File结构体输入。
 
 ```go
 file := &fsds.File{
-	Path: "/tmp/test.jpg", //支持 .mp4 .vv .png .jpg文件
-	Params: map[string]string{
-		"png_ms": "20000",
-		"dtext":  "请输入会议号",
+	FSDS: &fsds.FSDS{
+		Params: map[string]string{
+			"png_ms": "20000",
+			"dtext":  "请输入会议号",
+		},
 	},
+	Path: "/tmp/test.jpg",
 }
 fileString := file.String()
 ```
@@ -240,10 +230,12 @@ pngFile := fsds.PNGFile{
 	File: &File{
 		Path: "tmp/",
 		Name: "test.png",
-		Params: map[string]string{
-		"a": "1",
-		"b": "2",
-	},
+		FSDS: &fsds.FSDS{
+			Params: map[string]string{
+			"a": "1",
+			"b": "2",
+			},
+		},
 	MS:        "1000",//可选参数
 	Alpha:     true,//可选参数
 	PNGFPS:    10,//可选参数
