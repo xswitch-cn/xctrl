@@ -160,9 +160,6 @@ func (c *Ctrl) Respond(topic string, resp *Response, opts ...nats.PublishOption)
 }
 
 func (c *Ctrl) SetFromPrefix(prefix string) {
-	if len(prefix) > 0 && prefix[len(prefix)-1] != '-' {
-		prefix = prefix + "-"
-	}
 	c.fromPrefix = prefix
 }
 
@@ -173,9 +170,6 @@ func SetFromPrefix(prefix string) {
 }
 
 func (c *Ctrl) SetToPrefix(prefix string) {
-	if len(prefix) > 0 && prefix[len(prefix)-1] != '-' {
-		prefix = prefix + "-"
-	}
 	c.toPrefix = prefix
 }
 
