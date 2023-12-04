@@ -174,7 +174,7 @@ func quote(str string) string {
 	return str
 }
 
-func (f *File) String() string {
+func (f File) String() string {
 	var sb strings.Builder
 	// Append the file parameters
 	if f.FSDS != nil {
