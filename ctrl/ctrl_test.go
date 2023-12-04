@@ -9,6 +9,8 @@ import (
 )
 
 func TestNodeAddress(t *testing.T) {
+
+	globalCtrl.toPrefix = "to-"
 	type args struct {
 		nodeUUID string
 	}
@@ -18,18 +20,32 @@ func TestNodeAddress(t *testing.T) {
 		want string
 	}{
 		{
-			name: "test1",
+			name: "only nodeuuid",
 			args: args{
-				nodeUUID: "test.test",
+				nodeUUID: "86660714-df27-4a68-adf2-ec51cb7cd2aa",
 			},
-			want: "cn.xswitch.node.test.test",
+			want: "cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
 		},
 		{
-			name: "test1",
+			name: "topic with nodeuuid",
 			args: args{
-				nodeUUID: "cn.xswitch.node.test.test",
+				nodeUUID: "cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
 			},
-			want: "cn.xswitch.node.test.test",
+			want: "cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
+		},
+		{
+			name: "topic with tenancy and nodeuuid",
+			args: args{
+				nodeUUID: "to-xyt.cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
+			},
+			want: "to-xyt.cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
+		},
+		{
+			name: "topic with tenancy and nodeuuid",
+			args: args{
+				nodeUUID: "tso-cherry.cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
+			},
+			want: "cn.xswitch.node.tso-cherry.cn.xswitch.node.86660714-df27-4a68-adf2-ec51cb7cd2aa",
 		},
 	}
 	for _, tt := range tests {

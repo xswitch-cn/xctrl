@@ -213,14 +213,14 @@ func (c *Ctrl) TenantNodeAddress(tenant string, nodeUUID string) string {
 
 func (c *Ctrl) GetTenancyTopicAndUser(rawTopic string) (user string, topic string) {
 	user = ""
-	topic = ""
-	frontIndex := strings.Index(rawTopic, "from-")
-	if frontIndex > -1 {
-		pointIndex := strings.Index(rawTopic, ".")
-		user = rawTopic[frontIndex+5 : pointIndex]
-		topic = rawTopic[pointIndex+1:]
-	} else {
-		topic = rawTopic
+	topic = rawTopic
+	if c.isTenancy && c.fromPrefix != "" {
+		frontIndex := strings.Index(rawTopic, c.fromPrefix)
+		if frontIndex > -1 {
+			pointIndex := strings.Index(rawTopic, ".")
+			user = rawTopic[frontIndex+len(c.fromPrefix) : pointIndex]
+			topic = rawTopic[pointIndex+1:]
+		}
 	}
 	return user, topic
 }
@@ -230,4 +230,14 @@ func (c *Ctrl) GetTenancyTopicAddress(userPrefix string, topic string) string {
 		return topic
 	}
 	return c.toPrefix + userPrefix + "." + topic
+}
+
+func (c *Ctrl) SetTenancyStatus(status bool) {
+	c.isTenancy = status
+}
+
+func EnableTenancy() {
+	if globalCtrl != nil {
+		globalCtrl.SetTenancyStatus(true)
+	}
 }

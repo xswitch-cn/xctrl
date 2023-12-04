@@ -34,17 +34,18 @@ type Ctrl struct {
 	hubLock    sync.RWMutex
 	channelHub map[string]*Channel
 
-	seq             uint64
-	cbLock          sync.RWMutex
-	resultCallbacks map[string]*AsyncCallOption
-	nodeCallback    NodeHashFun
+	seq                 uint64
+	cbLock              sync.RWMutex
+	resultCallbacks     map[string]*AsyncCallOption
+	nodeCallback        NodeHashFun
+	nodeCallbackTenancy NodeHashWithTenacyFun
 
 	maxChannelLifeTime uint
-
-	instanceName string
-	nodes        CtrlNodes
-	fromPrefix   string
-	toPrefix     string
+	instanceName       string
+	nodes              CtrlNodes
+	fromPrefix         string
+	toPrefix           string
+	isTenancy          bool
 }
 
 type AsyncCallOption struct {
@@ -392,6 +393,7 @@ func NodeAddress(nodeUUID string) string {
 	if nodeUUID == "" {
 		return "cn.xswitch.node"
 	}
+
 	if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
 		return "cn.xswitch.node." + nodeUUID
 	}
@@ -438,7 +440,11 @@ func RegisterHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	if globalCtrl != nil {
 		globalCtrl.registerHashNodeFun(nodeCallbackFunc)
 	}
-
+}
+func RegisterHashNodeWithTenancyFun(nodeCallbackFunc NodeHashWithTenacyFun) {
+	if globalCtrl != nil {
+		globalCtrl.registerHashNodeWithtenancyFun(nodeCallbackFunc)
+	}
 }
 
 func SetMaxChannelLifeTime(time uint) {

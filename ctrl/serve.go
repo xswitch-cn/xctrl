@@ -71,6 +71,48 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 	return nil
 }
 
+func (h *Ctrl) handleNodeWithTenancy(natsEvent nats.Event) error {
+	var event Request
+	err := json.Unmarshal(natsEvent.Message().Body, &event)
+	if err != nil {
+		return fmt.Errorf("event parse error: %v", err)
+	}
+	node := &xctrl.Node{}
+	err = json.Unmarshal(*event.Params, node)
+	if err != nil {
+		return fmt.Errorf("jsonrpc parse error: %v", err)
+	}
+	log.Tracef("Node Register: %s, %s, %s, %s, %d",
+		node.GetName(),
+		node.GetVersion(),
+		node.GetUuid(),
+		node.GetAddress(),
+		node.GetRack())
+	isMethodForNode := true
+	switch event.Method {
+	case "Event.NodeRegister":
+		h.register(node)
+	case "Event.NodeUnregister":
+		h.deRegister(node)
+	case "Event.NodeUpdate":
+		h.register(node)
+	default:
+		isMethodForNode = false
+		log.Warnf("Received unsupported event: %s\n", event.Method)
+	}
+	if isMethodForNode && h.nodeCallbackTenancy != nil {
+		node := new(xctrl.Node)
+		err = json.Unmarshal(*event.Params, node)
+		if err != nil {
+			log.Error(err)
+		} else {
+			userPrefix, _ := GetTenancyTopicAndUser(natsEvent.Topic())
+			h.nodeCallbackTenancy(node, event.Method, userPrefix)
+		}
+	}
+	return nil
+}
+
 // nodeUpdate 节点状态更新
 func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 	n := &xctrl.Node{}
@@ -364,7 +406,11 @@ func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 	}
 	log.Infof("EnableNodeStatus subject=%s", subject)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
-		return h.handleNode(ev)
+		if h.isTenancy {
+			return h.handleNodeWithTenancy(ev)
+		} else {
+			return h.handleNode(ev)
+		}
 	})
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
@@ -425,11 +471,15 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 }
 
 type NodeHashFun func(node *xctrl.Node, method string)
+type NodeHashWithTenacyFun func(node *xctrl.Node, method string, tenancy string)
 
 // RegisterHashNodeFun 注册hash节点事件
 // nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
+}
+func (h *Ctrl) registerHashNodeWithtenancyFun(nodeCallbackFunc NodeHashWithTenacyFun) {
+	h.nodeCallbackTenancy = nodeCallbackFunc
 }
 
 func before(str1, str2 string) string {
