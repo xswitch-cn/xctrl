@@ -293,7 +293,11 @@ vvFile := VVFile{
 }
 ```
 
-file输出。
+- Engine：TTS引擎
+- Voice：TTS引擎使用的声音
+- Text：TTS播放的文字
+
+VVFile输出。
 
 ```shell
 {param=test,vv_ms=some-value}vv://tts://some-engine|some-voice|some-text
