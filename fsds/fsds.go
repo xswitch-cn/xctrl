@@ -239,7 +239,7 @@ func (f PNGFile) String() (string, error) {
 	sb.Reset()
 	sb.WriteString(ParamsString)
 	sb.WriteString("}")
-	sb.WriteString(path.Join("/", f.Path, f.Name))
+	sb.WriteString(path.Join(f.Path, f.Name))
 	return sb.String(), nil
 }
 

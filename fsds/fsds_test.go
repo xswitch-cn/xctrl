@@ -91,7 +91,7 @@ func TestUserEndpoint_String(t *testing.T) {
 }
 
 func TestFile(t *testing.T) {
-	file_string := "{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg"
+	file_string := "{png_ms=20000,dtext=请输入会议号}tmp/test.jpg"
 	file := &File{
 		FSDS: &FSDS{
 			Params: map[string]string{
@@ -99,7 +99,7 @@ func TestFile(t *testing.T) {
 				"dtext":  "请输入会议号",
 			},
 		},
-		Path: "/tmp/test.jpg",
+		Path: "tmp/test.jpg",
 	}
 	if file.String() != file_string {
 		t.Errorf("file.String() = %v, want %v", file.String(), file_string)
@@ -113,7 +113,7 @@ func TestPNGFile(t *testing.T) {
 				FSDS: &FSDS{
 					Params: nil,
 				},
-				Path: "tmp",
+				Path: "/tmp",
 				Name: "test.jpg",
 			},
 			MS:    "20000",
@@ -121,8 +121,8 @@ func TestPNGFile(t *testing.T) {
 		},
 		{
 			File: &File{
-				Path: "/tmp",
-				Name: "/test.jpg",
+				Path: "tmp",
+				Name: "test.jpg",
 				FSDS: &FSDS{
 					Params: nil,
 				},
@@ -156,7 +156,7 @@ func TestPNGFile(t *testing.T) {
 		},
 		{
 			File: &File{
-				Path: "tmp/",
+				Path: "tmp",
 				Name: "test.png",
 			},
 			MS:        "1000",
@@ -178,16 +178,16 @@ func TestPNGFile(t *testing.T) {
 			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
 		},
 		{
-			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+			"{png_ms=20000,dtext=请输入会议号}tmp/test.jpg", false,
 		},
 		{
-			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+			"{png_ms=20000,dtext=请输入会议号}tmp/test.jpg", false,
 		},
 		{
 			"", true,
 		},
 		{
-			"{png_ms=1000,dtext=dtext,png_fps=10,bg=bg,fg=fg,text=text,tts_engine=ttsengine,tts_voice=ttsvoice,alpha=true,size=size,scale_w=scalew,scale_h=scaleh}/tmp/test.png", false,
+			"{png_ms=1000,dtext=dtext,png_fps=10,bg=bg,fg=fg,text=text,tts_engine=ttsengine,tts_voice=ttsvoice,alpha=true,size=size,scale_w=scalew,scale_h=scaleh}tmp/test.png", false,
 		},
 	}
 	for index, signalCase := range Cases {
