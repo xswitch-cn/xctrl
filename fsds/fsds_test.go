@@ -72,15 +72,17 @@ func TestUserEndpoint_String(t *testing.T) {
 	endpoint := User{
 		Endpoint: &Endpoint{
 			FSDS: &FSDS{
-				Params: map[string]string{"param1": "value1", "param2": "value2"},
+				Params:         map[string]string{"param1": "value1", "param2": "value2"},
+				CallerIDName:   "test1",
+				CallerIDNumber: "test2",
 			},
-			Type: "sofia",
-			Dest: "1000",
+			Type: "test",
+			Dest: "1234",
 		},
 		Domain: "domain",
 	}
 
-	expected := "{param1=value1,param2=value2}sofia/1000@domain"
+	expected := "{param1=value1,param2=value2,caller_id_name=test1,caller_id_number=test2}test/1234@domain"
 	result := endpoint.String()
 
 	if result != expected {
@@ -89,7 +91,7 @@ func TestUserEndpoint_String(t *testing.T) {
 }
 
 func TestFile(t *testing.T) {
-	file_string := "{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg"
+	file_string := "{png_ms=20000,dtext=请输入会议号}tmp/test.jpg"
 	file := &File{
 		FSDS: &FSDS{
 			Params: map[string]string{
@@ -97,7 +99,7 @@ func TestFile(t *testing.T) {
 				"dtext":  "请输入会议号",
 			},
 		},
-		Path: "/tmp/test.jpg",
+		Path: "tmp/test.jpg",
 	}
 	if file.String() != file_string {
 		t.Errorf("file.String() = %v, want %v", file.String(), file_string)
@@ -111,7 +113,7 @@ func TestPNGFile(t *testing.T) {
 				FSDS: &FSDS{
 					Params: nil,
 				},
-				Path: "tmp",
+				Path: "/tmp",
 				Name: "test.jpg",
 			},
 			MS:    "20000",
@@ -119,8 +121,8 @@ func TestPNGFile(t *testing.T) {
 		},
 		{
 			File: &File{
-				Path: "/tmp",
-				Name: "/test.jpg",
+				Path: "tmp",
+				Name: "test.jpg",
 				FSDS: &FSDS{
 					Params: nil,
 				},
@@ -154,7 +156,7 @@ func TestPNGFile(t *testing.T) {
 		},
 		{
 			File: &File{
-				Path: "tmp/",
+				Path: "tmp",
 				Name: "test.png",
 			},
 			MS:        "1000",
@@ -176,16 +178,16 @@ func TestPNGFile(t *testing.T) {
 			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
 		},
 		{
-			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+			"{png_ms=20000,dtext=请输入会议号}tmp/test.jpg", false,
 		},
 		{
-			"{png_ms=20000,dtext=请输入会议号}/tmp/test.jpg", false,
+			"{png_ms=20000,dtext=请输入会议号}tmp/test.jpg", false,
 		},
 		{
 			"", true,
 		},
 		{
-			"{png_ms=1000,dtext=dtext,png_fps=10,bg=bg,fg=fg,text=text,tts_engine=ttsengine,tts_voice=ttsvoice,alpha=true,size=size,scale_w=scalew,scale_h=scaleh}/tmp/test.png", false,
+			"{png_ms=1000,dtext=dtext,png_fps=10,bg=bg,fg=fg,text=text,tts_engine=ttsengine,tts_voice=ttsvoice,alpha=true,size=size,scale_w=scalew,scale_h=scaleh}tmp/test.png", false,
 		},
 	}
 	for index, signalCase := range Cases {
@@ -294,5 +296,33 @@ func TestTRTC(t *testing.T) {
 	}
 	if result != expected {
 		t.Errorf("Expected %s, but got %s", expected, result)
+	}
+}
+
+func TestString(t *testing.T) {
+	vvFile := VVFile{
+		Endpoint: &Endpoint{
+			FSDS: &FSDS{
+				Params: map[string]string{
+					"param": "test",
+				},
+			},
+		},
+		VVMs:   "some-value",
+		Engine: "some-engine",
+		Voice:  "some-voice",
+		Text:   "some-text",
+	}
+
+	expectedResult := "{param=test,vv_ms=some-value}vv://tts://some-engine|some-voice|some-text" // 设置预期结果
+
+	actualResult, err := vvFile.String()
+
+	if err != nil {
+		t.Errorf("Error occurred: %v", err)
+	}
+
+	if actualResult != expectedResult {
+		t.Errorf("Expected %s, but got %s", expectedResult, actualResult)
 	}
 }

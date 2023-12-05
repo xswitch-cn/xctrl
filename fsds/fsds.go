@@ -174,7 +174,7 @@ func quote(str string) string {
 	return str
 }
 
-func (f *File) String() string {
+func (f File) String() string {
 	var sb strings.Builder
 	// Append the file parameters
 	if f.FSDS != nil {
@@ -239,7 +239,7 @@ func (f PNGFile) String() (string, error) {
 	sb.Reset()
 	sb.WriteString(ParamsString)
 	sb.WriteString("}")
-	sb.WriteString(path.Join("/", f.Path, f.Name))
+	sb.WriteString(path.Join(f.Path, f.Name))
 	return sb.String(), nil
 }
 
@@ -352,5 +352,36 @@ func (trtc TRTC) String() (string, error) {
 	sb.WriteString(trtc.RoomId)
 	sb.WriteString("/")
 	sb.WriteString(trtc.Endpoint.Dest)
+	return sb.String(), nil
+}
+
+type VVFile struct {
+	*Endpoint
+	VVMs   string
+	Engine string
+	Voice  string
+	Text   string
+}
+
+func (vvFile VVFile) String() (string, error) {
+	var sb strings.Builder
+	if vvFile.FSDS != nil && vvFile.FSDS.String() != "" {
+		sb.WriteString(vvFile.FSDS.String()[:len(vvFile.FSDS.String())-1])
+		if vvFile.VVMs != "" {
+			sb.WriteString(",")
+
+			sb.WriteString("vv_ms")
+			sb.WriteString("=")
+			sb.WriteString(vvFile.VVMs)
+		}
+		sb.WriteString("}")
+	}
+	sb.WriteString("vv://tts://")
+
+	sb.WriteString(vvFile.Engine)
+	sb.WriteString("|")
+	sb.WriteString(vvFile.Voice)
+	sb.WriteString("|")
+	sb.WriteString(vvFile.Text)
 	return sb.String(), nil
 }

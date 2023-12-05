@@ -30,7 +30,7 @@ endpoint := fsds.User{
 			CallerIDName:   "test1",
 			CallerIDNumber: "test2",
 		},
-		Type: "test",
+		Type: "sofia",
 		Dest: "1234",
 	},
 	Domain: "domain",
@@ -41,7 +41,7 @@ callString := u.String()
 user输出。
 
 ```sh
-{param1=value1,param2=value2}sofia/1000@domain
+{param1=value1,param2=value2,caller_id_name=test1,caller_id_number=test2}sofia/1234@domain
 ```
 
 
@@ -275,7 +275,33 @@ pngfile输出。
 
 ### VVFile
 
-Todo.
+PNGFile输入。
+
+```go
+vvFile := VVFile{
+	Endpoint: &Endpoint{
+		FSDS: &FSDS{
+			Params: map[string]string{
+				"param": "test",
+			},
+		},
+	},
+	VVMs:   "some-value",
+	Engine: "some-engine",
+	Voice:  "some-voice",
+	Text:   "some-text",
+}
+```
+
+- Engine：TTS引擎
+- Voice：TTS引擎使用的声音
+- Text：TTS播放的文字
+
+VVFile输出。
+
+```shell
+{param=test,vv_ms=some-value}vv://tts://some-engine|some-voice|some-text
+```
 
 ## AV
 
