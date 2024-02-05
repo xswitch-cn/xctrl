@@ -77,6 +77,8 @@ func (q *queue) start() {
 		log.Tracef("Queue %s started", q.name)
 		if q.expire > 0 {
 			var handler Handler
+			timer := time.NewTimer(q.expire)
+			defer timer.Stop()
 			for running {
 				// xlog.Infof("Queue %s running", q.name)
 				select {
@@ -91,11 +93,13 @@ func (q *queue) start() {
 					q.runWithRecovery(e)
 				case <-q.done:
 					running = false
-				case <-time.After(q.expire):
+				case <-timer.C:
 					// sigh, we don't have a handler here ?
 					q.runWithRecovery(&Event{Flag: "TIMEOUT", handler: handler})
 					running = false
 					log.Tracef("Queue %s timeout %d", q.name, q.expire)
+					timer.Reset(q.expire)
+
 				}
 			}
 		} else {
