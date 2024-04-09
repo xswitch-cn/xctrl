@@ -2,6 +2,8 @@ git.xswitch.cn/xswitch/proto v0.1.18-0.20240408062153-bc5a3d8f4229 h1:yE2UUriG6m
 git.xswitch.cn/xswitch/proto v0.1.18-0.20240408062153-bc5a3d8f4229/go.mod h1:KR2cZ0KTSYRCtPz1oNaV9gm7M8+yhFxz/zDLmPLMZxY=
 git.xswitch.cn/xswitch/proto v0.2.1-0.20240408065317-87172dc65100 h1:izhzv3O2/fNDkkRn4pm+tyfXK5hefxh5rtlTtWpIHTk=
 git.xswitch.cn/xswitch/proto v0.2.1-0.20240408065317-87172dc65100/go.mod h1:C0S4YR263c6jYTgjGqCHkVeIe69b10Q3p8N/bLtWUUE=
+git.xswitch.cn/xswitch/proto v0.2.1-0.20240409024837-7ac508d3bc56 h1:w7fFRUOFUP5L/VgC4ZIwDGWmRaWtTrrIOIw7RHgI3B4=
+git.xswitch.cn/xswitch/proto v0.2.1-0.20240409024837-7ac508d3bc56/go.mod h1:C0S4YR263c6jYTgjGqCHkVeIe69b10Q3p8N/bLtWUUE=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
