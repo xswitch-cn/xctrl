@@ -331,7 +331,7 @@ func (c *Ctrl) handleEvent(handler EventHandler, natsEvent nats.Event) error {
 
 // EnableApp APP事件
 func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error {
-	log.Infof("EnableApp subject=%s queue=%s", subject, queue)
+	log.Infof("EnableApp subject=%s queue=%s\n", subject, queue)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	}, nats.Queue(queue))
@@ -341,7 +341,7 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 	}
 
 	mySubject := fmt.Sprintf(`%s.%s`, subject, h.uuid)
-	log.Infof("EnableApp subscribe to subject=%s", mySubject)
+	log.Infof("EnableApp subscribe to subject=%s\n", mySubject)
 	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	})
@@ -350,14 +350,16 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		return err
 	}
 
-	mySubject = fmt.Sprintf(`%s.%s`, "cn.xswitch.ctrl", h.uuid)
-	log.Infof("EnableApp subscribe to subject=%s", mySubject)
-	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
-		return h.handleApp(handler, ev)
-	})
-	if err != nil {
-		log.Errorf("topic subscribe error: %s", err.Error())
-		return err
+	if subject != "cn.xswitch.ctrl" {
+		mySubject = fmt.Sprintf(`%s.%s`, "cn.xswitch.ctrl", h.uuid)
+		log.Infof("EnableApp subscribe to subject=%s\n", mySubject)
+		_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
+			return h.handleApp(handler, ev)
+		})
+		if err != nil {
+			log.Errorf("topic subscribe error: %s", err.Error())
+			return err
+		}
 	}
 
 	return nil

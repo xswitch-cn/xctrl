@@ -1,8 +1,15 @@
 # xctrl - XSwitch XCC API Go 语言 SDK
 
-小樱桃在用的Go语言SDK 1.1，API更规范，推荐升级。[旧的1.0版代码和文档见这里](https://git.xswitch.cn/xswitch/xctrl/src/branch/v1.0)。
+小樱桃在用的Go语言SDK 1.2，API更规范，推荐升级。
 
-- 依赖 <https://git.xswitch.cn/xswitch/proto> 。
+关于Go语言SDK 旧版的代码和说明文档：
+
+- [1.1版代码和文档](https://git.xswitch.cn/xswitch/xctrl/src/branch/v1.1)
+- [1.0版代码和文档](https://git.xswitch.cn/xswitch/xctrl/src/branch/v1.0)
+
+以下是其他相关链接：
+
+- 依赖 <https://git.xswitch.cn/xswitch/proto> 
 - [SDK使用和开发文档](docs/README.md)
 - 协议参考文档参见：<https://git.xswitch.cn/xswitch/proto/src/branch/main/docs>
 - 示例：<https://git.xswitch.cn/xswitch/xcc-examples/src/branch/master/go>
