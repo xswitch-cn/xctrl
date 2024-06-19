@@ -262,7 +262,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 
 		})
 	default:
-		log.Infof("Channel State %s %s", channel.GetUuid(), channel.GetState())
+		log.Infof("Channel State %s %s \n", channel.GetUuid(), channel.GetState())
 	}
 
 	ev := bus.NewEvent(channel.GetState(), channel.GetUuid(), channel, natsEvent)
