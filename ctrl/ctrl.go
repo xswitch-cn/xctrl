@@ -208,7 +208,7 @@ func Respond(topic string, resp *Response, opts ...nats.PublishOption) error {
 
 // Init 初始化Ctrl trace 是否开启NATS消息跟踪， addrs nats消息队列连接地址
 func Init(trace bool, addrs string) error {
-	log.Infof("ctrl starting with addrs=%s\n", addrs)
+	log.Infof("xxx ctrl starting with addrs=%s\n", addrs)
 	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
 	if err != nil {
 		return err

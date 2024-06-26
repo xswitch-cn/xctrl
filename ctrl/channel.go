@@ -430,6 +430,39 @@ func (channel *Channel) DetectSpeech0(req *xctrl.DetectRequest, async bool) *xct
 	return response
 }
 
+// DetectSpeech 语音识别过程中补充TTS文本
+func (channel *Channel) DetectSpeechFeedTTS0(req *xctrl.DetectSpeechFeedTTSRequest, async bool) *xctrl.Response {
+	if channel == nil {
+		fmt.Println("======WTF ? ssss", req.Text)
+		return &xctrl.Response{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+
+	if req.GetUuid() == "" {
+		req.Uuid = channel.GetUuid()
+	}
+	fmt.Println("======ssss", req.Text)
+	var response *xctrl.Response
+	var err error
+
+	if !async {
+		response, err = Service().DetectSpeechFeedTTS(context.Background(), req, channel.NodeAddress(), client.WithRequestTimeout(2*time.Second))
+	} else {
+		response, err = Service().DetectSpeechFeedTTS(context.Background(), req, channel.NodeAddress(), client.WithAsync())
+	}
+
+	if err != nil {
+		response = new(xctrl.Response)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+		return response
+	}
+	return response
+}
+
 // RingBackDetection 回铃音检测
 func (channel *Channel) RingBackDetection0(req *xctrl.RingBackDetectionRequest, async bool) *xctrl.Response {
 	if channel == nil {
