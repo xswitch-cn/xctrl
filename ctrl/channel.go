@@ -433,7 +433,6 @@ func (channel *Channel) DetectSpeech0(req *xctrl.DetectRequest, async bool) *xct
 // DetectSpeech 语音识别过程中补充TTS文本
 func (channel *Channel) DetectSpeechFeedTTS0(req *xctrl.DetectSpeechFeedTTSRequest, async bool) *xctrl.Response {
 	if channel == nil {
-		fmt.Println("======WTF ? ssss", req.Text)
 		return &xctrl.Response{
 			Code:    http.StatusInternalServerError,
 			Message: "Unable to locate Channel",
@@ -443,7 +442,6 @@ func (channel *Channel) DetectSpeechFeedTTS0(req *xctrl.DetectSpeechFeedTTSReque
 	if req.GetUuid() == "" {
 		req.Uuid = channel.GetUuid()
 	}
-	fmt.Println("======ssss", req.Text)
 	var response *xctrl.Response
 	var err error
 
