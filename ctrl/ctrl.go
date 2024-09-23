@@ -218,6 +218,21 @@ func Init(trace bool, addrs string) error {
 	return err
 }
 
+// Init 初始化Ctrl trace 是否开启NATS消息跟踪， addrs nats消息队列连接地址, 手动指定UUID
+func InitWithUUID(trace bool, addrs string, uuid string) error {
+	log.Infof("ctrl starting with addrs=%s\n", addrs)
+	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
+	if err != nil {
+		return err
+	}
+	if uuid != "" {
+		c.uuid = uuid
+	}
+	globalCtrl = c
+	xctrl.SetService(&c.service)
+	return err
+}
+
 func InitCManService(addr string) error {
 	if globalCtrl != nil {
 		globalCtrl.NewCManService(addr)
