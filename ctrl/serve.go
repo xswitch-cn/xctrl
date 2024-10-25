@@ -461,6 +461,34 @@ func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
 	return c, nil
 }
 
+func initCtrlWithOptions(options ...nats.Option) (*Ctrl, error) {
+
+	c := &Ctrl{
+		conn:               nats.NewConn(options...),
+		uuid:               uuid.New().String(),
+		serviceName:        "cn.xswitch.nodes",
+		enableNodeStatus:   false,
+		channelHub:         map[string]*Channel{},
+		resultCallbacks:    map[string]*AsyncCallOption{},
+		maxChannelLifeTime: 4,
+	}
+
+	// 连接NATS消息队列
+	if err := c.conn.Connect(); err != nil {
+		return nil, err
+	}
+
+	// 同步调用 xswitch
+	c.service = c.newNodeService()
+	// 异步调用 xswitch
+	c.asyncService = c.newAsyncService()
+	// 同步调用 xswitch, 使用nats的RequestWithContext, 可以返回结果，可以中途取消
+	c.aService = c.newAService()
+
+	c.nodes = InitCtrlNodes()
+	return c, nil
+}
+
 // 订阅消息
 func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
 	sub, err := h.conn.Subscribe(topic, func(ev nats.Event) error {

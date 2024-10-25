@@ -3,6 +3,7 @@ package ctrl
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -53,6 +54,13 @@ type AsyncCallOption struct {
 	cb   ResultCallbackFunc
 	data interface{}
 	ts   time.Time
+}
+
+type CtrlConfig struct {
+	Trace           bool
+	Addrs           string
+	CtrlUUID        string
+	DrainConnection bool
 }
 
 type ResultCallbackFunc func(msg *Message, data interface{})
@@ -227,6 +235,34 @@ func InitWithUUID(trace bool, addrs string, uuid string) error {
 	}
 	if uuid != "" {
 		c.uuid = uuid
+	}
+	globalCtrl = c
+	xctrl.SetService(&c.service)
+	return err
+}
+
+// Init 通过配置类初始化Ctrl
+func InitWithConfig(config CtrlConfig) error {
+	if config.Addrs == "" {
+		return errors.New("addrs is empty")
+	}
+	log.Infof("ctrl starting with addrs=%s\n", config.Addrs)
+
+	options := []nats.Option{
+		nats.Addrs(strings.Split(config.Addrs, ",")...),
+		nats.Trace(config.Trace),
+	}
+
+	if config.DrainConnection {
+		options = append(options, nats.DrainConnection())
+	}
+
+	c, err := initCtrlWithOptions(options...)
+	if err != nil {
+		return err
+	}
+	if config.CtrlUUID != "" {
+		c.uuid = config.CtrlUUID
 	}
 	globalCtrl = c
 	xctrl.SetService(&c.service)
