@@ -545,3 +545,11 @@ func GetTenancyTopicAddress(userPrefix string, topic string) string {
 	}
 	return globalCtrl.GetTenancyTopicAddress(userPrefix, topic)
 }
+
+func Disconnect() error {
+	if globalCtrl == nil {
+		return errors.New("ctrl uninitialized")
+	}
+	globalCtrl.conn.Disconnect()
+	return nil
+}
