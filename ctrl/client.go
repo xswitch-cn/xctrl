@@ -135,7 +135,6 @@ func (r *ctrlClient) Options() client.Options {
 }
 
 func (r *ctrlClient) Call(ctx context.Context, request client.Request, response interface{}, opts ...client.CallOption) error {
-
 	// make a copy of call opts
 	callOpts := r.opts.CallOptions
 	// todo check this
@@ -186,10 +185,12 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 	request := new(Request)
 	requestID, ok := metadata.Get(ctx, "request-seq-id")
 	if !ok || requestID == "" {
-		requestID = fmt.Sprintf(`"%d"`, atomic.AddUint64(&r.seq, 1))
+		if !opts.Async && !r.async {
+			requestID = fmt.Sprintf(`"%d"`, atomic.AddUint64(&r.seq, 1))
+			id := json.RawMessage(requestID)
+			request.ID = &id
+		}
 	}
-	id := json.RawMessage(requestID)
-	request.ID = &id
 	request.Method = req.Method()
 	request.Version = "2.0"
 	data, _ := json.Marshal(req.Body())
