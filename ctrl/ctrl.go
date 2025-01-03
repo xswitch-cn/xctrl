@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/nats-io/nats-server/v2/server"
 	"strings"
 	"sync"
 	"time"
@@ -61,6 +62,9 @@ type CtrlConfig struct {
 	Addrs           string
 	CtrlUUID        string
 	DrainConnection bool
+	CertPem         string
+	KeyPem          string
+	RootCAPem       string
 }
 
 type ResultCallbackFunc func(msg *Message, data interface{})
@@ -251,6 +255,27 @@ func InitWithConfig(config CtrlConfig) error {
 	options := []nats.Option{
 		nats.Addrs(strings.Split(config.Addrs, ",")...),
 		nats.Trace(config.Trace),
+	}
+
+	if config.CertPem != "" && config.KeyPem != "" && config.RootCAPem != "" {
+		serverTlsConfig, err := server.GenTLSConfig(&server.TLSConfigOpts{
+			CertFile: config.CertPem,
+			KeyFile:  config.KeyPem,
+			CaFile:   config.RootCAPem,
+			Verify:   true,
+			Timeout:  5,
+		})
+		if err != nil {
+			log.Fatalf("tls config: %v", err)
+		}
+		options = append(options, nats.TLSConfig(serverTlsConfig))
+		n := &nats.TLSConnectInformation{
+			Cert:    config.CertPem,
+			Key:     config.KeyPem,
+			RootCAs: config.RootCAPem,
+		}
+		options = append(options, nats.TLSConnect(n))
+
 	}
 
 	if config.DrainConnection {

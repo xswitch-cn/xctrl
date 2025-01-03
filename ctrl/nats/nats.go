@@ -335,6 +335,17 @@ func NewConn(opts ...Option) Conn {
 	if options.TLSConfig == nil {
 		options.TLSConfig = natsOpts.TLSConfig
 	}
+	if options.TLSConnectInformation != nil {
+		rootCAErr := nats.RootCAs(options.TLSConnectInformation.RootCAs)(&natsOpts)
+		if rootCAErr != nil {
+			fmt.Printf("RootCAs init error: %s \n", rootCAErr.Error())
+		}
+
+		certErr := nats.ClientCert(options.TLSConnectInformation.Cert, options.TLSConnectInformation.Key)(&natsOpts)
+		if certErr != nil {
+			fmt.Printf("Certification init error: %s \n", certErr.Error())
+		}
+	}
 
 	nb := &nConn{
 		opts:  options,
