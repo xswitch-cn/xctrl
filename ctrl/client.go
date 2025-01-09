@@ -246,13 +246,16 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 	rsp.Result = resp
 	err = json.Unmarshal(msg.Body, &rsp)
 
-	if err != nil || rsp.getError() != nil {
+	if rsp.getError() != nil {
+		log.Errorf("nats.jsonrpc.client %v %v %v", rsp.getError(), resp, rsp)
+		return rsp.getError()
+	}
+
+	if err != nil {
 		log.Errorf("nats.jsonrpc.client %v %v %v", err, resp, rsp)
-		if rsp.getError() != nil {
-			return rsp.getError()
-		}
 		return errors.InternalServerError("nats.jsonrpc.client", "%v", err)
 	}
+
 	return nil
 }
 
