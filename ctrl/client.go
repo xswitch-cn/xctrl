@@ -248,6 +248,9 @@ func (r *ctrlClient) call(ctx context.Context, req client.Request, resp interfac
 
 	if err != nil || rsp.getError() != nil {
 		log.Errorf("nats.jsonrpc.client %v %v %v", err, resp, rsp)
+		if rsp.getError() != nil {
+			return rsp.getError()
+		}
 		return errors.InternalServerError("nats.jsonrpc.client", "%v", err)
 	}
 	return nil
