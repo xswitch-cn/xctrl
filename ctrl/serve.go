@@ -224,7 +224,12 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
 			if ev.Params == nil {
-				log.Error("ev.Params is nil")
+
+				if ev.Flag == "TIMEOUT" {
+					bus.Unsubscribe(ev.Topic, ev.Queue)
+				} else {
+					log.Error("ev.Params is nil")
+				}
 				return nil
 			}
 			if natsEvent, ok := ev.Params.(nats.Event); ok {
