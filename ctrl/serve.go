@@ -46,7 +46,7 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 		node.GetVersion(),
 		node.GetUuid(),
 		node.GetAddress(),
-		node.GetRack())
+		node.GetRank())
 	isMethodForNode := true
 	switch event.Method {
 	case "Event.NodeRegister":
@@ -87,7 +87,7 @@ func (h *Ctrl) handleNodeWithTenancy(natsEvent nats.Event) error {
 		node.GetVersion(),
 		node.GetUuid(),
 		node.GetAddress(),
-		node.GetRack())
+		node.GetRank())
 	isMethodForNode := true
 	switch event.Method {
 	case "Event.NodeRegister":
@@ -126,7 +126,7 @@ func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 		n.GetVersion(),
 		n.GetUuid(),
 		n.GetAddress(),
-		n.GetRack())
+		n.GetRank())
 	h.register(n)
 	return nil
 }
