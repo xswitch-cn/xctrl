@@ -188,9 +188,15 @@ func (c *Ctrl) GetTenantID(subject string) string {
 }
 
 func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOption {
+	address := c.TenantNodeAddress(tenant, nodeUUID)
+	return client.WithAddress(address)
+}
+
+func (c *Ctrl) TenantNodeAddress(tenant string, nodeUUID string) string {
 	if tenant == "" {
-		return WithAddress(nodeUUID)
+		return NodeAddress(nodeUUID)
 	}
+
 	prefix := c.toPrefix + tenant + "."
 	address := ""
 	if nodeUUID == "" {
@@ -202,5 +208,36 @@ func (c *Ctrl) WithTenantAddress(tenant string, nodeUUID string) client.CallOpti
 			address = prefix + nodeUUID
 		}
 	}
-	return client.WithAddress(address)
+	return address
+}
+
+func (c *Ctrl) GetTenancyTopicAndUser(rawTopic string) (user string, topic string) {
+	user = ""
+	topic = rawTopic
+	if c.isTenancy && c.fromPrefix != "" {
+		frontIndex := strings.Index(rawTopic, c.fromPrefix)
+		if frontIndex > -1 {
+			pointIndex := strings.Index(rawTopic, ".")
+			user = rawTopic[frontIndex+len(c.fromPrefix) : pointIndex]
+			topic = rawTopic[pointIndex+1:]
+		}
+	}
+	return user, topic
+}
+
+func (c *Ctrl) GetTenancyTopicAddress(userPrefix string, topic string) string {
+	if userPrefix == "" || c.toPrefix == "" {
+		return topic
+	}
+	return c.toPrefix + userPrefix + "." + topic
+}
+
+func (c *Ctrl) SetTenancyStatus(status bool) {
+	c.isTenancy = status
+}
+
+func EnableTenancy() {
+	if globalCtrl != nil {
+		globalCtrl.SetTenancyStatus(true)
+	}
 }

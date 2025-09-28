@@ -40,12 +40,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	ctrl.SetFromPrefix("from-")
-	ctrl.SetToPrefix("to-")
-	ctrl.EnableApp(new(ctrl.EmptyAppHandler), "*.cn.xswitch.ctrl", "ctrl")
+	tenant := ""
+	// tenant = "cherry"
+	prefix := ""
+	if tenant != "" {
+		ctrl.SetFromPrefix("from-")
+		ctrl.SetToPrefix("to-")
+		prefix = "to-" + tenant + "."
+	}
+
+	// ctrl.EnableApp(new(ctrl.EmptyAppHandler), "cn.xswitch.ctrl", "ctrl")
 	ctrl.EnableNodeStatus("")
 	// init cman service before we can talk to cman
-	ctrl.InitCManService("to-cherry.cn.xswitch.cman.control")
+	ctrl.InitCManService(prefix + "cn.xswitch.cman.control")
 
 	response, err := ctrl.Service().NativeAPI(context.Background(), &xctrl.NativeAPIRequest{
 		Cmd: "status",

@@ -46,7 +46,7 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 		node.GetVersion(),
 		node.GetUuid(),
 		node.GetAddress(),
-		node.GetRack())
+		node.GetRank())
 	isMethodForNode := true
 	switch event.Method {
 	case "Event.NodeRegister":
@@ -71,6 +71,48 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 	return nil
 }
 
+func (h *Ctrl) handleNodeWithTenancy(natsEvent nats.Event) error {
+	var event Request
+	err := json.Unmarshal(natsEvent.Message().Body, &event)
+	if err != nil {
+		return fmt.Errorf("event parse error: %v", err)
+	}
+	node := &xctrl.Node{}
+	err = json.Unmarshal(*event.Params, node)
+	if err != nil {
+		return fmt.Errorf("jsonrpc parse error: %v", err)
+	}
+	log.Tracef("Node Register: %s, %s, %s, %s, %d",
+		node.GetName(),
+		node.GetVersion(),
+		node.GetUuid(),
+		node.GetAddress(),
+		node.GetRank())
+	isMethodForNode := true
+	switch event.Method {
+	case "Event.NodeRegister":
+		h.register(node)
+	case "Event.NodeUnregister":
+		h.deRegister(node)
+	case "Event.NodeUpdate":
+		h.register(node)
+	default:
+		isMethodForNode = false
+		log.Warnf("Received unsupported event: %s\n", event.Method)
+	}
+	if isMethodForNode && h.nodeCallbackTenancy != nil {
+		node := new(xctrl.Node)
+		err = json.Unmarshal(*event.Params, node)
+		if err != nil {
+			log.Error(err)
+		} else {
+			userPrefix, _ := GetTenancyTopicAndUser(natsEvent.Topic())
+			h.nodeCallbackTenancy(node, event.Method, userPrefix)
+		}
+	}
+	return nil
+}
+
 // nodeUpdate 节点状态更新
 func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 	n := &xctrl.Node{}
@@ -84,7 +126,7 @@ func (h *Ctrl) nodeUpdate(ctx context.Context, frame *json.RawMessage) error {
 		n.GetVersion(),
 		n.GetUuid(),
 		n.GetAddress(),
-		n.GetRack())
+		n.GetRank())
 	h.register(n)
 	return nil
 }
@@ -146,11 +188,6 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 	}
 	channel := new(Channel)
 	channel.userData = nil
-	subject := natsEvent.Topic()
-	tenantID := findTenantId(subject, h.fromPrefix)
-	if tenantID != "" {
-		channel.tenantID = tenantID
-	}
 	if message.Method == "Event.DTMF" {
 		dtmfEvent := new(xctrl.DTMFEvent)
 		err := json.Unmarshal(*message.Params, dtmfEvent)
@@ -168,6 +205,16 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
 		}
 	}
+	if channel.ChannelEvent != nil {
+		subject := natsEvent.Topic()
+		tenantID := findTenantId(subject, h.fromPrefix)
+		if tenantID != "" {
+			channel.ChannelEvent.SetTenantID(tenantID)
+		}
+		if h.toPrefix != "" {
+			channel.ChannelEvent.SetToPrefix(h.toPrefix)
+		}
+	}
 
 	timeout := time.Duration(h.maxChannelLifeTime)*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
 	switch channel.GetState() {
@@ -177,7 +224,12 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		ctx := context.WithValue(context.Background(), key, channel)
 		bus.SubscribeWithExpire(channel.GetUuid(), channel.GetUuid(), timeout, func(ev *bus.Event) error {
 			if ev.Params == nil {
-				log.Error("ev.Params is nil")
+
+				if ev.Flag == "TIMEOUT" {
+					bus.Unsubscribe(ev.Topic, ev.Queue)
+				} else {
+					log.Error("ev.Params is nil")
+				}
 				return nil
 			}
 			if natsEvent, ok := ev.Params.(nats.Event); ok {
@@ -215,7 +267,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 
 		})
 	default:
-		log.Infof("Channel State %s %s", channel.GetUuid(), channel.GetState())
+		log.Infof("Channel State %s %s \n", channel.GetUuid(), channel.GetState())
 	}
 
 	ev := bus.NewEvent(channel.GetState(), channel.GetUuid(), channel, natsEvent)
@@ -284,7 +336,7 @@ func (c *Ctrl) handleEvent(handler EventHandler, natsEvent nats.Event) error {
 
 // EnableApp APP事件
 func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error {
-	log.Infof("EnableApp subject=%s queue=%s", subject, queue)
+	log.Infof("EnableApp subject=%s queue=%s\n", subject, queue)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	}, nats.Queue(queue))
@@ -292,8 +344,9 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
+
 	mySubject := fmt.Sprintf(`%s.%s`, subject, h.uuid)
-	log.Infof("EnableApp subscribe to subject=%s", mySubject)
+	log.Infof("EnableApp subscribe to subject=%s\n", mySubject)
 	_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
 		return h.handleApp(handler, ev)
 	})
@@ -301,6 +354,19 @@ func (h *Ctrl) EnableApp(handler AppHandler, subject string, queue string) error
 		log.Errorf("topic subscribe error: %s", err.Error())
 		return err
 	}
+
+	if subject != "cn.xswitch.ctrl" {
+		mySubject = fmt.Sprintf(`%s.%s`, "cn.xswitch.ctrl", h.uuid)
+		log.Infof("EnableApp subscribe to subject=%s\n", mySubject)
+		_, err = h.conn.Subscribe(mySubject, func(ev nats.Event) error {
+			return h.handleApp(handler, ev)
+		})
+		if err != nil {
+			log.Errorf("topic subscribe error: %s", err.Error())
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -347,7 +413,11 @@ func (h *Ctrl) EnbaleNodeStatus(subject string) error {
 	}
 	log.Infof("EnableNodeStatus subject=%s", subject)
 	_, err := h.conn.Subscribe(subject, func(ev nats.Event) error {
-		return h.handleNode(ev)
+		if h.isTenancy {
+			return h.handleNodeWithTenancy(ev)
+		} else {
+			return h.handleNode(ev)
+		}
 	})
 	if err != nil {
 		log.Errorf("topic subscribe error: %s", err.Error())
@@ -396,6 +466,34 @@ func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
 	return c, nil
 }
 
+func initCtrlWithOptions(options ...nats.Option) (*Ctrl, error) {
+
+	c := &Ctrl{
+		conn:               nats.NewConn(options...),
+		uuid:               uuid.New().String(),
+		serviceName:        "cn.xswitch.nodes",
+		enableNodeStatus:   false,
+		channelHub:         map[string]*Channel{},
+		resultCallbacks:    map[string]*AsyncCallOption{},
+		maxChannelLifeTime: 4,
+	}
+
+	// 连接NATS消息队列
+	if err := c.conn.Connect(); err != nil {
+		return nil, err
+	}
+
+	// 同步调用 xswitch
+	c.service = c.newNodeService()
+	// 异步调用 xswitch
+	c.asyncService = c.newAsyncService()
+	// 同步调用 xswitch, 使用nats的RequestWithContext, 可以返回结果，可以中途取消
+	c.aService = c.newAService()
+
+	c.nodes = InitCtrlNodes()
+	return c, nil
+}
+
 // 订阅消息
 func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nats.Subscriber, error) {
 	sub, err := h.conn.Subscribe(topic, func(ev nats.Event) error {
@@ -408,11 +506,15 @@ func (h *Ctrl) Subscribe(topic string, cb nats.EventCallback, queue string) (nat
 }
 
 type NodeHashFun func(node *xctrl.Node, method string)
+type NodeHashWithTenacyFun func(node *xctrl.Node, method string, tenancy string)
 
 // RegisterHashNodeFun 注册hash节点事件
 // nodeCallbackFunc 节点事件方法
 func (h *Ctrl) registerHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	h.nodeCallback = nodeCallbackFunc
+}
+func (h *Ctrl) registerHashNodeWithtenancyFun(nodeCallbackFunc NodeHashWithTenacyFun) {
+	h.nodeCallbackTenancy = nodeCallbackFunc
 }
 
 func before(str1, str2 string) string {

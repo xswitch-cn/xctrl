@@ -3,7 +3,9 @@ package ctrl
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/nats-io/nats-server/v2/server"
 	"strings"
 	"sync"
 	"time"
@@ -34,17 +36,18 @@ type Ctrl struct {
 	hubLock    sync.RWMutex
 	channelHub map[string]*Channel
 
-	seq             uint64
-	cbLock          sync.RWMutex
-	resultCallbacks map[string]*AsyncCallOption
-	nodeCallback    NodeHashFun
+	seq                 uint64
+	cbLock              sync.RWMutex
+	resultCallbacks     map[string]*AsyncCallOption
+	nodeCallback        NodeHashFun
+	nodeCallbackTenancy NodeHashWithTenacyFun
 
 	maxChannelLifeTime uint
-
-	instanceName string
-	nodes        CtrlNodes
-	fromPrefix   string
-	toPrefix     string
+	instanceName       string
+	nodes              CtrlNodes
+	fromPrefix         string
+	toPrefix           string
+	isTenancy          bool
 }
 
 type AsyncCallOption struct {
@@ -52,6 +55,16 @@ type AsyncCallOption struct {
 	cb   ResultCallbackFunc
 	data interface{}
 	ts   time.Time
+}
+
+type CtrlConfig struct {
+	Trace           bool
+	Addrs           string
+	CtrlUUID        string
+	DrainConnection bool
+	CertPem         string
+	KeyPem          string
+	RootCAPem       string
 }
 
 type ResultCallbackFunc func(msg *Message, data interface{})
@@ -211,6 +224,70 @@ func Init(trace bool, addrs string) error {
 	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
 	if err != nil {
 		return err
+	}
+	globalCtrl = c
+	xctrl.SetService(&c.service)
+	return err
+}
+
+// Init 初始化Ctrl trace 是否开启NATS消息跟踪， addrs nats消息队列连接地址, 手动指定UUID
+func InitWithUUID(trace bool, addrs string, uuid string) error {
+	log.Infof("ctrl starting with addrs=%s\n", addrs)
+	c, err := initCtrl(trace, strings.Split(addrs, ",")...)
+	if err != nil {
+		return err
+	}
+	if uuid != "" {
+		c.uuid = uuid
+	}
+	globalCtrl = c
+	xctrl.SetService(&c.service)
+	return err
+}
+
+// Init 通过配置类初始化Ctrl
+func InitWithConfig(config CtrlConfig) error {
+	if config.Addrs == "" {
+		return errors.New("addrs is empty")
+	}
+	log.Infof("ctrl starting with addrs=%s\n", config.Addrs)
+
+	options := []nats.Option{
+		nats.Addrs(strings.Split(config.Addrs, ",")...),
+		nats.Trace(config.Trace),
+	}
+
+	if config.CertPem != "" && config.KeyPem != "" && config.RootCAPem != "" {
+		serverTlsConfig, err := server.GenTLSConfig(&server.TLSConfigOpts{
+			CertFile: config.CertPem,
+			KeyFile:  config.KeyPem,
+			CaFile:   config.RootCAPem,
+			Verify:   true,
+			Timeout:  5,
+		})
+		if err != nil {
+			log.Fatalf("tls config: %v", err)
+		}
+		options = append(options, nats.TLSConfig(serverTlsConfig))
+		n := &nats.TLSConnectInformation{
+			Cert:    config.CertPem,
+			Key:     config.KeyPem,
+			RootCAs: config.RootCAPem,
+		}
+		options = append(options, nats.TLSConnect(n))
+
+	}
+
+	if config.DrainConnection {
+		options = append(options, nats.DrainConnection())
+	}
+
+	c, err := initCtrlWithOptions(options...)
+	if err != nil {
+		return err
+	}
+	if config.CtrlUUID != "" {
+		c.uuid = config.CtrlUUID
 	}
 	globalCtrl = c
 	xctrl.SetService(&c.service)
@@ -392,6 +469,7 @@ func NodeAddress(nodeUUID string) string {
 	if nodeUUID == "" {
 		return "cn.xswitch.node"
 	}
+
 	if !strings.HasPrefix(nodeUUID, "cn.xswitch.") {
 		return "cn.xswitch.node." + nodeUUID
 	}
@@ -401,6 +479,11 @@ func NodeAddress(nodeUUID string) string {
 // WithAddress 创建Node地址
 func WithAddress(nodeUUID string) client.CallOption {
 	return client.WithAddress(NodeAddress(nodeUUID))
+}
+
+// TenantNodeAddress Get tenant node add string
+func TenantNodeAddress(tenant string, nodeUUID string) string {
+	return globalCtrl.TenantNodeAddress(tenant, nodeUUID)
 }
 
 // WithTenantAddress 创建租户对应的Node地址
@@ -433,7 +516,11 @@ func RegisterHashNodeFun(nodeCallbackFunc NodeHashFun) {
 	if globalCtrl != nil {
 		globalCtrl.registerHashNodeFun(nodeCallbackFunc)
 	}
-
+}
+func RegisterHashNodeWithTenancyFun(nodeCallbackFunc NodeHashWithTenacyFun) {
+	if globalCtrl != nil {
+		globalCtrl.registerHashNodeWithtenancyFun(nodeCallbackFunc)
+	}
 }
 
 func SetMaxChannelLifeTime(time uint) {
@@ -467,4 +554,27 @@ func GetTenantID(subject string) string {
 // deprecated over GetTenantID
 func GetTenantId(subject string) string {
 	return GetTenantID(subject)
+}
+
+func GetTenancyTopicAndUser(rawTopic string) (user string, topic string) {
+	if globalCtrl == nil {
+		return "", ""
+	}
+	return globalCtrl.GetTenancyTopicAndUser(rawTopic)
+
+}
+
+func GetTenancyTopicAddress(userPrefix string, topic string) string {
+	if globalCtrl == nil {
+		return ""
+	}
+	return globalCtrl.GetTenancyTopicAddress(userPrefix, topic)
+}
+
+func Disconnect() error {
+	if globalCtrl == nil {
+		return errors.New("ctrl uninitialized")
+	}
+	globalCtrl.conn.Disconnect()
+	return nil
 }

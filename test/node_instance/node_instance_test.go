@@ -41,7 +41,7 @@ func TestNodeInstance(t *testing.T) {
 		Name:                 "ins1Node1",
 		Ip:                   "192.168.1.1",
 		Version:              "1.0.0",
-		Rack:                 1,
+		Rank:                 1,
 		Address:              "192.168.1.1:8000",
 		Uptime:               3600,
 		Sessions:             5,

@@ -15,7 +15,7 @@ func TestNode(t *testing.T) {
 	node := &xctrl.Node{
 		Uuid: "test",
 		Name: hostname,
-		Rack: 99,
+		Rank: 99,
 	}
 	nodes := InitCtrlNodes()
 	nodes.Store(hostname, node)

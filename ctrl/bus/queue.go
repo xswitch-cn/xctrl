@@ -22,6 +22,7 @@ type queue struct {
 	done     chan bool
 	lock     sync.Mutex
 	expire   time.Duration
+	queue    string
 }
 
 func newQueue(name string, expire time.Duration) *queue {
@@ -77,6 +78,8 @@ func (q *queue) start() {
 		log.Tracef("Queue %s started", q.name)
 		if q.expire > 0 {
 			var handler Handler
+			timer := time.NewTimer(q.expire)
+			defer timer.Stop()
 			for running {
 				// xlog.Infof("Queue %s running", q.name)
 				select {
@@ -88,14 +91,17 @@ func (q *queue) start() {
 					log.Tracef("%s delivered to handler", e.Topic)
 					// cache the last Handler
 					handler = e.handler
+					q.queue = e.Queue
 					q.runWithRecovery(e)
 				case <-q.done:
 					running = false
-				case <-time.After(q.expire):
+				case <-timer.C:
 					// sigh, we don't have a handler here ?
-					q.runWithRecovery(&Event{Flag: "TIMEOUT", handler: handler})
+					q.runWithRecovery(&Event{Flag: "TIMEOUT", Queue: q.queue, handler: handler})
 					running = false
 					log.Tracef("Queue %s timeout %d", q.name, q.expire)
+					timer.Reset(q.expire)
+
 				}
 			}
 		} else {

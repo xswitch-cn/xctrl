@@ -32,6 +32,8 @@ type Options struct {
 	ErrorHandler Handler
 
 	TLSConfig *tls.Config
+
+	TLSConnectInformation *TLSConnectInformation
 	// Registry used for clustering
 	// Other options for implementations of the interface
 	// can be stored in a context
@@ -44,6 +46,12 @@ type PublishOptions struct {
 	// Other options for implementations of the interface
 	// can be stored in a context
 	Context context.Context
+}
+
+type TLSConnectInformation struct {
+	RootCAs string
+	Cert    string
+	Key     string
 }
 
 // SubscribeOptions is Subscribe options
@@ -145,6 +153,13 @@ func Secure(b bool) Option {
 func TLSConfig(t *tls.Config) Option {
 	return func(o *Options) {
 		o.TLSConfig = t
+	}
+}
+
+// TLSConnect Set TLS Certification
+func TLSConnect(t *TLSConnectInformation) Option {
+	return func(o *Options) {
+		o.TLSConnectInformation = t
 	}
 }
 
