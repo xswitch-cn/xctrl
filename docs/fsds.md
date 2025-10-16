@@ -1,6 +1,6 @@
 # FSDS字符串生成
 
-FSDS指FreeSWITCH Dial String，亦指File String and Dial String，用于格式化生成文件字符串和叫叫字符串。
+FSDS指FreeSWITCH Dial String，亦指File String and Dial String，用于格式化生成文件字符串和呼叫字符串。
 
 使用方法：
 
