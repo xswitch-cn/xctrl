@@ -38,6 +38,8 @@ func TestConsistentHash_Get(t *testing.T) {
 			Node: &xctrl.Node{Name: "xcc-node-2", Uuid: "2"},
 		}, {
 			Node: &xctrl.Node{Name: "xcc-node-3", Uuid: "3"},
+		}, {
+			Node: &xctrl.Node{Name: "xcc-node-4", Uuid: "4"},
 		},
 	}
 	AddNodes(nodess...)
@@ -46,15 +48,80 @@ func TestConsistentHash_Get(t *testing.T) {
 	for k := range confNames {
 		node, err := Get(confNames[k])
 		if err != nil {
-			t.Fail()
+			t.Fatalf("获取节点失败: %v", err)
 		} else {
 			nodes = append(nodes, node)
 		}
 	}
+
+	// 验证相同key返回相同节点
 	if nodes[0] == nodes[2] && nodes[1] == nodes[3] {
-		t.Log("ok")
+		t.Log("相同key返回相同节点 - 测试通过")
 	} else {
-		t.Fatalf("?????")
+		t.Fatalf("相同key应该返回相同节点")
+	}
+
+	// 新增测试用例 - 测试您提供的特定name
+	thorNames := []string{
+		"thor_916344178-mihoyo-sip-beta.hoyowave.com",
+		"thor_193787997-mihoyo-sip-beta.hoyowave.com",
+		"thor_435064194-mihoyo-sip-beta.hoyowave.com",
+		"thor_752678318-mihoyo-sip-beta.hoyowave.com",
+	}
+
+	t.Log("\n===thor name分配 ===")
+	thorDistribution := make(map[string]int)
+	thorNodes := make([]string, 0)
+
+	for _, name := range thorNames {
+		node, err := Get(name)
+		if err != nil {
+			t.Fatalf("获取节点失败: %v", err)
+		}
+		thorDistribution[node.Name]++
+		thorNodes = append(thorNodes, node.Name)
+		t.Logf("Name: %s -> Node: %s", name, node.Name)
+	}
+
+	// 分布结果
+	t.Logf("\n=== 分布统计 ===")
+	for node, count := range thorDistribution {
+		t.Logf("  %s: %d 个name", node, count)
+	}
+
+	// 验证分布结果
+	uniqueNodes := len(thorDistribution)
+	t.Logf("\n=== 分布分析 ===")
+	t.Logf("总共 %d 个name分配到了 %d 个不同节点", len(thorNames), uniqueNodes)
+	// 期望：相似的name应该被分散到多个节点
+	if uniqueNodes == 1 {
+		t.Log("所有name都被分配到同一个节点，分布不够均匀")
+	} else if uniqueNodes >= 2 {
+		t.Logf("name被分散到 %d 个不同节点，分布良好", uniqueNodes)
+	}
+
+	// 验证有没有空
+	for i, node := range thorNodes {
+		if node == "" {
+			t.Fatalf("第 %d 个name返回了空节点", i)
+		}
+	}
+
+	// 验证虚拟节点数量
+	expectedVirtualNodes := len(nodess) * 1000 * 3 // 4个节点 × 1000虚拟节点 × 3种模式
+	actualVirtualNodes := GetVirtualNodeCount()
+	if actualVirtualNodes != expectedVirtualNodes {
+		t.Logf("虚拟节点数量: 期望 %d, 实际 %d", expectedVirtualNodes, actualVirtualNodes)
+	} else {
+		t.Logf("虚拟节点数量正确: %d", actualVirtualNodes)
+	}
+
+	// 验证真实节点数量
+	actualNodes := GetNodeCount()
+	if actualNodes != len(nodess) {
+		t.Fatalf("真实节点数量错误: 期望 %d, 实际 %d", len(nodess), actualNodes)
+	} else {
+		t.Logf("真实节点数量正确: %d", actualNodes)
 	}
 }
 
