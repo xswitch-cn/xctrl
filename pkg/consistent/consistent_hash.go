@@ -2,9 +2,8 @@ package consistent
 
 import (
 	"errors"
-	"hash/crc32"
+	"fmt"
 	"sort"
-	"strconv"
 	"sync"
 
 	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
@@ -36,6 +35,7 @@ type HashNode struct {
 	*xctrl.Node
 	Port int `json:"port"`
 }
+
 type consistentHash struct {
 	mux              sync.RWMutex         //lock
 	hash             HashFunc             //hash算法
@@ -49,22 +49,41 @@ var defaultConsistentHash consistentHash
 
 var once sync.Once
 
+func OptimizedHash(data []byte) uint32 {
+	// 使用FNV风格的哈希，性能好且分布均匀
+	const (
+		offset32 uint32 = 2166136261
+		prime32  uint32 = 16777619
+	)
+
+	hash := offset32
+	for _, c := range data {
+		hash *= prime32
+		hash ^= uint32(c)
+	}
+
+	// 额外的混合步骤，提高分布均匀性
+	hash = (hash >> 16) ^ (hash << 16)
+	hash *= prime32
+	return hash
+}
+
 // Init
-// virtualNodesNums 虚拟节点个数，default 100个
-// hashFunc hash方法，默认crc32.ChecksumIEEE
+// virtualNodesNums 虚拟节点个数，默认250个
+// hashFunc hash方法，默认SHA1BasedHash
+// cman里使用这个默认的方法
 func Init(virtualNodesNums int, hashFunc ...HashFunc) {
-	// 避免多次初始化
 	(&once).Do(func() {
 		if virtualNodesNums == 0 {
-			// 一般来说正常就个位数的节点，虚拟节点100个完全足够均衡了
-			virtualNodesNums = 100
+			// 增加虚拟节点，保证均衡
+			virtualNodesNums = 250
 		}
 		defaultConsistentHash.VirtualNodesNums = virtualNodesNums
 		if len(hashFunc) > 0 {
 			defaultConsistentHash.hash = hashFunc[0]
 		} else {
 			// 默认hash计算算方法
-			defaultConsistentHash.hash = crc32.ChecksumIEEE
+			defaultConsistentHash.hash = OptimizedHash
 		}
 		defaultConsistentHash.Hash2Node = make(map[uint32]*HashNode)
 	})
@@ -83,13 +102,39 @@ func AddNodes(nodes ...*HashNode) error {
 	// 给虚拟节点赋值
 	defaultConsistentHash.mux.Lock()
 	defer defaultConsistentHash.mux.Unlock()
+
+	// 检查是否有重复节点，避免重复添加
+	for _, newNode := range nodes {
+		for _, existingNode := range defaultConsistentHash.Nodes {
+			if existingNode.Uuid == newNode.Uuid {
+				return fmt.Errorf("node with UUID %s already exists", newNode.Uuid)
+			}
+		}
+	}
+
 	for k := 0; k < len(nodes); k++ {
 		defaultConsistentHash.Nodes = append(defaultConsistentHash.Nodes, nodes[k])
 		for i := 0; i < defaultConsistentHash.VirtualNodesNums; i++ {
-			// 虚拟节点hash
-			hashValue := defaultConsistentHash.hash([]byte(strconv.Itoa(i) + nodes[k].Uuid))
-			defaultConsistentHash.NodesHashes = append(defaultConsistentHash.NodesHashes, hashValue)
-			defaultConsistentHash.Hash2Node[hashValue] = nodes[k]
+			// 调整key，增大随机性
+			virtualKey1 := fmt.Sprintf("%s|virtual|%d|%d|salt1",
+				nodes[k].Uuid, i, k*defaultConsistentHash.VirtualNodesNums+i)
+			virtualKey2 := fmt.Sprintf("%d|%s|%d|virtual|salt2",
+				i, nodes[k].Uuid, k)
+			virtualKey3 := fmt.Sprintf("node|%d|%s|%d|salt3",
+				k, nodes[k].Uuid, i)
+
+			// 为每个节点生成多个不同模式的虚拟节点
+			hashValue1 := defaultConsistentHash.hash([]byte(virtualKey1))
+			hashValue2 := defaultConsistentHash.hash([]byte(virtualKey2))
+			hashValue3 := defaultConsistentHash.hash([]byte(virtualKey3))
+
+			defaultConsistentHash.NodesHashes = append(
+				defaultConsistentHash.NodesHashes,
+				hashValue1, hashValue2, hashValue3,
+			)
+			defaultConsistentHash.Hash2Node[hashValue1] = nodes[k]
+			defaultConsistentHash.Hash2Node[hashValue2] = nodes[k]
+			defaultConsistentHash.Hash2Node[hashValue3] = nodes[k]
 		}
 	}
 	sort.Sort(defaultConsistentHash.NodesHashes)
@@ -98,6 +143,9 @@ func AddNodes(nodes ...*HashNode) error {
 
 // ExistNode 是否存在这个节点
 func ExistNode(node *HashNode) bool {
+	defaultConsistentHash.mux.RLock()
+	defer defaultConsistentHash.mux.RUnlock()
+
 	found := false
 	for k := 0; k < len(defaultConsistentHash.Nodes); k++ {
 		if defaultConsistentHash.Nodes[k].Uuid == node.Uuid {
@@ -115,29 +163,49 @@ func DeleteNodes(node *HashNode) error {
 	}
 	defaultConsistentHash.mux.Lock()
 	defer defaultConsistentHash.mux.Unlock()
+
 	found := false
+	index := -1
 	for k := 0; k < len(defaultConsistentHash.Nodes); k++ {
 		if defaultConsistentHash.Nodes[k].Uuid == node.Uuid {
-			defaultConsistentHash.Nodes = append(defaultConsistentHash.Nodes[:k], defaultConsistentHash.Nodes[k+1:]...)
+			index = k
 			found = true
 			break
 		}
 	}
 	if !found {
-		// 没必要进行hash计算了
 		log.Warnf("deleting a nonexistent node %s", node.Name)
 		return errors.New("not found this node " + node.Uuid)
 	}
 
+	// 从Nodes中删除
+	defaultConsistentHash.Nodes = append(defaultConsistentHash.Nodes[:index], defaultConsistentHash.Nodes[index+1:]...)
+
+	// 删除虚拟节点
 	for i := 0; i < defaultConsistentHash.VirtualNodesNums; i++ {
-		hash := defaultConsistentHash.hash([]byte(strconv.Itoa(i) + node.Uuid))
-		for j := 0; j < len(defaultConsistentHash.NodesHashes); j++ {
-			if defaultConsistentHash.NodesHashes[j] == hash {
-				defaultConsistentHash.NodesHashes = append(defaultConsistentHash.NodesHashes[:j], defaultConsistentHash.NodesHashes[j+1:]...)
-				break
+		virtualKey1 := fmt.Sprintf("%s|virtual|%d|%d|salt1",
+			node.Uuid, i, index*defaultConsistentHash.VirtualNodesNums+i)
+		virtualKey2 := fmt.Sprintf("%d|%s|%d|virtual|salt2",
+			i, node.Uuid, index)
+		virtualKey3 := fmt.Sprintf("node|%d|%s|%d|salt3",
+			index, node.Uuid, i)
+
+		hash1 := defaultConsistentHash.hash([]byte(virtualKey1))
+		hash2 := defaultConsistentHash.hash([]byte(virtualKey2))
+		hash3 := defaultConsistentHash.hash([]byte(virtualKey3))
+
+		hashes := []uint32{hash1, hash2, hash3}
+		for _, hash := range hashes {
+			// 从NodesHashes中删除
+			for j := 0; j < len(defaultConsistentHash.NodesHashes); j++ {
+				if defaultConsistentHash.NodesHashes[j] == hash {
+					defaultConsistentHash.NodesHashes = append(defaultConsistentHash.NodesHashes[:j], defaultConsistentHash.NodesHashes[j+1:]...)
+					break
+				}
 			}
+			// 从Hash2Node中删除
+			delete(defaultConsistentHash.Hash2Node, hash)
 		}
-		delete(defaultConsistentHash.Hash2Node, hash)
 	}
 	return nil
 }
@@ -158,4 +226,18 @@ func Get(key string) (*HashNode, error) {
 	defaultConsistentHash.mux.RLock()
 	defer defaultConsistentHash.mux.RUnlock()
 	return defaultConsistentHash.Hash2Node[defaultConsistentHash.NodesHashes[k]], nil
+}
+
+// 节点数量
+func GetNodeCount() int {
+	defaultConsistentHash.mux.RLock()
+	defer defaultConsistentHash.mux.RUnlock()
+	return len(defaultConsistentHash.Nodes)
+}
+
+// 拟节点数量
+func GetVirtualNodeCount() int {
+	defaultConsistentHash.mux.RLock()
+	defer defaultConsistentHash.mux.RUnlock()
+	return len(defaultConsistentHash.NodesHashes)
 }
