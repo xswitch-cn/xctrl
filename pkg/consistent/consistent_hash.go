@@ -112,6 +112,9 @@ func AddNodes(nodes ...*HashNode) error {
 		}
 	}
 
+	//virtualKey1: "UUID|virtual|i|k*VirtualNodesNums+i|salt1"
+	//virtualKey2: "i|UUID|k|virtual|salt2"
+	//virtualKey3: "node|k|UUID|i|salt3"
 	for k := 0; k < len(nodes); k++ {
 		defaultConsistentHash.Nodes = append(defaultConsistentHash.Nodes, nodes[k])
 		for i := 0; i < defaultConsistentHash.VirtualNodesNums; i++ {
