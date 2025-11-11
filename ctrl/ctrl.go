@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/nats-io/nats-server/v2/server"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/nats-io/nats-server/v2/server"
 
 	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"github.com/google/uuid"
@@ -243,6 +244,16 @@ func InitWithUUID(trace bool, addrs string, uuid string) error {
 	globalCtrl = c
 	xctrl.SetService(&c.service)
 	return err
+}
+
+func InitMock(c client.Client) error {
+	log.Info("mock ctrl starting")
+	globalCtrl = &Ctrl{}
+	s := xctrl.NewXNodeService("mock", c)
+	c.Init(client.Selector())
+	xctrl.SetService(&s)
+	globalCtrl.service = s
+	return nil
 }
 
 // Init 通过配置类初始化Ctrl
