@@ -43,6 +43,7 @@ type Ctrl struct {
 	nodeCallback        NodeHashFun
 	nodeCallbackTenancy NodeHashWithTenacyFun
 
+	// Minute
 	maxChannelLifeTime uint
 	instanceName       string
 	nodes              CtrlNodes
@@ -535,6 +536,12 @@ func RegisterHashNodeWithTenancyFun(nodeCallbackFunc NodeHashWithTenacyFun) {
 }
 
 func SetMaxChannelLifeTime(time uint) {
+	if globalCtrl != nil {
+		globalCtrl.maxChannelLifeTime = time * 60
+	}
+}
+
+func SetMaxChannelLifeTimeMinute(time uint) {
 	if globalCtrl != nil {
 		globalCtrl.maxChannelLifeTime = time
 	}
