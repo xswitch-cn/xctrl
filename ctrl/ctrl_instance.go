@@ -30,6 +30,10 @@ func (c *Ctrl) SetInstanceName(instanceName string) {
 }
 
 func (c *Ctrl) SetMaxChannelLifeTime(time uint) {
+	c.maxChannelLifeTime = time * 60
+}
+
+func (c *Ctrl) SetMaxChannelLifeTimeMinute(time uint) {
 	c.maxChannelLifeTime = time
 }
 

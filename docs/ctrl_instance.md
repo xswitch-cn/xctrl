@@ -32,6 +32,15 @@ func(c *Ctrl) SetMaxChannelLifeTime(time uint)
 
 * `time`：为小时数
 
+## SetMaxChannelLifeTimeMinute
+
+```go
+func(c *Ctrl) SetMaxChannelLifeTimeMinute(time uint)
+```
+
+设置Channel的最长保留事件分钟数，超时就会销毁，默认为4小时
+
+* `time`：分钟数
 
 ## EnableApp
 

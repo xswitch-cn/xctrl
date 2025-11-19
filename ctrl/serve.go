@@ -216,7 +216,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		}
 	}
 
-	timeout := time.Duration(h.maxChannelLifeTime)*time.Hour + 10*time.Minute // make sure timeout is bigger than call duration
+	timeout := time.Duration(h.maxChannelLifeTime)*time.Minute + 10*time.Minute // make sure timeout is bigger than call duration
 	switch channel.GetState() {
 	case "START":
 		log.Tracef("%s START", channel.GetUuid())
@@ -447,7 +447,7 @@ func initCtrl(trace bool, addrs ...string) (*Ctrl, error) {
 		enableNodeStatus:   false,
 		channelHub:         map[string]*Channel{},
 		resultCallbacks:    map[string]*AsyncCallOption{},
-		maxChannelLifeTime: 4,
+		maxChannelLifeTime: 240, // 4 hours
 	}
 
 	// 连接NATS消息队列
@@ -475,7 +475,7 @@ func initCtrlWithOptions(options ...nats.Option) (*Ctrl, error) {
 		enableNodeStatus:   false,
 		channelHub:         map[string]*Channel{},
 		resultCallbacks:    map[string]*AsyncCallOption{},
-		maxChannelLifeTime: 4,
+		maxChannelLifeTime: 240, // 4 hours
 	}
 
 	// 连接NATS消息队列
