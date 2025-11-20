@@ -5,7 +5,7 @@ go 1.16
 // replace git.xswitch.cn/xswitch/proto => ../proto
 
 require (
-	git.xswitch.cn/xswitch/proto v0.3.4
+	git.xswitch.cn/xswitch/proto v0.3.6
 	github.com/google/uuid v1.3.0
 	github.com/nats-io/nats-server/v2 v2.9.18
 	github.com/nats-io/nats.go v1.27.0
