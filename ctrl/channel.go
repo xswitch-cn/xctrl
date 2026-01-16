@@ -489,6 +489,29 @@ func (channel *Channel) RingBackDetection0(req *xctrl.RingBackDetectionRequest, 
 	return response
 }
 
+func (channel *Channel) MediaFork(req *xctrl.MediaForkRequest) *xctrl.MediaForkResponse {
+	if channel == nil {
+		return &xctrl.MediaForkResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Unable to locate Channel",
+		}
+	}
+
+	var response *xctrl.MediaForkResponse
+	var err error
+
+	response, err = Service().MediaFork(context.Background(), req, channel.NodeAddress())
+
+	if err != nil {
+		response = new(xctrl.MediaForkResponse)
+		e := errors.Parse(err.Error())
+		response.Code = e.Code
+		response.Message = e.Detail
+		return response
+	}
+	return response
+}
+
 // String marshalIndent
 func (channel *Channel) String() string {
 	if channel == nil {
