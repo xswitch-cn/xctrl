@@ -1,8 +1,8 @@
 package main
 
 import (
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	nats "github.com/nats-io/nats.go"
+	"github.com/xswitch-cn/xctrl/ctrl"
 	"log"
 	"os"
 	"os/signal"

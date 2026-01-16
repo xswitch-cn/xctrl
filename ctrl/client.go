@@ -8,12 +8,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/client"
-	"git.xswitch.cn/xswitch/proto/xctrl/codec"
-	"git.xswitch.cn/xswitch/proto/xctrl/errors"
-	"git.xswitch.cn/xswitch/proto/xctrl/metadata"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/proto/xctrl/client"
+	"github.com/xswitch-cn/proto/xctrl/codec"
+	"github.com/xswitch-cn/proto/xctrl/errors"
+	"github.com/xswitch-cn/proto/xctrl/metadata"
+	"github.com/xswitch-cn/proto/xctrl/util/log"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 )
 
 const defaultTimeout = 60 * time.Second

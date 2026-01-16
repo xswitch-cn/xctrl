@@ -11,15 +11,15 @@ import (
 
 	"github.com/nats-io/nats-server/v2/server"
 
-	"git.xswitch.cn/xswitch/xctrl/ctrl/bus"
 	"github.com/google/uuid"
 	natsio "github.com/nats-io/nats.go"
+	"github.com/xswitch-cn/xctrl/ctrl/bus"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/cman"
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/proto/xctrl/client"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/proto/go/proto/cman"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/proto/xctrl/client"
+	"github.com/xswitch-cn/proto/xctrl/util/log"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 )
 
 // Ctrl 控制中心

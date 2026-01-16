@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
+	"github.com/xswitch-cn/xctrl/ctrl"
 )
 
 func init() {

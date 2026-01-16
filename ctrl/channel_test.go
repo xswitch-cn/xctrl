@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/proto/xctrl/util/log"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 )
 
 const (

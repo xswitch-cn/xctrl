@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
 	nats "github.com/nats-io/nats.go"
+	"github.com/xswitch-cn/proto/xctrl/util/log"
 )
 
 type nConn struct {

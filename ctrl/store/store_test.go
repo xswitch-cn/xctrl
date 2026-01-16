@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/store"
+	"github.com/xswitch-cn/proto/xctrl/store"
 )
 
 func init() {

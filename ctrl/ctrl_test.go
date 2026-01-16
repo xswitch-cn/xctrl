@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/client"
+	"github.com/xswitch-cn/proto/xctrl/client"
 )
 
 func TestNodeAddress(t *testing.T) {

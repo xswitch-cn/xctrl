@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/store"
 	"github.com/google/uuid"
+	"github.com/xswitch-cn/proto/xctrl/store"
 )
 
 const (

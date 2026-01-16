@@ -5,12 +5,12 @@ import (
 	"os"
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/xctrl/ctrl"
 
-	"git.xswitch.cn/xswitch/xctrl/tboy"
+	"github.com/xswitch-cn/xctrl/tboy"
 )
 
 var (
