@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 
-	"git.xswitch.cn/xswitch/proto/xctrl/codec"
+	"github.com/xswitch-cn/proto/xctrl/codec"
 )
 
 type optionsKey struct{}

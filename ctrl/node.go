@@ -3,8 +3,8 @@ package ctrl
 import (
 	"time"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/proto/xctrl/store"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/proto/xctrl/store"
 )
 
 // nodeList .

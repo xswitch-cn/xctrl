@@ -9,9 +9,9 @@
 
 以下是其他相关链接：
 
-- 依赖 <https://git.xswitch.cn/xswitch/proto> 
+- 依赖 <https://github.com/xswitch-cn/proto> 
 - [SDK使用和开发文档](docs/README.md)
-- 协议参考文档参见：<https://git.xswitch.cn/xswitch/proto/src/branch/main/docs>
+- 协议参考文档参见：<https://github.com/xswitch-cn/proto/src/branch/main/docs>
 - 示例：<https://git.xswitch.cn/xswitch/xcc-examples/src/branch/master/go>
 - XCC API文档：<https://docs.xswitch.cn/xcc-api/>
 
@@ -25,8 +25,8 @@
 
 ```sh
 go mod init main
-go get git.xswitch.cn/xswitch/proto/go/proto/xctrl
-go get git.xswitch.cn/xswitch/xctrl
+go get github.com/xswitch-cn/proto/go/proto/xctrl
+go get github.com/xswitch-cn/xctrl
 # 创建 main.go，并运行
 go run main.go
 ```
@@ -36,7 +36,7 @@ go run main.go
 1. 克隆该项目到本地：
 
 ```shell
-git clone https://git.xswitch.cn/xswitch/xctrl.git
+git clone https://github.com/xswitch-cn/xctrl.git
 cd xctrl
 ```
 

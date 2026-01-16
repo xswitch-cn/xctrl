@@ -1,8 +1,8 @@
 package ctrl_instance
 
 import (
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/xctrl/ctrl"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 	"os"
 	"testing"
 	"time"

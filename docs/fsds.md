@@ -5,7 +5,7 @@ FSDS指FreeSWITCH Dial String，亦指File String and Dial String，用于格式
 使用方法：
 
 ```go
-import "git.xswitch.cn/xswitch/xctrl/fsds"
+import "github.com/xswitch-cn/xctrl/fsds"
 var params = &fsds.Endpoint{
 	...
 }

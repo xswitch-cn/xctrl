@@ -3,12 +3,12 @@ package tboy
 import (
 	"context"
 	"encoding/json"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 	"sync"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
 	"github.com/sirupsen/logrus"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/xctrl/ctrl"
 )
 
 func init() {

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/proto/xctrl/util/log"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/proto/xctrl/util/log"
 )
 
 // 基准测试

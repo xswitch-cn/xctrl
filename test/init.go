@@ -3,7 +3,7 @@ package test
 import (
 	"os"
 
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
+	"github.com/xswitch-cn/xctrl/ctrl"
 )
 
 const (

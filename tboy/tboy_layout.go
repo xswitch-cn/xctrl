@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"sync"
 
-	"git.xswitch.cn/xswitch/proto/go/proto/xctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl"
-	"git.xswitch.cn/xswitch/xctrl/ctrl/nats"
+	"github.com/xswitch-cn/proto/go/proto/xctrl"
+	"github.com/xswitch-cn/xctrl/ctrl"
+	"github.com/xswitch-cn/xctrl/ctrl/nats"
 )
 
 type FakeLayoutChannel struct {
