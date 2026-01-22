@@ -219,6 +219,15 @@ Ctrl中的Context使用了标准的Go Context包，目前没有太大用处，�
 
 在订阅事件的时候会使用这个变量大小进行channel的初始化，1024容量足够事件使用，太小会导致程序阻塞卡顿，影响运行效率。
 
+## GetNodeList
+
+```go
+func (c *CtrlNodes) GetNodeList() map[string]*xctrl.Node
+```
+
+获取当前Xctrl内部维护的hash环中所有的节点, key为主机名。
+
+
 ## protobuf 扩展示例
 
 ```go
