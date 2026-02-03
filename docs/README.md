@@ -1,6 +1,6 @@
 # xctrl 文档
 
-本文档是xctrl 1.2文档。
+本文档是xctrl 1.4文档。
 
 需要注意，xctrl并不使用Protocol Buffer以及gRPC，而是使用了Protocol Buffer的协议描述，方便生成跨语言的客户端户。xctrl与XSwitch之间使用JSON数据格式，并使用JSON-RPC封装。
 
