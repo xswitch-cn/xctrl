@@ -235,7 +235,7 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 			if natsEvent, ok := ev.Params.(nats.Event); ok {
 				channelEvent := ev.Message.(*Channel)
 				channelEvent.natsEvent = natsEvent
-				handler.ChannelEvent(ctx, channelEvent)
+				ctx = handler.ChannelEvent(ctx, channelEvent)
 				if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 					bus.Unsubscribe(ev.Topic, ev.Queue)
 				}

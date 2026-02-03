@@ -77,7 +77,7 @@ type EventHandler interface {
 }
 
 type AppHandler interface {
-	ChannelEvent(context.Context, *Channel)
+	ChannelEvent(context.Context, *Channel) context.Context
 	Event(msg *Message, natsEvent nats.Event)
 }
 
