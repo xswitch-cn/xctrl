@@ -36,7 +36,8 @@ func main() {
 	ctrl.SetLogger(new(Logger))         // tell ctrl to use our logger
 	log.Print("Hello, world!")          // the world starts from here
 	// init ctrl, connect to NATS and subscribe a subject
-	err := ctrl.Init(isTrace, "nats://king:king@localhost:4222")
+	err := ctrl.Init(isTrace, "nats://localhost:4222")
+	// err := ctrl.Init(isTrace, "nats://user:pass@localhost:4222")
 	if err != nil {
 		panic(err)
 	}
