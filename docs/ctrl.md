@@ -61,7 +61,7 @@ Handler是一个`interface`，必须实现如下几个函数（可以是空函�
 
 ```go
 type Handler interface {
-	ChannelEvent(ctx context.Context, channel *Channel)
+	ChannelEvent(ctx context.Context, channel *Channel) context.Context
 	Event(msg *Message, natsEvent nats.Event)
 }
 ```

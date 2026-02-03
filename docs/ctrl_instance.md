@@ -62,7 +62,7 @@ Handler是一个`interface`，必须实现如下几个函数（可以是空函�
 
 ```go
 type Handler interface {
-	ChannelEvent(ctx context.Context, channel *Channel)
+	ChannelEvent(ctx context.Context, channel *Channel) context.Context
 	Event(msg *Message, natsEvent nats.Event)
 }
 ```
@@ -104,7 +104,7 @@ type AppExample struct {}
 
 func (h *AppExample) Event(msg *ctrl.Message, natsEvent nats.Event) {}
 
-func (a *AppExample) ChannelEvent(ctx context.Context, c *ctrl.Channel) {}
+func (a *AppExample) ChannelEvent(ctx context.Context, c *ctrl.Channel) context.Context {}
 
 instance.EnableApp(new(AppExample),subject,"")
 ```

@@ -236,7 +236,7 @@ digraph G {
 
 type MyAppHandler struct{}
 
-func (h *MyAppHandler) ChannelEvent(context.Context, *Channel) {}
+func (h *MyAppHandler) ChannelEvent(context.Context, *Channel) context.Context {}
 func (h *MyAppHandler) Event(*Message, nats.Event)             {}
 
 
@@ -247,7 +247,7 @@ ctrl.EnableApp(new Handler, "cn.xswitch.ctrl", "q")
 当有来话时，将会回调`ChannelEvent`：
 
 ```go
-func (h *MyAppHandler) ChannelEvent(context.Context, *Channel) {
+func (h *MyAppHandler) ChannelEvent(ctx context.Context, channel *Channel) context.Context {
 	switch channel.GetState {
 	case "START":
 		{
@@ -266,6 +266,7 @@ func (h *MyAppHandler) ChannelEvent(context.Context, *Channel) {
 			// do something
 		}
 	}
+    return ctx
 }
 ```
 

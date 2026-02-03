@@ -19,7 +19,8 @@ type PlayHandler struct {
 	*ctrl.Channel
 }
 
-func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
+func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel)context.Context {
+    return ctx
 }
 
 func (h *PlayHandler) Event(msg *ctrl.Message, natsEvent nats.Event) {
@@ -69,7 +70,7 @@ func (h *PlayHandler) Event(msg *ctrl.Message, natsEvent nats.Event) {
 	}
 }
 
-func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
+func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) context.Context {
 	log.Println("App: method = Event.Channel, state = ", c.State)
 
     switch c.State {
@@ -78,13 +79,14 @@ func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
 			log.Println("App DTMF = ", c.Dtmf)
 		}
     }
+    return ctx
 }
 ```
 
 注意，在这种情况下，只有在Channel处理处理媒体状态时（如正在Play）才能收到DTMF，但同时，如果是正在阻塞的Play，则回调会阻塞。这时，如果想让`ChannelEvent`回调被执行，在上一步的Play可以放到Go Routine中执行，如：
 
 ```go
-func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
+func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) context.Context {
 	log.Println("App: method = Event.Channel, state = ", c.State)
 
     switch c.State {
@@ -99,6 +101,7 @@ func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
 			log.Println("App DTMF = ", c.Dtmf)
 		}
     }
+    return ctx
 }
 ```
 
@@ -116,7 +119,7 @@ ctrl.ForkDTMFEventToChannelEventThread()
 播放是阻塞的，通过`channel.Play()`或`ctrl.Service().Play()`函数播放时，想提前结束播放的话，如果直接通过`ctrl.WithTimeout`函数设置超时时间，只是在客户端侧（Go侧、ctrl侧）解除了函数阻塞，并不能中断XNode侧的播放。因此，要终止XNode侧的播放，可以发送`Stop()`或`break` Native App命令，如：
 
 ```go
-func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
+func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) context.Context {
 	log.Println("App: method = Event.Channel, state = ", c.State)
 	switch c.State {
 	case "DTMF":
@@ -127,13 +130,14 @@ func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
 			}
 		}
     }
+    return ctx
 }
 ```
 
 或：
 
 ```go
-func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
+func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) context.Context {
 	log.Println("App: method = Event.Channel, state = ", c.State)
 	switch c.State {
 	case "DTMF":
@@ -149,6 +153,7 @@ func (h *PlayHandler) ChannelEvent(ctx context.Context, c *ctrl.Channel) {
 			}
 		}
     }
+    return ctx
 }
 ```
 
