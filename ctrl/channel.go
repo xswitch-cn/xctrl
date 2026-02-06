@@ -26,6 +26,7 @@ type Channel struct {
 	userData            interface{}       // store private userData from the higher level Application
 	toPrefix            string            // the to- prefix of the channel
 	tenantID            string            // the tenant ID of the channel
+	DetectedData        *xctrl.DetectedData
 }
 
 // only call at the first time

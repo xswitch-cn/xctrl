@@ -199,6 +199,18 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 		channel.NodeUuid = dtmfEvent.NodeUuid
 		channel.Uuid = dtmfEvent.Uuid
 		channel.State = "DTMF"
+	} else if message.Method == "Event.DetectedData" {
+		var detected *xctrl.DetectedData
+		err := json.Unmarshal(*message.Params, &detected)
+		if err != nil {
+			return fmt.Errorf("%s: application json parse error %+v", natsEvent.Topic(), natsEvent.Error())
+		}
+		channel.ChannelEvent = new(xctrl.ChannelEvent)
+		channel.DetectedData = detected
+		channel.NodeUuid = detected.NodeUuid
+		channel.Uuid = detected.Uuid
+		channel.State = "DetectedData"
+
 	} else {
 		err := json.Unmarshal(*message.Params, channel)
 		if err != nil {
@@ -294,6 +306,10 @@ func (c *Ctrl) handleApp(handler AppHandler, natsEvent nats.Event) error {
 		}()
 
 		if c.forkDTMFEvent && message.Method == "Event.DTMF" {
+			// fork this event and deliver to the Event Channel Thread
+			c.handleChannel(handler, &message, natsEvent)
+		}
+		if c.forkDetectedData && message.Method == "Event.DetectedData" {
 			// fork this event and deliver to the Event Channel Thread
 			c.handleChannel(handler, &message, natsEvent)
 		}
@@ -436,6 +452,12 @@ func (h *Ctrl) OnEvicted(f func(string, interface{})) {
 // ForkDTMFEventToChannelEventThread
 func (h *Ctrl) ForkDTMFEventToChannelEventThread() error {
 	h.forkDTMFEvent = true
+	return nil
+}
+
+// ForkDetectedDataToChannelEventThread
+func (h *Ctrl) ForkDetectedDataToChannelEventThread() error {
+	h.forkDetectedData = true
 	return nil
 }
 
