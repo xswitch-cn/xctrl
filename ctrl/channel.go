@@ -570,3 +570,7 @@ func (channel *Channel) GetTenantID() string {
 	// return channel.tenantID
 	return channel.GetPNATSTenantID()
 }
+
+func (channel *Channel) Ignore(ctx context.Context) context.Context {
+	return context.WithValue(ctx, "IGNORE", true)
+}
