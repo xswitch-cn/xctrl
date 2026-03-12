@@ -251,6 +251,13 @@ func (h *Ctrl) handleChannel(handler AppHandler, message *Message, natsEvent nat
 				if ev.Flag == "DESTROY" || ev.Flag == "TIMEOUT" {
 					bus.Unsubscribe(ev.Topic, ev.Queue)
 				}
+				if cValue := ctx.Value("IGNORE"); cValue != nil {
+					if value, valueOk := cValue.(bool); valueOk {
+						if value {
+							bus.Unsubscribe(ev.Topic, ev.Queue)
+						}
+					}
+				}
 				return nil
 			}
 			return nil
