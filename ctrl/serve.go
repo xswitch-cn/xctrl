@@ -54,7 +54,11 @@ func (h *Ctrl) handleNode(natsEvent nats.Event) error {
 	case "Event.NodeUnregister":
 		h.deRegister(node)
 	case "Event.NodeUpdate":
-		h.register(node)
+		if node.GetShutdown() {
+			h.deRegister(node)
+		} else {
+			h.register(node)
+		}
 	default:
 		isMethodForNode = false
 		log.Warnf("Received unsupported event: %s\n", event.Method)
@@ -95,7 +99,11 @@ func (h *Ctrl) handleNodeWithTenancy(natsEvent nats.Event) error {
 	case "Event.NodeUnregister":
 		h.deRegister(node)
 	case "Event.NodeUpdate":
-		h.register(node)
+		if node.GetShutdown() {
+			h.deRegister(node)
+		} else {
+			h.register(node)
+		}
 	default:
 		isMethodForNode = false
 		log.Warnf("Received unsupported event: %s\n", event.Method)
